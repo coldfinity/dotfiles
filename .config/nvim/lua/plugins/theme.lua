@@ -22,22 +22,19 @@ return {
     lazy = false, -- make sure we load this during startup if it is your main colorscheme
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
+      local transparent = true
       require("github-theme").setup({
-        trasparent = true, -- enable transparent background
-        darken = {
-          floats = true, -- darken floating windows
-          sidebars = {
-            enabled = true, -- darken sidebars
-            list = {}, -- darken list windows
+        options = {
+          transparent = transparent,
+          styles = {
+            comments = "italic",
+            keywords = "bold",
+            types = "italic,bold",
+            sidebars = transparent and "transparent" or "dark",
+            floats = transparent and "transparent" or "dark",
           },
         },
-        styles = {
-          comments = "italic", -- italic comments
-          keywords = "bold", -- italic keywords
-          types = "italic, bold",
-        },
       })
-
       vim.cmd("colorscheme github_dark")
     end,
   },
