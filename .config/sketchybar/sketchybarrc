@@ -42,9 +42,9 @@ default=(
 sketchybar --default "${default[@]}"
 
 ##### Left Side Items #####
-source $ITEM_DIR/spaces.sh    # Displays the current space
+#source $ITEM_DIR/spaces.sh    # Displays the current space
 source $ITEM_DIR/front_app.sh # Displays the current frontmost app
-#source $ITEM_DIR/aerospace.sh # Display aerospace
+source $ITEM_DIR/aerospace.sh # Display aerospace
 
 ##### Right Side of Notch Items #####
 source $ITEM_DIR/media.sh
