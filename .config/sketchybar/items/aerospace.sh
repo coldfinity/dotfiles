@@ -2,7 +2,7 @@
 
 sketchybar --add event aerospace_workspace_change
 
-letters=("1" "2" "3" "4" "5")
+letters=("1" "2" "3" "4" "5" "B" "C")
 
 for sid in "${letters[@]}"; do
   sketchybar --add item space.$sid left \

@@ -19,7 +19,10 @@ return {
         "markdown",
         "markdown_inline",
         "javascript",
+        "r",
+        "csv",
       })
+      opts.highlights = { enable = true }
     end,
   },
 }

@@ -7,6 +7,8 @@ source "$CONFIG_DIR/colors.sh" # Loads all defined colors
 # For a (much) more advanced configuration example see my dotfiles:
 # https://github.com/FelixKratz/dotfiles
 
+FONT_FACE="JetBrainsMono Nerd Font"
+
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 ITEM_DIR="$CONFIG_DIR/items"
 
@@ -17,7 +19,7 @@ ITEM_DIR="$CONFIG_DIR/items"
 # If you are looking for other colors, see the color picker:
 # https://felixkratz.github.io/SketchyBar/config/tricks#color-picker
 
-sketchybar --bar position=top height=40 blur_radius=30 color=$BAR_COLOR
+sketchybar --bar position=top height=40 margin=0 blur_radius=30 sticky=on notch_width=200 color=$BAR_COLOR
 
 ##### Changing Defaults #####
 # We now change some default values, which are applied to all further items.
@@ -48,6 +50,7 @@ source $ITEM_DIR/aerospace.sh # Display aerospace
 
 ##### Right Side of Notch Items #####
 source $ITEM_DIR/media.sh
+source $ITEM_DIR/spotify.sh
 
 ##### Right Side Items #####
 source $ITEM_DIR/calendar.sh # Displays the current time
