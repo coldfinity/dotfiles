@@ -1,6 +1,6 @@
 return {
-  "williamboman/mason.nvim",
-  "williamboman/mason-lspconfig.nvim",
+  "mason-org/mason.nvim",
+  "mason-org/mason-lspconfig.nvim",
   "neovim/nvim-lspconfig",
   ---@class PluginLspOpts
   opts = {
@@ -16,6 +16,7 @@ return {
       "stylua",
       "cmake",
       "markdown-oxide",
+      "r-langaugeserver",
     },
   },
 }
