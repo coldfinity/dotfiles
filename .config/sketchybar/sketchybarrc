@@ -49,8 +49,8 @@ source $ITEM_DIR/front_app.sh # Displays the current frontmost app
 source $ITEM_DIR/aerospace.sh # Display aerospace
 
 ##### Right Side of Notch Items #####
-source $ITEM_DIR/media.sh
-source $ITEM_DIR/spotify.sh
+#source $ITEM_DIR/media.sh
+#source $ITEM_DIR/spotify.sh
 
 ##### Right Side Items #####
 source $ITEM_DIR/calendar.sh # Displays the current time
