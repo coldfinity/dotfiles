@@ -17,6 +17,7 @@ return {
       "cmake",
       "markdown-oxide",
       "r-langaugeserver",
+      "copilot-language-server",
     },
   },
 }
