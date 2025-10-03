@@ -62,6 +62,14 @@ return {
         desc = "Sidekick Ask Prompt",
         mode = { "n", "v" },
       },
+      {
+        "<leader>as",
+        function()
+          require("sidekick.cli").toggle({ name = "copilot", focus = true })
+        end,
+        desc = "Sidekick Copilot Toggle",
+        mode = { "n", "v" },
+      },
     },
   },
 }
