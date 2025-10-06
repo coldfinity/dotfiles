@@ -11,6 +11,7 @@ return {
       "markdown-oxide",
       "r-langaugeserver",
       "copilot-language-server",
+      "black",
     },
   },
   dependencies = {
