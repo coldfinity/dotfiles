@@ -21,6 +21,8 @@ return {
         "javascript",
         "r",
         "csv",
+        "fish",
+        "yaml",
       })
       opts.highlights = { enable = true }
     end,

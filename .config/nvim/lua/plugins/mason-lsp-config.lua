@@ -1,16 +1,9 @@
 return {
-  "mason-org/mason.nvim",
   "mason-org/mason-lspconfig.nvim",
-  "neovim/nvim-lspconfig",
-  ---@class PluginLspOpts
   opts = {
-    ---@type lspconfig.options
-    servers = {
-      -- pyright will be automatically installed with mason and loaded with lspconfig
-      pyright = {},
-      clangd = {},
-    },
     ensure_installed = {
+      "lua_ls",
+      "rust_analyzer",
       "pyright",
       "clangd",
       "stylua",
@@ -19,5 +12,9 @@ return {
       "r-langaugeserver",
       "copilot-language-server",
     },
+  },
+  dependencies = {
+    { "mason-org/mason.nvim", opts = {} },
+    "neovim/nvim-lspconfig",
   },
 }
