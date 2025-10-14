@@ -35,4 +35,8 @@ config.window_padding = {
 }
 
 -- and finally, return the configuration to wezterm
+config.keys = {
+  {key="Enter", mods="SHIFT", action=wezterm.action{SendString="\x1b\r"}},
+}
+
 return config
