@@ -71,4 +71,13 @@ return {
     priority = 1000,
     opts = {},
   },
+  {
+    "alexkotusenko/nightgem.nvim",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      require("nightgem").setup()
+      vim.cmd("colorscheme nightgem")
+    end,
+  },
 }

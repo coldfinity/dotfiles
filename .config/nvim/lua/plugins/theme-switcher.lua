@@ -83,6 +83,10 @@ return {
           name = "GitHub Dark High Contrast",
           colorscheme = "github_dark_high_contrast",
         },
+        {
+          name = "Night Gem",
+          colorscheme = "nightgem",
+        },
       },
     })
   end,
