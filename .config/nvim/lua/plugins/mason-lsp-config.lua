@@ -8,7 +8,6 @@ return {
       "clangd",
       "stylua",
       "cmake",
-      "black",
     },
   },
   dependencies = {
