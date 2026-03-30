@@ -8,6 +8,8 @@ return {
       "clangd",
       "stylua",
       "cmake",
+      "html",
+      "cssls",
     },
   },
   dependencies = {
