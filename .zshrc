@@ -31,10 +31,6 @@ setopt hist_expire_dups_first
 setopt hist_ignore_dups
 setopt hist_verify
 
-# completion using arrow keys (based on history)
-bindkey '^[[A' history-search-backward
-bindkey '^[[B' history-search-forward
-
 # ---- Eza (better ls) -----
 alias ls="eza --icons=auto"
 alias ll="eza --icons=auto -l --group-directories-first"
