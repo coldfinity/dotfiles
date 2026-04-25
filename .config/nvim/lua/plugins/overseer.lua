@@ -55,6 +55,23 @@ return {
         end,
         condition = { filetype = { "r" } },
       })
+
+      -- R Markdown
+      overseer.register_template({
+        name = "Render R Markdown",
+        builder = function()
+          local file = vim.fn.expand("%:t") -- just filename, not full path
+          return {
+            cmd = { "Rscript" },
+            args = {
+              "-e",
+              "rmarkdown::render('" .. file .. "')",
+            },
+            components = { "default" },
+          }
+        end,
+        condition = { filetype = { "rmd" } },
+      })
     end,
   },
 }
