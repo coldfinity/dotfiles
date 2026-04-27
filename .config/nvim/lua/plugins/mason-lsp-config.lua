@@ -10,6 +10,7 @@ return {
       "cmake",
       "html",
       "cssls",
+      "ts_ls",
     },
   },
   dependencies = {
