@@ -7,8 +7,11 @@ local config = wezterm.config_builder()
 -- Set the color scheme
 -- config.color_scheme = "Catppuccin Mocha"
 -- config.color_scheme = "Github Dark"
-config.color_scheme = "Gruvbox Dark Hard"
+-- config.color_scheme = "GruvboxDark"
+-- config.color_scheme = "GruvboxDarkHard"
 -- config.color_scheme = "rose-pine"
+-- config.color_scheme = "Dracula"
+config.color_scheme = "Kanagawa (Gogh)"
 
 -- This is where you actually apply your config choices
 
