@@ -7,8 +7,8 @@ local config = wezterm.config_builder()
 -- Set the color scheme
 -- config.color_scheme = "Catppuccin Mocha"
 -- config.color_scheme = "Github Dark"
--- config.color_scheme = "Gruvbox Dark Hard"
-config.color_scheme = "rose-pine"
+config.color_scheme = "Gruvbox Dark Hard"
+-- config.color_scheme = "rose-pine"
 
 -- This is where you actually apply your config choices
 
@@ -36,7 +36,7 @@ config.window_padding = {
 
 -- and finally, return the configuration to wezterm
 config.keys = {
-  {key="Enter", mods="SHIFT", action=wezterm.action{SendString="\x1b\r"}},
+	{ key = "Enter", mods = "SHIFT", action = wezterm.action({ SendString = "\x1b\r" }) },
 }
 
 return config

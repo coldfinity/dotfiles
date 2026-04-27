@@ -33,7 +33,7 @@ setopt hist_verify
 
 # ---- Eza (better ls) -----
 alias ls="eza --icons=auto"
-alias ll="eza --icons=auto -l --group-directories-first"
+alias ll="eza -a --icons=auto -l --group-directories-first"
 
 # ---- Zoxide (better cd) ----
 eval "$(zoxide init zsh --cmd cd)"
