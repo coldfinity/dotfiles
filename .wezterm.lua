@@ -15,7 +15,7 @@ config.color_scheme = "Kanagawa (Gogh)"
 
 -- This is where you actually apply your config choices
 
-config.font = wezterm.font("JetBrainsMono Nerd Font")
+config.font = wezterm.font("Maple Mono")
 config.font_size = 16
 config.line_height = 1.3
 
@@ -24,7 +24,7 @@ config.use_fancy_tab_bar = false
 
 config.window_decorations = "RESIZE"
 
-config.window_background_opacity = 0.8
+config.window_background_opacity = 0.4
 config.macos_window_background_blur = 80
 
 config.initial_rows = 50
