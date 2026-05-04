@@ -18,3 +18,10 @@ vim.api.nvim_create_autocmd("ColorScheme", {
   end,
 })
 ]]
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "markdown", "rmarkdown" },
+  callback = function()
+    vim.opt_local.conceallevel = 0
+  end,
+})
