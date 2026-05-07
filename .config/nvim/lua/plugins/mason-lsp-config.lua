@@ -11,6 +11,7 @@ return {
       "html",
       "cssls",
       "ts_ls",
+      "tinymist",
     },
   },
   dependencies = {

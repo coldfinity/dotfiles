@@ -23,6 +23,7 @@ return {
         "csv",
         "fish",
         "yaml",
+        "typst",
       })
       opts.highlights = { enable = true }
     end,
