@@ -12,3 +12,4 @@
 # secrets & local overrides
 .env
 *.local
+.DS_Store
