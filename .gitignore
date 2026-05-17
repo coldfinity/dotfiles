@@ -7,7 +7,7 @@
 .config/spicetify/user.css
 
 # macOS
-.DS_Store
+**/.DS_Store
 
 # secrets & local overrides
 .env
