@@ -1,0 +1,46 @@
+-- ── core/options.lua ─────────────────────────────────────────
+local o = vim.opt
+
+-- appearance
+o.termguicolors = true
+o.number = true
+o.relativenumber = true
+o.cursorline = true
+o.signcolumn = "yes"
+o.scrolloff = 8
+o.wrap = false
+o.showmode = false
+
+-- indentation
+o.tabstop = 4
+o.shiftwidth = 4
+o.softtabstop = 4
+o.expandtab = true
+o.smartindent = true
+
+-- search
+o.ignorecase = true
+o.smartcase = true
+o.hlsearch = false
+
+-- splits
+o.splitbelow = true
+o.splitright = true
+
+-- files
+o.swapfile = false
+o.backup = false
+o.undofile = true
+o.undodir = vim.fn.stdpath("data") .. "/undo"
+
+-- misc
+o.updatetime = 200
+o.timeoutlen = 300
+o.clipboard = "unnamedplus"
+o.foldenable = false
+o.foldlevel = 99
+
+-- 0.12 native completion
+o.completeopt = "menu,menuone,noselect"
+o.pumborder = "rounded"
+o.pummaxwidth = 40
