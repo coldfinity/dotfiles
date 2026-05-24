@@ -8,7 +8,8 @@ o.relativenumber = true
 o.cursorline = true
 o.signcolumn = "yes"
 o.scrolloff = 8
-o.wrap = false
+o.wrap = true
+o.linebreak = true -- break at word boundaries, not mid-word
 o.showmode = false
 
 -- indentation
@@ -28,6 +29,7 @@ o.splitbelow = true
 o.splitright = true
 
 -- files
+o.autoread = true
 o.swapfile = false
 o.backup = false
 o.undofile = true

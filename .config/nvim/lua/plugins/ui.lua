@@ -12,6 +12,7 @@ if wk_ok then
 			{ "<leader>d", group = "debug" },
 			{ "<leader>x", group = "diagnostics" },
 			{ "<leader>p", group = "plugins & pdf" },
+			{ "<leader>a", group = "claude" },
 		},
 	})
 end

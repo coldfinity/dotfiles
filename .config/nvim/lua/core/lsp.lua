@@ -71,4 +71,3 @@ vim.lsp.config["r_language_server"] = {
 	root_markers = { ".git", "DESCRIPTION" },
 }
 vim.lsp.enable("r_language_server")
-

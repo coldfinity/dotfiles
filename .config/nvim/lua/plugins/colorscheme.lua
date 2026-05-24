@@ -1,18 +1,12 @@
-local ok, rosepine = pcall(require, "rose-pine")
+local ok, tenebris = pcall(require, "tenebris")
 if not ok then
 	return
 end
 
-rosepine.setup({
-	variant = "main", -- "main", "moon", or "dawn"
-	dark_variant = "main",
-	dim_inactive_windows = false,
-	extend_background_behind_borders = true,
-	styles = {
-		bold = true,
-		italic = true,
-		transparency = true,
-	},
+tenebris.setup({
+	transparent = true,
+	-- italic_comments = false,
+	-- bold_keywords   = false,
 })
 
-vim.cmd("colorscheme rose-pine")
+vim.cmd("colorscheme tenebris")

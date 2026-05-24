@@ -28,10 +28,17 @@ map("v", "K", ":m '<-2<cr>gv=gv")
 map("x", "<leader>p", '"_dP', "Paste without yanking")
 
 -- splits
+-- move in buffers
 map("n", "<C-h>", "<C-w>h")
 map("n", "<C-j>", "<C-w>j")
 map("n", "<C-k>", "<C-w>k")
 map("n", "<C-l>", "<C-w>l")
+-- move in claude code
+map("t", "<C-h>", "<C-\\><C-n><C-w>h")
+map("t", "<C-j>", "<C-\\><C-n><C-w>j")
+map("t", "<C-k>", "<C-\\><C-n><C-w>k")
+map("t", "<C-l>", "<C-\\><C-n><C-w>l")
+-- split buffers
 map("n", "<leader>sv", "<cmd>vsplit<cr>", "Split vertical")
 map("n", "<leader>sh", "<cmd>split<cr>", "Split horizontal")
 
@@ -53,8 +60,26 @@ map("n", "<leader>E", "<cmd>Neotree reveal<cr>", "Reveal in tree")
 -- lazygit
 map("n", "<leader>gg", "<cmd>LazyGit<cr>", "LazyGit")
 
+-- claude code
+map("n", "<leader>ac", "<cmd>ClaudeCode<cr>", "Toggle Claude")
+map("n", "<leader>af", "<cmd>ClaudeCodeFocus<cr>", "Focus Claude")
+map("n", "<leader>ar", "<cmd>ClaudeCode --resume<cr>", "Resume Claude")
+map("n", "<leader>aC", "<cmd>ClaudeCode --continue<cr>", "Continue Claude")
+map("n", "<leader>am", "<cmd>ClaudeCodeSelectModel<cr>", "Select model")
+map("n", "<leader>ab", "<cmd>ClaudeCodeAdd %<cr>", "Add buffer to Claude")
+map("v", "<leader>as", "<cmd>ClaudeCodeSend<cr>", "Send selection to Claude")
+map("n", "<leader>aa", "<cmd>ClaudeCodeDiffAccept<cr>", "Accept diff")
+map("n", "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", "Deny diff")
+
+-- diffview
+vim.keymap.set("n", "<leader>gd", "<cmd>DiffviewOpen<cr>", { desc = "Diff view" })
+vim.keymap.set("n", "<leader>gh", "<cmd>DiffviewFileHistory %<cr>", { desc = "File history" })
+vim.keymap.set("n", "<leader>gH", "<cmd>DiffviewFileHistory<cr>", { desc = "Repo history" })
+vim.keymap.set("n", "<leader>gx", "<cmd>DiffviewClose<cr>", { desc = "Close diffview" })
+
 -- plugin manager
 map("n", "<leader>pu", "<cmd>lua vim.pack.update()<cr>", "Update plugins")
+map("n", "<leader>pr", "<cmd>restart<cr>", "Restart Neovim")
 
 -- open PDF in zathura
 map("n", "<leader>pz", function()
@@ -67,9 +92,20 @@ map("n", "<leader>pz", function()
 end, "Open PDF in Zathura")
 
 -- diagnostics
-map("n", "[d", vim.diagnostic.goto_prev, "Prev diagnostic")
-map("n", "]d", vim.diagnostic.goto_next, "Next diagnostic")
+vim.keymap.set("n", "[d", function()
+	vim.diagnostic.jump({ count = -1 })
+end)
+vim.keymap.set("n", "]d", function()
+	vim.diagnostic.jump({ count = 1 })
+end)
 map("n", "<leader>cd", vim.diagnostic.open_float, "Line diagnostics")
+vim.keymap.set("n", "<leader>cy", function()
+	local diagnostics = vim.diagnostic.get(0, { lnum = vim.fn.line(".") - 1 })
+	if #diagnostics > 0 then
+		vim.fn.setreg("+", diagnostics[1].message)
+		print("Copied: " .. diagnostics[1].message)
+	end
+end, { desc = "Copy diagnostic on line" })
 
 -- NOTE: LSP keymaps (gra, grn, grr, gri, grt, gO, K) are built-in in 0.12
 -- Override only what you want to change:

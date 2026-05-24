@@ -52,6 +52,16 @@ autocmd("FileType", {
 	end,
 })
 
+-- reload files changed outside nvim
+autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
+	group = augroup("autoread", { clear = true }),
+	callback = function()
+		if vim.fn.mode() ~= "c" then
+			vim.cmd("checktime")
+		end
+	end,
+})
+
 -- close certain windows with q
 autocmd("FileType", {
 	group = augroup("close_with_q", { clear = true }),

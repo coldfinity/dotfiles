@@ -15,6 +15,11 @@ mason.setup({
 		"clangd",
 		"tinymist",
 		"r-languageserver",
+		"marksman",
+		"html-lsp",
+		"css-lsp",
+		"marksman",
+		"typescript-language-server",
 		-- Debug adapters
 		"debugpy",
 		"codelldb",

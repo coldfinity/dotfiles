@@ -5,10 +5,14 @@
 
 vim.pack.add({
 	-- colorscheme
-	"https://github.com/rose-pine/neovim",
+	"https://github.com/coldfinity/tenebris.nvim",
 
 	-- treesitter (better syntax highlighting)
 	"https://github.com/nvim-treesitter/nvim-treesitter",
+
+	-- claude code
+	"https://github.com/folke/snacks.nvim",
+	"https://github.com/coder/claudecode.nvim",
 
 	-- fuzzy finder
 	"https://github.com/nvim-telescope/telescope.nvim",
@@ -78,6 +82,7 @@ vim.pack.add({
 })
 
 -- mason must load before lsp so its bin dir is on PATH
+require("plugins.claudecode")
 require("plugins.mason")
 
 -- core
