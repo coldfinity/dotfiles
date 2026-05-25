@@ -1,8 +1,10 @@
 local ok, noice = pcall(require, "noice")
-if not ok then return end
+if not ok then
+	return
+end
 
 noice.setup({
-	cmdline = { enabled = false },
+	cmdline = { view = "cmdline" },
 	lsp = {
 		override = {
 			["vim.lsp.util.convert_input_to_markdown_lines"] = true,

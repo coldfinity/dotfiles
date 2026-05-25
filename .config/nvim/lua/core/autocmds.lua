@@ -41,17 +41,6 @@ autocmd("VimResized", {
 	end,
 })
 
--- 2-space indent for lua and typst
-autocmd("FileType", {
-	group = augroup("filetype_indent", { clear = true }),
-	pattern = { "lua", "typst" },
-	callback = function()
-		vim.opt_local.tabstop = 2
-		vim.opt_local.shiftwidth = 2
-		vim.opt_local.softtabstop = 2
-	end,
-})
-
 -- reload files changed outside nvim
 autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
 	group = augroup("autoread", { clear = true }),

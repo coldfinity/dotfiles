@@ -17,8 +17,6 @@ config.color_scheme = "Kanagawa (Gogh)"
 
 -- config.font = wezterm.font("Maple Mono")
 config.font = wezterm.font("JetBrainsMono Nerd Font")
--- config.font = wezterm.font("FantasqueSansM Nerd Font")
--- config.font = wezterm.font("Terminess Nerd Font")
 
 config.font_size = 18
 config.line_height = 1.5
@@ -39,11 +37,6 @@ config.window_padding = {
 	right = 10,
 	top = 10,
 	bottom = 10,
-}
-
--- and finally, return the configuration to wezterm
-config.keys = {
-	{ key = "Enter", mods = "SHIFT", action = wezterm.action({ SendString = "\x1b\r" }) },
 }
 
 return config

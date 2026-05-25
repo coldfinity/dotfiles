@@ -9,11 +9,6 @@ end
 -- escape
 map("i", "jk", "<esc>")
 
--- save / quit
-map("n", "<leader>w", "<cmd>w<cr>", "Save")
-map("n", "<leader>q", "<cmd>q<cr>", "Quit")
-map("n", "<leader>Q", "<cmd>qa!<cr>", "Quit all")
-
 -- center on scroll
 map("n", "<C-d>", "<C-d>zz")
 map("n", "<C-u>", "<C-u>zz")
@@ -53,6 +48,40 @@ map("n", "<leader>fg", "<cmd>Telescope live_grep<cr>", "Live grep")
 map("n", "<leader>fb", "<cmd>Telescope buffers<cr>", "Buffers")
 map("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", "Recent files")
 
+-- search & replace
+map("n", "<leader>sr", function()
+	require("grug-far").open()
+end, "Search & replace (project)")
+map("v", "<leader>sr", function()
+	require("grug-far").open({ prefills = { search = vim.fn.expand("<cword>") } })
+end, "Search & replace (word)")
+map("n", "<leader>sf", function()
+	require("grug-far").open({ paths = vim.fn.expand("%") })
+end, "Search & replace (current file)")
+
+-- undo tree
+map("n", "<leader>u", "<cmd>UndotreeToggle<cr>", "Toggle undo tree")
+
+-- harpoon
+map("n", "<leader>ha", function()
+	require("harpoon.mark").add_file()
+end, "Harpoon add file")
+map("n", "<leader>hh", function()
+	require("harpoon.ui").toggle_quick_menu()
+end, "Harpoon menu")
+map("n", "<leader>h1", function()
+	require("harpoon.ui").nav_file(1)
+end, "Harpoon file 1")
+map("n", "<leader>h2", function()
+	require("harpoon.ui").nav_file(2)
+end, "Harpoon file 2")
+map("n", "<leader>h3", function()
+	require("harpoon.ui").nav_file(3)
+end, "Harpoon file 3")
+map("n", "<leader>h4", function()
+	require("harpoon.ui").nav_file(4)
+end, "Harpoon file 4")
+
 -- file tree
 map("n", "<leader>e", "<cmd>Neotree toggle<cr>", "Toggle file tree")
 map("n", "<leader>E", "<cmd>Neotree reveal<cr>", "Reveal in tree")
@@ -76,6 +105,22 @@ vim.keymap.set("n", "<leader>gd", "<cmd>DiffviewOpen<cr>", { desc = "Diff view" 
 vim.keymap.set("n", "<leader>gh", "<cmd>DiffviewFileHistory %<cr>", { desc = "File history" })
 vim.keymap.set("n", "<leader>gH", "<cmd>DiffviewFileHistory<cr>", { desc = "Repo history" })
 vim.keymap.set("n", "<leader>gx", "<cmd>DiffviewClose<cr>", { desc = "Close diffview" })
+
+-- waypoint
+map("n", "<leader>td", function()
+	require("waypoint").open()
+end, "Todo list")
+
+-- neogen (docstrings)
+map("n", "<leader>nf", function()
+	require("neogen").generate({ type = "func" })
+end, "Neogen function docstring")
+map("n", "<leader>nc", function()
+	require("neogen").generate({ type = "class" })
+end, "Neogen class docstring")
+map("n", "<leader>nt", function()
+	require("neogen").generate({ type = "type" })
+end, "Neogen type docstring")
 
 -- plugin manager
 map("n", "<leader>pu", "<cmd>lua vim.pack.update()<cr>", "Update plugins")

@@ -4,15 +4,25 @@
 -- ─────────────────────────────────────────────────────────────
 
 vim.pack.add({
-	-- colorscheme
+	-- colorschemes
 	"https://github.com/coldfinity/tenebris.nvim",
+	"https://github.com/oskarnurm/koda.nvim",
+	"https://github.com/rose-pine/neovim",
 
 	-- treesitter (better syntax highlighting)
 	"https://github.com/nvim-treesitter/nvim-treesitter",
 
+	-- waypoint todos
+	"https://github.com/coldfinity/waypoint.nvim",
+
 	-- claude code
-	"https://github.com/folke/snacks.nvim",
 	"https://github.com/coder/claudecode.nvim",
+
+	-- auto close html/jsx tags
+	"https://github.com/windwp/nvim-ts-autotag",
+
+	-- harpoon
+	"https://github.com/ThePrimeagen/harpoon",
 
 	-- fuzzy finder
 	"https://github.com/nvim-telescope/telescope.nvim",
@@ -38,6 +48,9 @@ vim.pack.add({
 	-- navigation
 	"https://github.com/folke/flash.nvim",
 
+	-- undo history
+	"https://github.com/mbbill/undotree",
+
 	-- diagnostics & quickfix
 	"https://github.com/folke/trouble.nvim",
 
@@ -59,30 +72,31 @@ vim.pack.add({
 	-- ui
 	"https://github.com/folke/which-key.nvim",
 	"https://github.com/lukas-reineke/indent-blankline.nvim",
-	"https://github.com/MeanderingProgrammer/render-markdown.nvim",
-	-- "https://github.com/rcarriga/nvim-notify",
-	-- "https://github.com/folke/noice.nvim",
+	"https://github.com/OXY2DEV/markview.nvim",
+	"https://github.com/nvimdev/dashboard-nvim",
+	"https://github.com/rcarriga/nvim-notify",
+	"https://github.com/folke/noice.nvim",
 
 	-- formatting
 	"https://github.com/stevearc/conform.nvim",
+
+	-- docstring/annotation generation
+	"https://github.com/danymat/neogen",
 
 	-- smear cursor
 	"https://github.com/sphamba/smear-cursor.nvim",
 
 	-- completions
-	"https://github.com/hrsh7th/nvim-cmp",
-	"https://github.com/hrsh7th/cmp-nvim-lsp",
-	"https://github.com/hrsh7th/cmp-buffer",
-	"https://github.com/hrsh7th/cmp-path",
-	"https://github.com/hrsh7th/cmp-cmdline",
+	"https://github.com/saghen/blink.lib",
+	"https://github.com/Saghen/blink.cmp",
 	"https://github.com/L3MON4D3/LuaSnip",
-	"https://github.com/saadparwaiz1/cmp_luasnip",
 	"https://github.com/rafamadriz/friendly-snippets",
-	"https://github.com/onsails/lspkind.nvim",
 })
 
 -- mason must load before lsp so its bin dir is on PATH
 require("plugins.claudecode")
+require("plugins.waypoint")
+require("plugins.autotag")
 require("plugins.mason")
 
 -- core
@@ -100,8 +114,12 @@ require("plugins.toggleterm")
 require("plugins.grug-far")
 require("plugins.ui")
 require("plugins.format")
+require("plugins.neogen")
 require("plugins.smear-cursor")
 require("plugins.completion")
 require("plugins.dap")
-require("plugins.render-markdown")
--- require("plugins.noice")
+require("plugins.markview")
+require("plugins.notify")
+require("plugins.dashboard")
+require("plugins.harpoon")
+require("plugins.noice")

@@ -3,11 +3,15 @@
 -- Servers are installed via mason (:Mason).
 -- ─────────────────────────────────────────────────────────────
 
+vim.lsp.config("*", {
+	capabilities = require("blink.cmp").get_lsp_capabilities(),
+})
+
 -- diagnostics
 vim.diagnostic.config({
 	severity_sort = true,
 	virtual_text = { prefix = "●" },
-	float = { border = "rounded", source = "always" },
+	float = { border = "rounded", source = true },
 	signs = {
 		text = {
 			[vim.diagnostic.severity.ERROR] = " ",
@@ -38,7 +42,7 @@ vim.lsp.enable("lua_ls")
 vim.lsp.config["pyright"] = {
 	cmd = { "pyright-langserver", "--stdio" },
 	filetypes = { "python" },
-	root_markers = { "pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", ".git" },
+	root_markers = { "pyrightconfig.json", "pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", ".git" },
 	settings = {
 		python = {
 			analysis = { typeCheckingMode = "basic", autoSearchPaths = true },
@@ -63,6 +67,49 @@ vim.lsp.config["tinymist"] = {
 	settings = { exportPdf = "onSave", formatterMode = "typstyle" },
 }
 vim.lsp.enable("tinymist")
+
+-- ── TypeScript / JavaScript ──────────────────────────────────
+vim.lsp.config["ts_ls"] = {
+	cmd = { "typescript-language-server", "--stdio" },
+	filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
+	root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" },
+}
+vim.lsp.enable("ts_ls")
+
+-- ── HTML ─────────────────────────────────────────────────────
+vim.lsp.config["html"] = {
+	cmd = { "html-lsp", "--stdio" },
+	filetypes = { "html" },
+	root_markers = { "package.json", ".git" },
+}
+vim.lsp.enable("html")
+
+-- ── CSS ──────────────────────────────────────────────────────
+vim.lsp.config["cssls"] = {
+	cmd = { "css-lsp", "--stdio" },
+	filetypes = { "css", "scss", "less" },
+	root_markers = { "package.json", ".git" },
+}
+vim.lsp.enable("cssls")
+
+-- ── Tailwind CSS ─────────────────────────────────────────────
+vim.lsp.config["tailwindcss"] = {
+	cmd = { "tailwindcss-language-server", "--stdio" },
+	filetypes = { "html", "css", "scss", "javascript", "javascriptreact", "typescript", "typescriptreact" },
+	root_markers = { "tailwind.config.js", "tailwind.config.ts", "postcss.config.js", "package.json", ".git" },
+}
+vim.lsp.enable("tailwindcss")
+
+-- ── LTeX (LaTeX/grammar in markdown) ─────────────────────────
+vim.lsp.config["ltex"] = {
+	cmd = { "ltex-ls" },
+	filetypes = { "markdown", "tex", "typst" },
+	root_markers = { ".git" },
+	settings = {
+		ltex = { language = "en-US" },
+	},
+}
+vim.lsp.enable("ltex")
 
 -- R
 vim.lsp.config["r_language_server"] = {

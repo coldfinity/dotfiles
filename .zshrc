@@ -1,3 +1,17 @@
+printf '\n  \033[1m  Commands\033[0m\n'
+printf '  %-12s %s\n' \
+  'v'         'nvim' \
+  'lg'        'lazygit' \
+  'claude'    'claude code' \
+  'opencode'  'opencode' \
+  'z'         'jump dir (zoxide)' \
+  'mole'      'ssh tunnel' \
+  'btop'      'system monitor' \
+  'C-f'       'tmux sessionizer' \
+  'll'        'ls -la with icons' \
+  'zshconfig' 'edit this file'
+echo
+
 #fastfetch
 
 # P10k instant prompt
@@ -11,6 +25,9 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 plugins=(git zsh-syntax-highlighting zsh-autosuggestions web-search z)
 source $ZSH/oh-my-zsh.sh
 
+# Export local/bin to path
+export PATH="$HOME/.local/bin:$PATH"
+
 # Zoxide
 eval "$(zoxide init zsh --cmd cd)"
 
@@ -23,7 +40,6 @@ alias ls="eza --icons=auto"
 alias ll="eza -a --icons=auto -l --group-directories-first"
 alias lg="lazygit"
 alias zshconfig="nvim ~/.zshrc"
-alias cc="claude"
 
 # History setup
 HISTFILE=$HOME/.zhistory

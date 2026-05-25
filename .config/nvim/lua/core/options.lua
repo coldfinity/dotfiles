@@ -11,6 +11,7 @@ o.scrolloff = 8
 o.wrap = true
 o.linebreak = true -- break at word boundaries, not mid-word
 o.showmode = false
+-- o.guicursor = "n-v-c:block,i-ci-ve:block,r-cr-o:block"
 
 -- indentation
 o.tabstop = 4
@@ -42,7 +43,4 @@ o.clipboard = "unnamedplus"
 o.foldenable = false
 o.foldlevel = 99
 
--- 0.12 native completion
 o.completeopt = "menu,menuone,noselect"
-o.pumborder = "rounded"
-o.pummaxwidth = 40

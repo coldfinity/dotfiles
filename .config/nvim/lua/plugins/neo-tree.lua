@@ -5,7 +5,10 @@ end
 
 neotree.setup({
 	close_if_last_window = true,
-	window = { position = "current", width = 30 },
+	-- set width = 30
+	--window = { position = "current"},
+	window = { position = "float" },
+	--window = { position = "left" },
 	filesystem = {
 		filtered_items = { hide_dotfiles = false, hide_gitignored = true },
 		follow_current_file = { enabled = true },
