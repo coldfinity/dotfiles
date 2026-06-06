@@ -15,13 +15,11 @@ local ensure_installed = {
 	"clangd",
 	"tinymist",
 	"r-languageserver",
-	"marksman",
 	"html-lsp",
 	"css-lsp",
 	"typescript-language-server",
 	"tailwindcss-language-server",
-	"eslint-lsp",
-    "ltex-ls",
+	"ltex-ls",
 	-- Debug adapters
 	"debugpy",
 	"codelldb",
@@ -37,8 +35,8 @@ local ensure_installed = {
 local registry = require("mason-registry")
 registry.refresh(function()
 	for _, name in ipairs(ensure_installed) do
-		local ok, pkg = pcall(registry.get_package, name)
-		if ok and not pkg:is_installed() then
+		local pkg_ok, pkg = pcall(registry.get_package, name)
+		if pkg_ok and not pkg:is_installed() then
 			pkg:install()
 		end
 	end

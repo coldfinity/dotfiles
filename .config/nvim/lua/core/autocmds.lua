@@ -51,6 +51,27 @@ autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
 	end,
 })
 
+-- 2-space indent for web languages
+autocmd("FileType", {
+	group = augroup("web_indent", { clear = true }),
+	pattern = {
+		"javascript",
+		"javascriptreact",
+		"typescript",
+		"typescriptreact",
+		"html",
+		"css",
+		"scss",
+		"json",
+		"yaml",
+	},
+	callback = function()
+		vim.bo.tabstop = 2
+		vim.bo.shiftwidth = 2
+		vim.bo.softtabstop = 2
+	end,
+})
+
 -- close certain windows with q
 autocmd("FileType", {
 	group = augroup("close_with_q", { clear = true }),

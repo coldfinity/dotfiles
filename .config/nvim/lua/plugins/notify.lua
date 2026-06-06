@@ -4,5 +4,5 @@ if not ok then
 end
 
 notify.setup({
-	background_colour = "NotifyBackground",
+	background_colour = "#000000",
 })

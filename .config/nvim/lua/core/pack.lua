@@ -93,33 +93,11 @@ vim.pack.add({
 	"https://github.com/rafamadriz/friendly-snippets",
 })
 
--- mason must load before lsp so its bin dir is on PATH
-require("plugins.claudecode")
-require("plugins.waypoint")
-require("plugins.autotag")
-require("plugins.mason")
-
--- core
-require("plugins.colorscheme")
-require("plugins.treesitter")
-require("plugins.telescope")
-require("plugins.neo-tree")
-require("plugins.git")
-require("plugins.diffview")
-require("plugins.lualine")
-require("plugins.editing")
-require("plugins.flash")
-require("plugins.trouble")
-require("plugins.toggleterm")
-require("plugins.grug-far")
-require("plugins.ui")
-require("plugins.format")
-require("plugins.neogen")
-require("plugins.smear-cursor")
-require("plugins.completion")
-require("plugins.dap")
-require("plugins.markview")
-require("plugins.notify")
-require("plugins.dashboard")
-require("plugins.harpoon")
-require("plugins.noice")
+-- Load all plugin config files alphabetically.
+-- mason.lua prepends its bin dir to PATH instantly (line 1), so
+-- PATH is available before core/lsp.lua runs, regardless of order.
+for name, type in vim.fs.dir(vim.fn.stdpath("config") .. "/lua/plugins") do
+	if type == "file" and name:match("%.lua$") then
+		require("plugins." .. name:gsub("%.lua$", ""))
+	end
+end

@@ -15,6 +15,10 @@ map("n", "<C-u>", "<C-u>zz")
 map("n", "n", "nzzzv")
 map("n", "N", "Nzzzv")
 
+-- flash navigation
+vim.keymap.set({ "n", "x", "o" }, "s", function() require("flash").jump() end, { silent = true, desc = "Flash jump" })
+vim.keymap.set({ "n", "x", "o" }, "S", function() require("flash").treesitter() end, { silent = true, desc = "Flash treesitter" })
+
 -- move lines in visual
 map("v", "J", ":m '>+1<cr>gv=gv")
 map("v", "K", ":m '<-2<cr>gv=gv")
@@ -36,6 +40,10 @@ map("t", "<C-l>", "<C-\\><C-n><C-w>l")
 -- split buffers
 map("n", "<leader>sv", "<cmd>vsplit<cr>", "Split vertical")
 map("n", "<leader>sh", "<cmd>split<cr>", "Split horizontal")
+
+-- terminal
+map("n", "<C-\\>", "<cmd>ToggleTerm<cr>", "Toggle terminal")
+map("t", "<C-\\>", "<cmd>ToggleTerm<cr>", "Toggle terminal")
 
 -- buffers
 map("n", "<S-l>", "<cmd>bnext<cr>", "Next buffer")
@@ -88,6 +96,14 @@ map("n", "<leader>E", "<cmd>Neotree reveal<cr>", "Reveal in tree")
 
 -- lazygit
 map("n", "<leader>gg", "<cmd>LazyGit<cr>", "LazyGit")
+
+-- gitsigns hunks
+map("n", "]h", function() require("gitsigns").nav_hunk("next") end, "Next hunk")
+map("n", "[h", function() require("gitsigns").nav_hunk("prev") end, "Prev hunk")
+map("n", "<leader>hs", function() require("gitsigns").stage_hunk() end, "Stage hunk")
+map("n", "<leader>hr", function() require("gitsigns").reset_hunk() end, "Reset hunk")
+map("n", "<leader>hp", function() require("gitsigns").preview_hunk() end, "Preview hunk")
+map("n", "<leader>hb", function() require("gitsigns").blame_line({ full = true }) end, "Blame line")
 
 -- claude code
 map("n", "<leader>ac", "<cmd>ClaudeCode<cr>", "Toggle Claude")
@@ -151,6 +167,25 @@ vim.keymap.set("n", "<leader>cy", function()
 		print("Copied: " .. diagnostics[1].message)
 	end
 end, { desc = "Copy diagnostic on line" })
+
+-- trouble (diagnostics & lists)
+map("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", "Diagnostics (project)")
+map("n", "<leader>xd", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", "Diagnostics (buffer)")
+map("n", "<leader>xl", "<cmd>Trouble loclist toggle<cr>", "Location list")
+map("n", "<leader>xq", "<cmd>Trouble qflist toggle<cr>", "Quickfix list")
+
+-- debugging
+map("n", "<leader>db", function() require("dap").toggle_breakpoint() end, "Toggle breakpoint")
+map("n", "<leader>dB", function() require("dap").set_breakpoint(vim.fn.input("Condition: ")) end, "Conditional breakpoint")
+map("n", "<leader>dc", function() require("dap").continue() end, "Continue / start")
+map("n", "<leader>dn", function() require("dap").step_over() end, "Step over")
+map("n", "<leader>di", function() require("dap").step_into() end, "Step into")
+map("n", "<leader>do", function() require("dap").step_out() end, "Step out")
+map("n", "<leader>dr", function() require("dap").repl.open() end, "Open REPL")
+map("n", "<leader>du", function()
+  local ok_ui, dapui = pcall(require, "dapui")
+  if ok_ui then dapui.toggle() end
+end, "Toggle DAP UI")
 
 -- NOTE: LSP keymaps (gra, grn, grr, gri, grt, gO, K) are built-in in 0.12
 -- Override only what you want to change:

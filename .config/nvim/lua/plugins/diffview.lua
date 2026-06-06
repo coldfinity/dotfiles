@@ -1,6 +1,3 @@
-local ok, diffview = pcall(require, "diffview")
-if not ok then
-	return
-end
-
-diffview.setup()
+local ok, mod = pcall(require, "diffview")
+if not ok then return end
+mod.setup()

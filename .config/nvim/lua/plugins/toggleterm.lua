@@ -4,7 +4,6 @@ if not ok then
 end
 
 toggleterm.setup({
-	open_mapping = [[<C-\>]],
 	direction = "float",
 	float_opts = { border = "rounded" },
 })

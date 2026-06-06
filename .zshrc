@@ -19,14 +19,14 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+# Export local/bin to path
+export PATH="$HOME/bin:$PATH"
+
 # Oh My Zsh
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="powerlevel10k/powerlevel10k"
 plugins=(git zsh-syntax-highlighting zsh-autosuggestions web-search z)
 source $ZSH/oh-my-zsh.sh
-
-# Export local/bin to path
-export PATH="$HOME/.local/bin:$PATH"
 
 # Zoxide
 eval "$(zoxide init zsh --cmd cd)"

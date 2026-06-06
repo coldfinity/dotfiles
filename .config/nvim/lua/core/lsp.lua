@@ -3,8 +3,9 @@
 -- Servers are installed via mason (:Mason).
 -- ─────────────────────────────────────────────────────────────
 
+local blink_ok, blink = pcall(require, "blink.cmp")
 vim.lsp.config("*", {
-	capabilities = require("blink.cmp").get_lsp_capabilities(),
+	capabilities = blink_ok and blink.get_lsp_capabilities() or vim.lsp.protocol.make_client_capabilities(),
 })
 
 -- diagnostics
