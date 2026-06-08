@@ -28,6 +28,6 @@ if rose_ok then
 	})
 end
 
---vim.cmd("colorscheme tenebris")
+vim.cmd("colorscheme tenebris")
 --vim.cmd("colorscheme koda")
-vim.cmd("colorscheme rose-pine")
+--vim.cmd("colorscheme rose-pine")

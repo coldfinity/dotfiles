@@ -20,6 +20,7 @@ if wk_ok then
 	})
 end
 
+--[[
 local ibl_ok, ibl = pcall(require, "ibl")
 if ibl_ok then
 	local highlight = {
@@ -49,3 +50,4 @@ if ibl_ok then
 		exclude = { filetypes = { "help", "neo-tree", "dashboard" } },
 	})
 end
+]]

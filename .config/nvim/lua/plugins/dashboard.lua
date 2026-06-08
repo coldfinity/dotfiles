@@ -16,13 +16,13 @@ db.setup({
 		},
 		packages = { enable = true },
 		project = {
-			enable = true,
+			enable = false,
 			limit = 8,
 			icon = " ",
 			label = " Recent projects:",
 			action = "Telescope find_files cwd=",
 		},
-		mru = { enable = true, limit = 10, icon = " ", label = " Recent files:", cwd_only = true },
+		mru = { enable = true, limit = 15, icon = " ", label = " Recent files:", cwd_only = true },
 		footer = {},
 	},
 })
