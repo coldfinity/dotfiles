@@ -8,42 +8,75 @@ PLUGIN_DIR="$CONFIG_DIR/plugins"
 ITEM_DIR="$CONFIG_DIR/items"
 
 ##### Bar Appearance #####
-sketchybar --bar position=top height=40 margin=0 blur_radius=30 sticky=on color=$BAR_COLOR
+# Transparent bar + y_offset/margin -> the pills read as floating glass islands.
+sketchybar --bar position=top height=36 margin=10 y_offset=6 blur_radius=0 sticky=on color=$BAR_COLOR
 
 ##### Defaults #####
 default=(
-  padding_left=4
-  padding_right=4
-  icon.font="$FONT_FACE:SemiBold:14.0"
-  label.font="$FONT_FACE:SemiBold:14.0"
-  icon.color=$WHITE
+  padding_left=6
+  padding_right=6
+  icon.font="$FONT_FACE:SemiBold:13.0"
+  label.font="$FONT_FACE:SemiBold:13.0"
+  icon.color=$GREY
   label.color=$WHITE
   background.drawing=off
   background.corner_radius=0
-  background.height=24
-  icon.padding_left=6
-  icon.padding_right=3
-  label.padding_left=3
-  label.padding_right=6
+  background.height=28
+  icon.padding_left=8
+  icon.padding_right=4
+  label.padding_left=4
+  label.padding_right=8
 )
 sketchybar --default "${default[@]}"
 
-##### Left Side Items #####
+##### Frosted glass island style (reused by every bracket) #####
+glass=(
+  background.color=$GLASS_BG
+  background.corner_radius=0
+  background.height=28
+)
+
+##### Left Side #####
 source $ITEM_DIR/aerospace.sh
+
+sketchybar --add bracket workspace_pill space.1 space.2 space.3 space.4 space.5 \
+  --set workspace_pill "${glass[@]}"
+
+sketchybar --add item spacer_app left --set spacer_app width=12
+
 source $ITEM_DIR/front_app.sh
 
-##### Right Side Items #####
-source $ITEM_DIR/gpu.sh
-source $ITEM_DIR/ram.sh
+sketchybar --add bracket front_app_pill front_app \
+  --set front_app_pill "${glass[@]}" padding_left=6 padding_right=6
+
+##### Right Side #####
 source $ITEM_DIR/cpu.sh
+source $ITEM_DIR/ram.sh
+source $ITEM_DIR/gpu.sh
+
+sketchybar --add bracket system_pill cpu ram gpu \
+  --set system_pill "${glass[@]}" padding_left=6 padding_right=6
+
+sketchybar --add item spacer_sys right --set spacer_sys width=12
+
 source $ITEM_DIR/volume.sh
+
+sketchybar --add bracket volume_pill volume \
+  --set volume_pill "${glass[@]}" padding_left=6 padding_right=6
+
+sketchybar --add item spacer_vol right --set spacer_vol width=12
+
 source $ITEM_DIR/battery.sh
 
-sketchybar --add bracket right_group gpu ram cpu volume battery \
-  --set right_group background.color=$ITEM_BG_COLOR background.height=24 background.corner_radius=6 \
-  background.padding_left=4 background.padding_right=4
+sketchybar --add bracket battery_pill battery \
+  --set battery_pill "${glass[@]}" padding_left=6 padding_right=6
+
+sketchybar --add item spacer_bat right --set spacer_bat width=12
 
 source $ITEM_DIR/calendar.sh
+
+sketchybar --add bracket clock_pill calendar \
+  --set clock_pill "${glass[@]}" padding_left=6 padding_right=6
 
 ##### Force all scripts to run the first time #####
 sketchybar --update

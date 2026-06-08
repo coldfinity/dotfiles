@@ -6,5 +6,7 @@
 # https://felixkratz.github.io/SketchyBar/config/events#events-and-scripting
 
 if [ "$SENDER" = "front_app_switched" ]; then
-  sketchybar --set "$NAME" label="$INFO" icon="$($CONFIG_DIR/plugins/icon_map_fn.sh "$INFO")"
+  icon="$($CONFIG_DIR/plugins/icon_map_fn.sh "$INFO")"
+  icon="${icon% }" # official map appends a trailing space
+  sketchybar --set "$NAME" label="$INFO" icon="$icon"
 fi
