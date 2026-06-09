@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+# gclone - quickly clone a GitHub repo
+# Usage: gclone [user] <repo> [destination] [-https]
+
+set -eo pipefail
+
+usage() {
+  echo "Usage: gclone [user] <repo> [destination] [-https]"
+  echo "  user         GitHub username or org (default: coldfinity)"
+  echo "  repo         repository name"
+  echo "  destination  directory to clone into (default: ~/Documents/projects/<repo>)"
+  echo "  -https       use HTTPS instead of SSH"
+}
+
+use_https=false
+positionals=()
+
+for arg in "$@"; do
+  case "$arg" in
+    -https) use_https=true ;;
+    *)      positionals+=("$arg") ;;
+  esac
+done
+
+case ${#positionals[@]} in
+  0)
+    usage
+    echo
+    printf 'user [coldfinity]: ' && read -r user
+    user="${user:-coldfinity}"
+    printf 'repo: ' && read -r repo
+    printf 'destination [%s/Documents/projects/%s]: ' "$HOME" "${repo:-<repo>}"
+    read -r dest
+    ;;
+  1)
+    user="coldfinity"
+    repo="${positionals[0]}"
+    dest=""
+    ;;
+  *)
+    user="${positionals[0]}"
+    repo="${positionals[1]}"
+    dest="${positionals[2]:-}"
+    ;;
+esac
+
+[[ -n "${user:-}" && -n "${repo:-}" ]] || { echo "Error: user and repo are required" >&2; exit 1; }
+dest="${dest:-$HOME/Documents/projects/$repo}"
+
+if $use_https; then
+  url="https://github.com/${user}/${repo}.git"
+else
+  url="git@github.com:${user}/${repo}.git"
+fi
+
+echo "Cloning ${user}/${repo} → ${dest}…"
+git clone "$url" "$dest"

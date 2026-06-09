@@ -11,6 +11,6 @@
 
 # secrets & local overrides
 .env
-*.local
+#*.local
 .DS_Store
 .config/spicetify

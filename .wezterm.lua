@@ -9,9 +9,9 @@ local config = wezterm.config_builder()
 -- config.color_scheme = "Github Dark"
 -- config.color_scheme = "GruvboxDark"
 -- config.color_scheme = "GruvboxDarkHard"
--- config.color_scheme = "rose-pine"
+config.color_scheme = "rose-pine"
 -- config.color_scheme = "Dracula"
-config.color_scheme = "Kanagawa (Gogh)"
+--config.color_scheme = "Kanagawa (Gogh)"
 
 -- This is where you actually apply your config choices
 

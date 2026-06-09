@@ -9,7 +9,8 @@ printf '  %-12s %s\n' \
   'btop'      'system monitor' \
   'C-f'       'tmux sessionizer' \
   'll'        'ls -la with icons' \
-  'zshconfig' 'edit this file'
+  'zshconfig' 'edit this file' \
+  'gclone'    'git clone script'
 echo
 
 #fastfetch
@@ -19,7 +20,7 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# Export local/bin to path
+# Export local/bin to path for custom scripts
 export PATH="$HOME/bin:$PATH"
 
 # Oh My Zsh
@@ -40,6 +41,7 @@ alias ls="eza --icons=auto"
 alias ll="eza -a --icons=auto -l --group-directories-first"
 alias lg="lazygit"
 alias zshconfig="nvim ~/.zshrc"
+alias Preview="open -a Preview"
 
 # History setup
 HISTFILE=$HOME/.zhistory
@@ -52,3 +54,11 @@ setopt hist_verify
 
 # P10k config
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# pnpm
+export PNPM_HOME="/Users/yudiwu/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME/bin:"*) ;;
+  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
+esac
+# pnpm end
