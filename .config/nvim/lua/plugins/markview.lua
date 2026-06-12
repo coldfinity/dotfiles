@@ -1,8 +1,10 @@
 local ok, mv = pcall(require, "markview")
-if not ok then return end
+if not ok then
+	return
+end
 
 mv.setup({
-  preview = {
-    filetypes = { "markdown", "typst" },
-  },
+	preview = {
+		filetypes = { "markdown" },
+	},
 })

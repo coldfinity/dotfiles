@@ -23,7 +23,7 @@ local rose_ok, rose_pine = pcall(require, "rose-pine")
 if rose_ok then
 	rose_pine.setup({
 		styles = {
-			transparency = true,
+			transparency = false,
 		},
 	})
 end

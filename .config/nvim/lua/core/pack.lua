@@ -39,8 +39,9 @@ vim.pack.add({
 	"https://github.com/kdheepak/lazygit.nvim",
 	"https://github.com/sindrets/diffview.nvim",
 
-	-- statusline
+	-- statusline & bufferline
 	"https://github.com/nvim-lualine/lualine.nvim",
+	"https://github.com/akinsho/bufferline.nvim",
 
 	-- editing (mini.nvim replaces autopairs, surround, comment)
 	"https://github.com/echasnovski/mini.nvim",
