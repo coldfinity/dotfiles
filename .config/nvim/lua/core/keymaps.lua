@@ -67,6 +67,9 @@ map("n", "<leader>sf", function()
 	require("grug-far").open({ paths = vim.fn.expand("%") })
 end, "Search & replace (current file)")
 
+-- theme picker
+map("n", "<leader>T", "<cmd>Themery<cr>", "Theme picker")
+
 -- undo tree
 map("n", "<leader>u", "<cmd>UndotreeToggle<cr>", "Toggle undo tree")
 

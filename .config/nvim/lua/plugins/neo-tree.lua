@@ -10,7 +10,7 @@ neotree.setup({
 	-- set width = 30
 	--window = { position = "current"},
 	--window = { position = "float" },
-	window = { position = "left", width = 30 },
+	window = { position = "left", width = 40 },
 	filesystem = {
 		filtered_items = { hide_dotfiles = false, hide_gitignored = true },
 		follow_current_file = { enabled = true },

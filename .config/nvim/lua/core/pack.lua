@@ -8,6 +8,7 @@ vim.pack.add({
 	"https://github.com/coldfinity/tenebris.nvim",
 	"https://github.com/oskarnurm/koda.nvim",
 	"https://github.com/rose-pine/neovim",
+	"https://github.com/thesimonho/kanagawa-paper.nvim",
 
 	-- treesitter (better syntax highlighting)
 	"https://github.com/nvim-treesitter/nvim-treesitter",
@@ -69,6 +70,9 @@ vim.pack.add({
 	"https://github.com/rcarriga/nvim-dap-ui",
 	"https://github.com/nvim-neotest/nvim-nio",
 	"https://github.com/mfussenegger/nvim-dap-python",
+
+	-- theme switcher
+	"https://github.com/zaldih/themery.nvim",
 
 	-- ui
 	"https://github.com/folke/which-key.nvim",
