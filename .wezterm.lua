@@ -15,10 +15,12 @@ config.color_scheme = "rose-pine"
 
 -- This is where you actually apply your config choices
 
--- config.font = wezterm.font("Maple Mono")
-config.font = wezterm.font("JetBrainsMono Nerd Font")
+--config.font = wezterm.font("Maple Mono")
+--config.font = wezterm.font("JetBrainsMono Nerd Font")
+config.font = wezterm.font("Iosevka Nerd Font")
+--config.font = wezterm.font("Fira Code")
 
-config.font_size = 18
+config.font_size = 20
 config.line_height = 1.5
 
 config.enable_tab_bar = false
