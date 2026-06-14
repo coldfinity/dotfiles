@@ -13,6 +13,9 @@ vim.pack.add({
 	-- treesitter (better syntax highlighting)
 	"https://github.com/nvim-treesitter/nvim-treesitter",
 
+	-- treesitter text objects (select/move functions, classes, params)
+	"https://github.com/nvim-treesitter/nvim-treesitter-textobjects",
+
 	-- waypoint todos
 	"https://github.com/coldfinity/waypoint.nvim",
 
