@@ -8,7 +8,7 @@ neotree.setup({
 	enable_git_status = true,
 	enable_diagnostics = true,
 	-- set width = 30
-	--window = { position = "current"},
+	--window = { position = "current" },
 	--window = { position = "float" },
 	window = { position = "left", width = 40 },
 	filesystem = {
@@ -16,3 +16,10 @@ neotree.setup({
 		follow_current_file = { enabled = true },
 	},
 })
+
+local ok, oil = pcall(require, "oil")
+if not ok then
+	return
+end
+
+oil.setup({})

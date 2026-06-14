@@ -14,6 +14,7 @@ o.showmode = false
 
 -- Cursor
 o.guicursor = "" -- block cursor for all modes
+o.guicursor = "a:block-blinkwait1000-blinkon500-blinkoff500"
 
 -- indentation
 o.tabstop = 4

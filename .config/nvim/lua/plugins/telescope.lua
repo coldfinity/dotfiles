@@ -10,7 +10,7 @@ telescope.setup({
 		selection_caret = " ",
 		sorting_strategy = "ascending",
 		layout_config = {
-			horizontal = { prompt_position = "top", preview_width = 0.55 },
+			horizontal = { prompt_position = "bottom", preview_width = 0.55 },
 		},
 		mappings = {
 			i = {

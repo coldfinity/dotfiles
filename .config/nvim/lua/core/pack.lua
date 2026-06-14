@@ -37,6 +37,7 @@ vim.pack.add({
 	"https://github.com/nvim-neo-tree/neo-tree.nvim",
 	"https://github.com/nvim-tree/nvim-web-devicons",
 	"https://github.com/MunifTanjim/nui.nvim",
+	"https://github.com/stevearc/oil.nvim",
 
 	-- git
 	"https://github.com/lewis6991/gitsigns.nvim",

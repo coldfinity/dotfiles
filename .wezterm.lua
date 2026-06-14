@@ -23,6 +23,11 @@ config.font = wezterm.font("Iosevka Nerd Font")
 config.font_size = 20
 config.line_height = 1.2
 
+config.default_cursor_style = "BlinkingBlock"
+config.cursor_blink_rate = 500
+config.cursor_blink_ease_in = "Constant"
+config.cursor_blink_ease_out = "Constant"
+
 config.enable_tab_bar = false
 config.use_fancy_tab_bar = false
 
