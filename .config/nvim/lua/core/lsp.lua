@@ -65,6 +65,7 @@ vim.lsp.config["tinymist"] = {
 	cmd = { "tinymist" },
 	filetypes = { "typst" },
 	root_markers = { ".git" },
+	single_file_support = true,
 	settings = { exportPdf = "onSave", formatterMode = "typstyle" },
 }
 vim.lsp.enable("tinymist")
@@ -104,7 +105,7 @@ vim.lsp.enable("tailwindcss")
 -- ── LTeX (LaTeX/grammar in markdown) ─────────────────────────
 vim.lsp.config["ltex"] = {
 	cmd = { "ltex-ls" },
-	filetypes = { "markdown", "tex", "typst" },
+	filetypes = { "markdown", "tex" },
 	root_markers = { ".git" },
 	settings = {
 		ltex = { language = "en-US" },

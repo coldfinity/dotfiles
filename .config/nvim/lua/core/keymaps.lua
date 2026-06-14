@@ -156,20 +156,26 @@ map("n", "<leader>pz", function()
 end, "Open PDF in Zathura")
 
 -- diagnostics
-vim.keymap.set("n", "[d", function()
-	vim.diagnostic.jump({ count = -1 })
-end)
-vim.keymap.set("n", "]d", function()
-	vim.diagnostic.jump({ count = 1 })
-end)
+map("n", "[d", function()
+	vim.diagnostic.goto_prev()
+end, "Prev diagnostic")
+map("n", "]d", function()
+	vim.diagnostic.goto_next()
+end, "Next diagnostic")
 map("n", "<leader>cd", vim.diagnostic.open_float, "Line diagnostics")
-vim.keymap.set("n", "<leader>cy", function()
+map("n", "<leader>xc", function()
+	local win = vim.api.nvim_get_current_win()
+	if vim.api.nvim_win_get_config(win).relative ~= "" then
+		vim.api.nvim_win_close(win, false)
+	end
+end, "Close diagnostics float")
+map("n", "<leader>xy", function()
 	local diagnostics = vim.diagnostic.get(0, { lnum = vim.fn.line(".") - 1 })
 	if #diagnostics > 0 then
 		vim.fn.setreg("+", diagnostics[1].message)
 		print("Copied: " .. diagnostics[1].message)
 	end
-end, { desc = "Copy diagnostic on line" })
+end, "Copy diagnostic on line")
 
 -- trouble (diagnostics & lists)
 map("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", "Diagnostics (project)")
