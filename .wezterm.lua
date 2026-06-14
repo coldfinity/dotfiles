@@ -21,7 +21,7 @@ config.font = wezterm.font("Iosevka Nerd Font")
 --config.font = wezterm.font("Fira Code")
 
 config.font_size = 20
-config.line_height = 1.5
+config.line_height = 1.2
 
 config.enable_tab_bar = false
 config.use_fancy_tab_bar = false
@@ -29,7 +29,7 @@ config.use_fancy_tab_bar = false
 config.window_decorations = "RESIZE"
 
 config.window_background_opacity = 0.4
-config.macos_window_background_blur = 80
+config.macos_window_background_blur = 60
 
 config.initial_rows = 50
 config.initial_cols = 200
