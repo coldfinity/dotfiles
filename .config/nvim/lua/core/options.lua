@@ -11,7 +11,9 @@ o.scrolloff = 8
 o.wrap = true
 o.linebreak = true -- break at word boundaries, not mid-word
 o.showmode = false
--- o.guicursor = "n-v-c:block,i-ci-ve:block,r-cr-o:block"
+
+-- Cursor
+o.guicursor = "" -- block cursor for all modes
 
 -- indentation
 o.tabstop = 4

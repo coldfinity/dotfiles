@@ -1,9 +1,4 @@
-local ok, configs = pcall(require, "nvim-treesitter.configs")
-if not ok then
-	return
-end
-
-configs.setup({
+require("nvim-treesitter").setup({
 	ensure_installed = {
 		"lua",
 		"vim",
@@ -24,7 +19,13 @@ configs.setup({
 		"markdown",
 		"markdown_inline",
 	},
-	auto_install = true,
-	highlight = { enable = true },
-	indent = { enable = true },
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+	callback = function()
+		pcall(vim.treesitter.start)
+	end,
+})
+
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
