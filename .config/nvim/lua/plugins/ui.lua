@@ -36,29 +36,32 @@ if lualine_ok then
 	lualine.setup({
 		options = {
 			theme = "auto",
+			icons_enabled = true,
 			globalstatus = true,
 			component_separators = { left = "|", right = "|" },
 			section_separators = { left = "|", right = "|" },
 		},
 		sections = {
 			lualine_a = {
-				{ "mode", icons_enabled = true },
+				"mode",
 			},
 			lualine_b = {
-				{ "branch", icon = "" },
+				"branch",
 				"diff",
 				{
 					"diagnostics",
 					sources = { "nvim_diagnostic" },
-					symbols = { error = " ", warn = " ", info = " ", hint = "󰌵 " },
 				},
 			},
 			lualine_c = {
 				{
 					"filename",
 					path = 1,
-					symbols = { modified = "", readonly = "", unnamed = "[No Name]" },
 				},
+			},
+			lualine_x = {
+				--"fileformat",
+				"filetype",
 				{
 					function()
 						local clients = vim.lsp.get_clients({ bufnr = 0 })
@@ -72,10 +75,6 @@ if lualine_ok then
 						return " " .. table.concat(names, ", ")
 					end,
 				},
-			},
-			lualine_x = {
-				"fileformat",
-				"filetype",
 			},
 			lualine_y = {
 				"progress",
