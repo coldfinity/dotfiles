@@ -113,10 +113,17 @@ vim.lsp.config["ltex"] = {
 }
 vim.lsp.enable("ltex")
 
--- R
+-- ── R  ─────────────────────────────────────────────
 vim.lsp.config["r_language_server"] = {
 	cmd = { "R", "--no-echo", "-e", "languageserver::run()" },
 	filetypes = { "r", "rmd" },
 	root_markers = { ".git", "DESCRIPTION" },
 }
 vim.lsp.enable("r_language_server")
+
+-- ── Swift ─────────────────────────
+vim.lsp.config("sourcekit", {
+	cmd = { "xcrun", "sourcekit-lsp" },
+	filetypes = { "swift" },
+})
+vim.lsp.enable("sourcekit")

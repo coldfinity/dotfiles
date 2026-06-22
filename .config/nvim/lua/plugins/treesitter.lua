@@ -18,6 +18,7 @@ require("nvim-treesitter").setup({
 		"yaml",
 		"markdown",
 		"markdown_inline",
+		"swift",
 	},
 })
 
