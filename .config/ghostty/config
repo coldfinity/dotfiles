@@ -1,12 +1,13 @@
 # Theme
-theme = Rose Pine
+# theme = Rose Pine
+# theme = Black Metal
+theme = Black Metal (Venom)
 
 # Font
 font-family = Iosevka Nerd Font
 font-size = 20
 font-thicken = false
 
-# Similar to WezTerm line_height = 1.2
 adjust-cell-height = 20%
 
 # Cursor
@@ -18,8 +19,8 @@ window-padding-x = 10
 window-padding-y = 10
 
 # Window
-background-opacity = 0.4
-background-blur-radius = 60
+background-opacity = 0.6
+background-blur-radius = 40
 
 # Scrollback
 scrollback-limit = 10000
