@@ -1,0 +1,29 @@
+# Theme
+theme = Rose Pine
+
+# Font
+font-family = Iosevka Nerd Font
+font-size = 20
+font-thicken = false
+
+# Similar to WezTerm line_height = 1.2
+adjust-cell-height = 20%
+
+# Cursor
+cursor-style = block
+cursor-style-blink = true
+
+# Tabs
+window-padding-x = 10
+window-padding-y = 10
+
+# Window
+background-opacity = 0.4
+background-blur-radius = 60
+
+# Scrollback
+scrollback-limit = 10000
+
+# Initial size
+window-height = 50
+window-width = 200
