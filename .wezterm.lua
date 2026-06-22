@@ -28,8 +28,7 @@ config.cursor_blink_rate = 600
 config.cursor_blink_ease_in = "Constant"
 config.cursor_blink_ease_out = "Constant"
 
-config.enable_tab_bar = true
-config.hide_tab_bar_if_only_one_tab = false
+config.enable_tab_bar = false
 config.use_fancy_tab_bar = false
 config.tab_bar_at_bottom = false
 
@@ -39,8 +38,8 @@ config.macos_window_background_blur = 60
 
 config.scrollback_lines = 10000
 
-config.initial_rows = 50
-config.initial_cols = 200
+-- config.initial_rows = 50
+-- config.initial_cols = 20
 
 config.window_padding = {
 	left = 10,
