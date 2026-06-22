@@ -24,17 +24,20 @@ config.font_size = 20
 config.line_height = 1.2
 
 config.default_cursor_style = "BlinkingBlock"
-config.cursor_blink_rate = 500
+config.cursor_blink_rate = 600
 config.cursor_blink_ease_in = "Constant"
 config.cursor_blink_ease_out = "Constant"
 
-config.enable_tab_bar = false
+config.enable_tab_bar = true
+config.hide_tab_bar_if_only_one_tab = false
 config.use_fancy_tab_bar = false
+config.tab_bar_at_bottom = false
 
 config.window_decorations = "RESIZE"
-
 config.window_background_opacity = 0.4
 config.macos_window_background_blur = 60
+
+config.scrollback_lines = 10000
 
 config.initial_rows = 50
 config.initial_cols = 200
