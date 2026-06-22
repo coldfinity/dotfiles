@@ -47,7 +47,6 @@ vim.pack.add({
 	-- statusline & bufferline
 	"https://github.com/nvim-lualine/lualine.nvim",
 	"https://github.com/akinsho/bufferline.nvim",
-	"https://github.com/vimpostor/vim-tpipeline",
 
 	-- editing (mini.nvim replaces autopairs, surround, comment)
 	"https://github.com/echasnovski/mini.nvim",

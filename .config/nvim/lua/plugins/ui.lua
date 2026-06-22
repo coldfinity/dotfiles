@@ -31,14 +31,6 @@ if ibl_ok then
 	})
 end
 
--- vim-tpipeline: embed the (lualine) statusline into tmux's status bar.
--- tmux side is already set up in ~/.tmux.conf (focus-events, status-style
--- bg=default, status-{left,right}-length 99, status-justify centre).
--- These globals must be set before tpipeline auto-embeds on VimEnter, which
--- they are: this file is required during init, well before VimEnter fires.
-vim.g.tpipeline_clearstl = 1 -- hide vim's own statusline; it lives in tmux now
-vim.g.tpipeline_restore = 1 -- restore the normal tmux statusline on exit
-
 local lualine_ok, lualine = pcall(require, "lualine")
 if lualine_ok then
 	lualine.setup({
