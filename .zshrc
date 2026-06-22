@@ -29,9 +29,6 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 plugins=(git zsh-syntax-highlighting zsh-autosuggestions web-search z)
 source $ZSH/oh-my-zsh.sh
 
-# Zoxide
-eval "$(zoxide init zsh --cmd cd)"
-
 # Tmux-Sessionizer
 bindkey -s ^f "~/.tmux/plugins/tmux-sessionizer/tmux-sessionizer\n"
 
@@ -62,3 +59,6 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME/bin:$PATH" ;;
 esac
 # pnpm end
+
+# Zoxide
+eval "$(zoxide init zsh --cmd cd)"
