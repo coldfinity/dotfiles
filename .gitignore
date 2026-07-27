@@ -1,10 +1,10 @@
 # nvim
-.config/nvim/nvim-pack-lock.json
-.config/nvim/lazy-lock.json
+**/nvim-pack-lock.json
+**/lazy-lock.json
 
 # spicetify
-.config/spicetify/config-xpui.ini
-.config/spicetify/user.css
+**/spicetify/config-xpui.ini
+**/spicetify/user.css
 
 # macOS
 **/.DS_Store
@@ -12,5 +12,3 @@
 # secrets & local overrides
 .env
 #*.local
-.DS_Store
-.config/spicetify
