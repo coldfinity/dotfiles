@@ -62,3 +62,6 @@ esac
 
 # Zoxide
 eval "$(zoxide init zsh --cmd cd)"
+
+# Created by `pipx` on 2026-07-08 11:20:57
+export PATH="$PATH:/Users/yudiwu/.local/bin"

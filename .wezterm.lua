@@ -38,8 +38,8 @@ config.macos_window_background_blur = 60
 
 config.scrollback_lines = 10000
 
--- config.initial_rows = 50
--- config.initial_cols = 20
+config.initial_rows = 150
+config.initial_cols = 50
 
 config.window_padding = {
 	left = 10,
