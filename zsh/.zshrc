@@ -20,9 +20,6 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# Export local/bin to path for custom scripts
-export PATH="$HOME/bin:$PATH"
-
 # Oh My Zsh
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -63,14 +60,10 @@ case ":$PATH:" in
 esac
 # pnpm end
 
-# Zoxide
-eval "$(zoxide init zsh --cmd cd)"
-<<<<<<< HEAD:.zshrc
-
-# Created by `pipx` on 2026-07-08 11:20:57
-export PATH="$PATH:/Users/yudiwu/.local/bin"
-=======
+# PATH
 export PATH="/opt/nvim/bin:$PATH"
+# also covers pipx-installed tools and stowed scripts (gclone, how)
 export PATH="$HOME/.local/bin:$PATH"
-export PATH=~/.npm-global/bin:$PATH
->>>>>>> refs/remotes/origin/main:zsh/.zshrc
+
+# Zoxide (keep last — it wraps `cd`)
+eval "$(zoxide init zsh --cmd cd)"
