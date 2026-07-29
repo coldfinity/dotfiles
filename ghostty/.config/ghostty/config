@@ -21,7 +21,8 @@ window-padding-x = 10
 window-padding-y = 10
 
 # Window
-background-opacity = 0.8
+# background-opacity = 0.8
+background-opacity = 1
 background-blur-radius = 40
 
 # Scrollback

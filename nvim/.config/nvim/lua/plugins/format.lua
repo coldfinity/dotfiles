@@ -18,5 +18,29 @@ conform.setup({
 		typescript = { "prettier" },
 		typescriptreact = { "prettier" },
 	},
+	formatters = {
+		clang_format = {
+			-- clang-format defaults to LLVM style (2 spaces); use the buffer's
+			-- own indent settings instead
+			prepend_args = function(_, ctx)
+				local ts = vim.bo[ctx.buf].tabstop
+				-- 'shiftwidth' of 0 means "follow tabstop"
+				local sw = vim.bo[ctx.buf].shiftwidth
+				if sw == 0 then
+					sw = ts
+				end
+				local use_tab = vim.bo[ctx.buf].expandtab and "Never" or "ForIndentation"
+				return {
+					"--style="
+						.. string.format(
+							"{BasedOnStyle: LLVM, IndentWidth: %d, TabWidth: %d, UseTab: %s}",
+							sw,
+							ts,
+							use_tab
+						),
+				}
+			end,
+		},
+	},
 	format_on_save = { timeout_ms = 500, lsp_fallback = true },
 })
