@@ -43,3 +43,7 @@ back it up (`mv ~/.zshrc ~/.zshrc.bak`) and re-stow.
   live in git. `bootstrap.sh` (or opening nvim) builds the parsers.
 - **typst** is a local package (`@local/notes`). Its data-dir path differs by
   OS — see `bootstrap.sh`; don't `stow typst` on macOS.
+- **herdr** shares `~/.config/herdr` with runtime state (sockets, logs,
+  `session*.json`), so only `config.toml` is tracked and the package is stowed
+  with `--no-folding` — plain `stow herdr` on a fresh machine would symlink the
+  whole directory and pull that state into the repo.

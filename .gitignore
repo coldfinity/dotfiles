@@ -6,6 +6,10 @@
 **/spicetify/config-xpui.ini
 **/spicetify/user.css
 
+# herdr runtime state (only config.toml is tracked)
+herdr/.config/herdr/*
+!herdr/.config/herdr/config.toml
+
 # macOS
 **/.DS_Store
 

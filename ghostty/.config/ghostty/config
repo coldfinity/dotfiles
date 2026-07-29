@@ -1,7 +1,7 @@
 # Theme
-# theme = Rose Pine
+theme = Rose Pine
 # theme = Black Metal
-theme = Black Metal (Venom)
+# theme = Black Metal (Venom)
 
 command = zsh
 

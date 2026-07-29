@@ -101,6 +101,13 @@ if ! stow -v "${PKGS[@]}"; then
   warn "Back them up (e.g. mv ~/.zshrc ~/.zshrc.bak) and re-run, or use: stow --adopt ${PKGS[*]}"
 fi
 
+# ── herdr (must not be tree-folded) ─────────────────────────────────
+# herdr writes runtime state (sockets, logs, session json) into
+# ~/.config/herdr. If stow folds that whole dir into a symlink, all of it
+# lands in this repo — so link the individual file instead.
+info "Stowing herdr"
+stow --no-folding -v herdr || warn "herdr stow conflict — resolve as above"
+
 # ── typst local package (data dir differs per OS) ───────────────────
 # Linux: ~/.local/share/typst   |   macOS: ~/Library/Application Support/typst
 # The repo stores it under the Linux path, so stow it directly on Linux and
