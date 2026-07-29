@@ -1,6 +1,6 @@
 # Theme
-theme = Rose Pine
-# theme = Black Metal
+# theme = Rose Pine
+theme = Black Metal
 # theme = Black Metal (Venom)
 
 command = zsh
@@ -21,9 +21,8 @@ window-padding-x = 10
 window-padding-y = 10
 
 # Window
-# background-opacity = 0.8
-background-opacity = 1
-background-blur-radius = 40
+background-opacity = 0.8
+background-blur-radius = 80
 
 # Scrollback
 scrollback-limit = 10000
