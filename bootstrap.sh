@@ -91,9 +91,12 @@ export PATH="$HOME/.local/bin:$PATH"
 COMMON=(bin fastfetch ghostty nvim nvim.bak tmux tmux-sessionizer wezterm zsh)
 # macOS-only tools.
 MAC_ONLY=(aerospace sketchybar)
+# Linux-only tools.
+LINUX_ONLY=(hypr waybar wofi)
 
 PKGS=("${COMMON[@]}")
 [ "$OS" = macos ] && PKGS+=("${MAC_ONLY[@]}")
+[ "$OS" = linux ] && PKGS+=("${LINUX_ONLY[@]}")
 
 info "Stowing: ${PKGS[*]}"
 if ! stow -v "${PKGS[@]}"; then

@@ -1,0 +1,76 @@
+/* wofi — same palette as waybar/sketchybar (see sketchybar colors.sh)
+ *
+ *   WHITE        #ffffff               primary text
+ *   GREY         #b4b4c0               secondary text
+ *   ACCENT       #7aa2f7               icy blue selection
+ *   GLASS_BORDER rgba(255,255,255,.2)  edge
+ *
+ * The launcher panel is more opaque than the bar's islands — text needs to
+ * stay readable over arbitrary wallpaper. Square corners match the bar.
+ */
+
+window {
+    background-color: rgba(16, 16, 22, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-family: "JetBrainsMono Nerd Font";
+    font-weight: 600;
+    font-size: 13px;
+}
+
+#outer-box {
+    padding: 12px;
+}
+
+/* ── search field ────────────────────────────────────────────────── */
+#input {
+    background-color: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0;
+    color: #ffffff;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+}
+
+#input:focus {
+    border-color: #7aa2f7;
+    /* GTK draws a default focus ring on top of the border; kill it. */
+    outline: none;
+    box-shadow: none;
+}
+
+/* ── results list ────────────────────────────────────────────────── */
+#scroll {
+    margin: 0;
+}
+
+#inner-box {
+    background-color: transparent;
+}
+
+#entry {
+    padding: 8px 10px;
+    border-radius: 0;
+    color: #b4b4c0;
+}
+
+#entry:selected {
+    background-color: rgba(122, 162, 247, 0.20);
+    color: #ffffff;
+    /* Accent rule on the left edge marks the selection without a fill. */
+    border-left: 2px solid #7aa2f7;
+    padding-left: 8px;
+}
+
+#text {
+    color: inherit;
+    margin-left: 8px;
+}
+
+#text:selected {
+    color: #ffffff;
+}
+
+/* Fuzzy-match highlight inside a result. */
+#entry image {
+    -gtk-icon-transform: none;
+}

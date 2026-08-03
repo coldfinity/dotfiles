@@ -1,0 +1,113 @@
+/* Waybar — port of the sketchybar palette in
+ * sketchybar/.config/sketchybar/colors.sh
+ *
+ *   WHITE        #ffffff              primary labels
+ *   GREY         #b4b4c0              icons / secondary text
+ *   DIM          rgba(255,255,255,.5) unfocused
+ *   ACCENT       #7aa2f7              icy blue
+ *   GLASS_BG     rgba(0,0,0,.15)      pill fill      (0x26000000)
+ *   GLASS_BORDER rgba(255,255,255,.2) pill edge      (0x33ffffff)
+ *   ACCENT_GLASS rgba(122,162,247,.15) focused ws    (0x267aa2f7)
+ *
+ * Note: sketchybar's glass used background.corner_radius=0, so these
+ * islands are deliberately square-edged, not rounded.
+ */
+
+* {
+    font-family: "JetBrainsMono Nerd Font";
+    font-weight: 600;          /* SemiBold, matching FONT_FACE:SemiBold:13.0 */
+    font-size: 13px;
+    /* Kill GTK's default min-height so pills honour the 28px below. */
+    min-height: 0;
+}
+
+/* BAR_COLOR = 0x00000000 — fully transparent, so groups float. */
+window#waybar {
+    background: transparent;
+}
+
+/* ── the glass islands ───────────────────────────────────────────── */
+#workspaces,
+#window,
+#system,
+#wireplumber,
+#clock {
+    background: rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+
+    min-height: 28px;
+    padding: 0 8px;
+    /* sketchybar spacer items were width=12 */
+    margin: 0 6px;
+}
+
+/* ── workspaces ──────────────────────────────────────────────────── */
+#workspaces {
+    padding: 0 2px;
+}
+
+#workspaces button {
+    color: rgba(255, 255, 255, 0.5);   /* DIM — unfocused */
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0 8px;
+    min-width: 20px;
+}
+
+#workspaces button.active {
+    color: #7aa2f7;                     /* ACCENT */
+    background: rgba(122, 162, 247, 0.15);  /* ACCENT_GLASS */
+}
+
+#workspaces button.urgent {
+    color: #f7768e;                     /* RED */
+}
+
+#workspaces button:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* ── focused app (sketchybar front_app pill) ─────────────────────── */
+#window {
+    color: #ffffff;
+    padding: 0 12px;
+}
+
+/* Hide the pill entirely when no window is focused, so an empty
+ * workspace doesn't leave a stray floating rectangle. */
+window#waybar.empty #window {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* ── system group: cpu / ram / gpu share one island ──────────────── */
+#system {
+    padding: 0 4px;
+}
+
+#cpu,
+#memory,
+#custom-gpu {
+    color: #b4b4c0;                     /* GREY */
+    padding: 0 8px;
+}
+
+/* ── volume ──────────────────────────────────────────────────────── */
+#wireplumber {
+    color: #b4b4c0;
+}
+
+#wireplumber.muted {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* ── clock ───────────────────────────────────────────────────────── */
+#clock {
+    color: #ffffff;
+    padding: 0 12px;
+}

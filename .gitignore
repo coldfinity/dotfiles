@@ -10,6 +10,9 @@
 herdr/.config/herdr/*
 !herdr/.config/herdr/config.toml
 
+# hyprpaper writes its config into the stowed (folded) hypr dir
+hypr/.config/hypr/hyprpaper.conf
+
 # macOS
 **/.DS_Store
 

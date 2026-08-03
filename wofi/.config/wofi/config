@@ -1,0 +1,29 @@
+# wofi — application launcher, bound to ALT+D in hyprland.conf
+#
+# Behaviour only; appearance lives in style.css.
+
+show=drun
+prompt=Search
+
+# Centred panel rather than a full-width bar.
+width=600
+height=400
+location=center
+
+# Fuzzy, case-insensitive matching.
+insensitive=true
+matching=fuzzy
+
+# Application icons from the .desktop entries.
+allow_images=true
+image_size=28
+
+# Hide the right-click "actions" submenu (New Window, etc.) — it mostly
+# adds noise for a launcher used to open apps.
+no_actions=true
+
+# Dark GTK variant, so icons and any GTK-drawn chrome match the theme.
+gtk_dark=true
+
+# No scrollbar; the list still scrolls with the arrow keys.
+hide_scroll=true

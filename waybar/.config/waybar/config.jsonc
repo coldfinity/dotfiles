@@ -1,0 +1,91 @@
+// Waybar — Linux counterpart to sketchybar/.config/sketchybar/sketchybarrc
+//
+// Mirrors the sketchybar layout: a transparent bar whose module groups read as
+// floating translucent islands. Left = workspaces + focused app,
+// right = system stats / volume / clock.
+//
+// Differences from the macOS bar, forced by the platform:
+//   - no battery pill (this machine is a desktop, no /sys/class/power_supply)
+//   - GPU comes from nvidia-smi rather than macOS ioreg
+//   - no real backdrop blur; sketchybar's frosted glass becomes tinted glass
+{
+    "layer": "top",
+    "position": "top",
+
+    // sketchybar: height=36 margin=10 y_offset=6
+    "height": 36,
+    "margin-top": 6,
+    "margin-left": 10,
+    "margin-right": 10,
+
+    "modules-left": ["hyprland/workspaces", "hyprland/window"],
+    "modules-right": ["group/system", "wireplumber", "clock"],
+
+    "hyprland/workspaces": {
+        "format": "{name}",
+        // Mirrors the workspace→monitor pinning in hyprland.conf, so each
+        // bar only ever lists the workspaces that live on its own output.
+        "persistent-workspaces": {
+            "DP-1": [1, 2, 3, 4, 5],
+            "DP-3": [6, 7, 8, 9]
+        }
+    },
+
+    // sketchybar's front_app pill.
+    "hyprland/window": {
+        "format": "{class}",
+        "max-length": 40,
+        "separate-outputs": true,
+        // sketchybar's front_app drew an app icon; waybar can too, resolved
+        // from the .desktop entry via the GTK icon theme.
+        "icon": true,
+        "icon-size": 18,
+        // Wayland app-ids are reverse-DNS, so the raw class reads
+        // "com.mitchellh.ghostty". Map the ones you use to display names.
+        // Keys are regexes matched against the whole formatted string.
+        "rewrite": {
+            "com.mitchellh.ghostty": "Ghostty",
+            "zen": "Zen",
+            "discord": "Discord",
+            "Spotify": "Spotify",
+            "org.mozilla.firefox": "Firefox",
+            "code": "VS Code",
+            "org.gnome.Nautilus": "Files"
+        }
+    },
+
+    // sketchybar grouped cpu+ram+gpu into a single system_pill bracket.
+    "group/system": {
+        "orientation": "horizontal",
+        "modules": ["cpu", "memory", "custom/gpu"]
+    },
+
+    "cpu": {
+        "interval": 5,
+        "format": "CPU {usage}%"
+    },
+
+    "memory": {
+        "interval": 5,
+        "format": "RAM {percentage}%"
+    },
+
+    "custom/gpu": {
+        "interval": 5,
+        "exec": "nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits 2>/dev/null || echo 0",
+        "format": "GPU {}%"
+    },
+
+    "wireplumber": {
+        "format": "VOL {volume}%",
+        "format-muted": "VOL --",
+        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+    },
+
+    // sketchybar calendar.sh: date +'%a %d %b %I:%M %p'
+    "clock": {
+        "interval": 1,
+        "format": "{:%a %d %b %I:%M %p}",
+        "tooltip-format": "<tt>{calendar}</tt>"
+    }
+}
