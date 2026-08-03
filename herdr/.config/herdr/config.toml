@@ -63,6 +63,33 @@ new_cwd = "follow"
 # alt+..., cmd/super, and punctuation-with-modifiers may depend on your terminal/tmux setup.
 prefix = "ctrl+s"
 
+# ── tmux parity ─────────────────────────────────────────────────────
+# Matches ~/.tmux.conf so the muscle memory carries between the two.
+# herdr's defaults are already tmux-shaped (prefix+c/n/p/1..9/z/x/?),
+# so only the divergences are set here.
+
+# tmux detaches with prefix+d; herdr defaults to prefix+q.
+detach = "prefix+d"
+
+# ~/.tmux.conf rebinds r to source-file, so prefix+r means "reload" to
+# you. herdr defaults that to prefix+shift+r and uses prefix+r for
+# resize mode, so resize moves to shift+r to free it up.
+reload_config = "prefix+r"
+resize_mode = "prefix+shift+r"
+
+# tmux renames a window with prefix+, (comma).
+rename_tab = "prefix+comma"
+
+# ── splits ──────────────────────────────────────────────────────────
+# NOT set to tmux's prefix+% and prefix+" on purpose. herdr documents
+# accepted punctuation as minus, comma, ampersand, plus and backtick —
+# % and " are shifted punctuation and are explicitly called out as
+# unreliable. herdr's own defaults (prefix+v and prefix+minus) are kept,
+# which match the common `bind | split-window -h` / `bind - split-window -v`
+# tmux rebind anyway.
+# split_vertical = "prefix+v"
+# split_horizontal = "prefix+minus"
+
 # Prefix-mode actions
 # help = "prefix+?"
 # settings = "prefix+s"
