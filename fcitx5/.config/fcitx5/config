@@ -1,0 +1,48 @@
+# fcitx5 global config.
+#
+# The one deliberate change from stock is TriggerKeys: fcitx5 ships with
+# Ctrl+Space, but GNOME used Super+Space to cycle input sources, so this
+# keeps the muscle memory. Super+Space is otherwise unbound in
+# hypr/.config/hypr/hyprland.conf (the launcher is ALT+Space).
+
+[Hotkey]
+# Toggle between the active method and the previous one.
+TriggerKeys=
+# Holding the trigger and tapping again cycles the list rather than
+# flipping between two — harmless with only two methods, useful if you
+# add a third later.
+EnumerateWithTriggerKeys=True
+# Don't let Alt+Shift / Ctrl+Shift also switch; they collide with too
+# much else and fire by accident.
+AltTriggerKeys=
+EnumerateForwardKeys=
+EnumerateBackwardKeys=
+EnumerateGroupForwardKeys=
+EnumerateGroupBackwardKeys=
+
+[Hotkey/TriggerKeys]
+0=Super+space
+
+[Hotkey/PrevPage]
+0=Up
+
+[Hotkey/NextPage]
+0=Down
+
+[Hotkey/PrevCandidate]
+0=Shift+Tab
+
+[Hotkey/NextCandidate]
+0=Tab
+
+[Behavior]
+# Start in the "inactive" (English) state in every new window rather than
+# inheriting whatever the last window used.
+ShareInputState=No
+# Show the method name briefly when it changes, so Super+Space gives
+# visible feedback.
+ShowInputMethodInformation=True
+ShowInputMethodInformationWhenFocusIn=False
+# Commit whatever is in the preedit buffer when focus leaves, instead of
+# discarding half-typed Pinyin.
+PreeditEnabledByDefault=True

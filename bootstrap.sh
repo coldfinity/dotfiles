@@ -93,6 +93,7 @@ COMMON=(bin fastfetch ghostty nvim nvim.bak tmux tmux-sessionizer wezterm zsh)
 MAC_ONLY=(aerospace sketchybar)
 # Linux-only tools.
 LINUX_ONLY=(hypr waybar wofi)
+# NOTE: fcitx5 is stowed separately below — it must not be tree-folded.
 
 PKGS=("${COMMON[@]}")
 [ "$OS" = macos ] && PKGS+=("${MAC_ONLY[@]}")
@@ -110,6 +111,15 @@ fi
 # lands in this repo — so link the individual file instead.
 info "Stowing herdr"
 stow --no-folding -v herdr || warn "herdr stow conflict — resolve as above"
+
+# ── fcitx5 (must not be tree-folded, Linux only) ────────────────────
+# fcitx5 creates its own files under ~/.config/fcitx5 at runtime (per-addon
+# conf/, cached state). Folding the dir into a symlink would drop all of
+# that into this repo, so link only the two files we actually manage.
+if [ "$OS" = linux ]; then
+  info "Stowing fcitx5"
+  stow --no-folding -v fcitx5 || warn "fcitx5 stow conflict — resolve as above"
+fi
 
 # ── typst local package (data dir differs per OS) ───────────────────
 # Linux: ~/.local/share/typst   |   macOS: ~/Library/Application Support/typst
