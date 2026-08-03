@@ -1,31 +1,23 @@
-# fcitx5 input method groups.
-#
-# One group holding two methods, toggled by Super+Space (set in ./config):
-#   keyboard-us -> plain US layout, no conversion
-#   pinyin      -> Chinese Pinyin (fcitx5-chinese-addons)
-#
-# This replaces the GNOME input-sources pair that was:
-#   [('xkb', 'us'), ('ibus', 'libpinyin')]
-#
-# NOTE: fcitx5 rewrites this file whenever you change settings in
-# fcitx5-config-qt. That's fine — it's a symlink into this repo, so edits
-# made in the GUI show up as a normal git diff.
-
 [Groups/0]
-Name="Default"
-# Base xkb layout for the whole group.
-Default Layout="us"
-# The method selected on login. "keyboard-us" means you start in English
-# and opt into Pinyin; swap to "pinyin" to start in Chinese.
-DefaultIM="keyboard-us"
+# Group Name
+Name=Default
+# Layout
+Default Layout=us
+# Default Input Method
+DefaultIM=pinyin
 
 [Groups/0/Items/0]
-Name="keyboard-us"
+# Name
+Name=keyboard-us
+# Layout
 Layout=
 
 [Groups/0/Items/1]
-Name="pinyin"
+# Name
+Name=pinyin
+# Layout
 Layout=
 
 [GroupOrder]
-0="Default"
+0=Default
+
