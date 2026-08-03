@@ -31,7 +31,8 @@ window#waybar {
 #window,
 #system,
 #wireplumber,
-#clock {
+#clock,
+#custom-power {
     background: rgba(0, 0, 0, 0.15);
     border: 1px solid rgba(255, 255, 255, 0.2);
     color: #ffffff;
@@ -110,4 +111,17 @@ window#waybar.empty #window {
 #clock {
     color: #ffffff;
     padding: 0 12px;
+}
+
+/* ── power button ────────────────────────────────────────────────── */
+#custom-power {
+    color: #b4b4c0;
+    padding: 0 12px;
+    /* No right margin — sit flush with the bar's 10px edge inset. */
+    margin-right: 0;
+}
+
+#custom-power:hover {
+    color: #f7768e;                     /* RED — destructive affordance */
+    background: rgba(247, 118, 142, 0.12);
 }

@@ -19,7 +19,7 @@
     "margin-right": 10,
 
     "modules-left": ["hyprland/workspaces", "hyprland/window"],
-    "modules-right": ["group/system", "wireplumber", "clock"],
+    "modules-right": ["group/system", "wireplumber", "clock", "custom/power"],
 
     "hyprland/workspaces": {
         "format": "{name}",
@@ -80,6 +80,14 @@
         "format": "VOL {volume}%",
         "format-muted": "VOL --",
         "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+    },
+
+    // Power button — opens power-menu.sh (lock / sleep / log out / restart /
+    // shut down). Nerd Font power glyph U+F011.
+    "custom/power": {
+        "format": "",
+        "on-click": "~/.config/waybar/power-menu.sh",
+        "tooltip": false
     },
 
     // sketchybar calendar.sh: date +'%a %d %b %I:%M %p'
