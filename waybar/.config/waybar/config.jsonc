@@ -2,7 +2,7 @@
 //
 // Mirrors the sketchybar layout: a transparent bar whose module groups read as
 // floating translucent islands. Left = workspaces + focused app,
-// right = system stats / volume / clock.
+// centre = clock, right = system stats / volume / power.
 //
 // Differences from the macOS bar, forced by the platform:
 //   - no battery pill (this machine is a desktop, no /sys/class/power_supply)
@@ -18,8 +18,13 @@
     "margin-left": 10,
     "margin-right": 10,
 
+    // The clock sits centre, macOS-menu-bar style, rather than in the right
+    // cluster where sketchybar had it. Note waybar centres this group against
+    // the bar, not against the gap between left and right — so it stays put
+    // as the focused-app title changes width.
     "modules-left": ["hyprland/workspaces", "hyprland/window"],
-    "modules-right": ["group/system", "wireplumber", "clock", "custom/power"],
+    "modules-center": ["clock"],
+    "modules-right": ["group/system", "wireplumber", "custom/power"],
 
     "hyprland/workspaces": {
         "format": "{name}",

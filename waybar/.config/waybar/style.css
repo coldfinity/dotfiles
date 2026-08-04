@@ -108,8 +108,14 @@ window#waybar.empty #window {
 }
 
 /* ── clock ───────────────────────────────────────────────────────── */
+/* GREY, not the WHITE sketchybar used. On macOS the clock was a short
+ * string and could carry the primary-label tier; here the format is
+ * "{:%a %d %b %I:%M %p}", which is the longest run of text on the bar —
+ * at full white it read as highlighted next to the grey stats and volume
+ * either side of it. Same island, same padding, just demoted to the
+ * secondary tier so the right side is uniform. */
 #clock {
-    color: #ffffff;
+    color: #b4b4c0;                     /* GREY */
     padding: 0 12px;
 }
 
