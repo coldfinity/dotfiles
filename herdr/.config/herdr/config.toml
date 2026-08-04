@@ -216,7 +216,11 @@ rename_tab = "prefix+comma"
 
 # Ask for a tab name before creating a new tab.
 # Set false to create tabs immediately with generated names.
-# prompt_new_tab_name = true
+#
+# Off for tmux parity: `prefix+c` in tmux creates a window immediately with
+# a generated name, and prefix+comma renames it after the fact if you care.
+# Same reasoning as the tmux parity block under [keys].
+prompt_new_tab_name = false
 
 # Ask for a workspace name before interactive creation.
 # prompt_new_workspace_name = false
@@ -266,6 +270,25 @@ rename_tab = "prefix+comma"
 # Background notification popup delivery
 show_agent_labels_on_pane_borders = true
 agent_panel_sort = "spaces"
+
+# ── agent rows ──────────────────────────────────────────────────────
+# Adds state_text to the sidebar's agents section, so each entry spells
+# out the status ("running", "waiting", …) instead of leaving it to the
+# colour of the state_icon dot alone. It sits on the second row beside the
+# agent name, keeping the first row's workspace/tab from being pushed out
+# at narrow sidebar widths.
+#
+# Default is: rows = [["state_icon", "workspace", "tab"], ["agent"]]
+#
+# Placement matters: this table header has to come AFTER the two bare
+# keys above, or TOML would read them as belonging to it rather than to
+# [ui]. It cannot be moved up next to the commented reference block.
+[ui.sidebar.agents]
+rows = [
+    ["state_icon", "workspace", "tab"],
+    [{ token = "state_text", dim = true }, "agent"],
+]
+
 [ui.toast]
 # off = disable pop-up notifications
 # herdr = show in-app toasts
@@ -339,7 +362,12 @@ pane_history = true
 # Values: block, steady_block (default), underline, steady_underline, bar, steady_bar.
 # cjk_ime_cursor_shape = "steady_block"
 
-switch_ascii_input_source_in_prefix = false
+# On for the Mac. This repo is stowed on both machines, and with a Pinyin
+# IME active the Ctrl+S prefix chord otherwise gets eaten by the input
+# method before herdr sees it. macOS-only and best-effort, so it is inert
+# on Linux, where fcitx5 handles the same problem differently.
+switch_ascii_input_source_in_prefix = true
+
 [advanced]
 # Maximum scrollback buffer size in bytes retained per pane terminal.
 # Matches Ghostty's default scrollback-limit behavior.
