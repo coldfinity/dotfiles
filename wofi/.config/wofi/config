@@ -1,22 +1,49 @@
-# wofi — application launcher, bound to ALT+D in hyprland.conf
+# wofi — application launcher, bound to ALT+Space in hyprland.conf
+# (in the spirit of Spotlight's CMD+Space; ALT+D is not bound).
 #
 # Behaviour only; appearance lives in style.css.
 
 show=drun
 prompt=Search
 
-# Centred panel rather than a full-width bar.
-width=600
-height=400
+# Launchpad-style grid: four apps per row, browsed visually rather than
+# read as a list. Wide enough that a 4-column split leaves each cell room
+# for a 48px icon plus a readable name.
+columns=4
+width=1400
+height=620
 location=center
+
+# Deliberately OFF for the grid. dynamic_lines shrinks the window to the
+# number of *lines*, which with columns>1 collapses the grid unevenly as
+# you filter — the panel should hold its shape while you type.
+dynamic_lines=false
+
+# Open above waybar. wofi defaults to the `top` layer, which is the same
+# layer waybar uses, so a centred panel is fine but anything taller could
+# end up drawn underneath the bar.
+layer=overlay
 
 # Fuzzy, case-insensitive matching.
 insensitive=true
 matching=fuzzy
 
-# Application icons from the .desktop entries.
+# Don't let pango markup or image escapes in a .desktop Name= field count
+# as searchable text — you'd otherwise match on markup you can't see.
+parse_search=true
+
+# Terminal apps (Terminal=true in their .desktop entry) open in ghostty.
+# Without this wofi walks a built-in list — kitty, alacritty, wezterm,
+# foot, … — and would land on wezterm, which is installed here.
+term=ghostty
+
+# One click launches; the default requires a double click.
+single_click=true
+
+# Application icons from the .desktop entries. The grid leans on these to
+# be scannable, so they're much larger than a list would need.
 allow_images=true
-image_size=28
+image_size=48
 
 # Hide the right-click "actions" submenu (New Window, etc.) — it mostly
 # adds noise for a launcher used to open apps.

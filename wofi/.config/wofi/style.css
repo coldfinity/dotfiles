@@ -10,15 +10,21 @@
  */
 
 window {
-    background-color: rgba(16, 16, 22, 0.92);
+    background-color: rgba(16, 16, 22, 0.97);
     border: 1px solid rgba(255, 255, 255, 0.2);
     font-family: "JetBrainsMono Nerd Font";
     font-weight: 600;
     font-size: 13px;
 }
 
+/* The fill is repeated here on purpose. wofi's #outer-box covers the whole
+ * window node, and with a bg only on `window` the desktop behind showed
+ * straight through the results area — sharply, so it was alpha and not
+ * Hyprland's blur. Painting both stacks the two alphas into something
+ * genuinely readable over a busy wallpaper. */
 #outer-box {
     padding: 12px;
+    background-color: rgba(16, 16, 22, 0.97);
 }
 
 /* ── search field ────────────────────────────────────────────────── */
@@ -38,6 +44,13 @@ window {
     box-shadow: none;
 }
 
+/* Text you select inside the search box, which otherwise falls back to
+ * the GTK theme's blue and clashes with the accent. */
+#input selection {
+    background-color: rgba(122, 162, 247, 0.35);
+    color: #ffffff;
+}
+
 /* ── results list ────────────────────────────────────────────────── */
 #scroll {
     margin: 0;
@@ -47,30 +60,53 @@ window {
     background-color: transparent;
 }
 
+/* ── grid cells ──────────────────────────────────────────────────────
+ * config sets columns=4, so an #entry is a cell rather than a full-width
+ * row. Note wofi lays each entry out as a HORIZONTAL box (icon, then
+ * label) and GTK3 CSS has no way to flip a box's orientation — so this is
+ * icon-beside-name, not the icon-above-name of a true Launchpad. Padding
+ * and a fixed min-height do the work of making cells read as tiles.
+ */
 #entry {
-    padding: 8px 10px;
+    padding: 14px 12px;
+    margin: 4px;
     border-radius: 0;
     color: #b4b4c0;
+    /* Cells must be uniform or the grid looks ragged — a one-line name and
+     * a wrapped two-line name would otherwise give different heights. */
+    min-height: 64px;
+    /* A transparent rule the same width as the selected state's, so cells
+     * don't shift horizontally as the selection moves. */
+    border-left: 2px solid transparent;
+    transition: background-color 100ms ease-out, color 100ms ease-out;
+}
+
+/* single_click=true means a click launches, so hovering needs to show
+ * what you're about to hit. Deliberately weaker than the selected state. */
+#entry:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+    color: #ffffff;
 }
 
 #entry:selected {
     background-color: rgba(122, 162, 247, 0.20);
     color: #ffffff;
-    /* Accent rule on the left edge marks the selection without a fill. */
+    /* Accent rule on the leading edge marks the selection without a fill. */
     border-left: 2px solid #7aa2f7;
-    padding-left: 8px;
 }
 
 #text {
     color: inherit;
-    margin-left: 8px;
+    margin-left: 10px;
 }
 
 #text:selected {
     color: #ffffff;
 }
 
-/* Fuzzy-match highlight inside a result. */
-#entry image {
+/* Icons carry the grid, so give them room to breathe. -gtk-icon-transform
+ * stops GTK smearing a small icon up to the 48px the config asks for. */
+#img {
+    margin-right: 2px;
     -gtk-icon-transform: none;
 }
