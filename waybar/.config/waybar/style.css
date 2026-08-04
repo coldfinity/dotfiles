@@ -1,65 +1,172 @@
-/* Waybar — port of the sketchybar palette in
- * sketchybar/.config/sketchybar/colors.sh
+/* Waybar — palette from sketchybar/.config/sketchybar/colors.sh
  *
  *   WHITE        #ffffff              primary labels
  *   GREY         #b4b4c0              icons / secondary text
  *   DIM          rgba(255,255,255,.5) unfocused
  *   ACCENT       #7aa2f7              icy blue
- *   GLASS_BG     rgba(0,0,0,.15)      pill fill      (0x26000000)
- *   GLASS_BORDER rgba(255,255,255,.2) pill edge      (0x33ffffff)
- *   ACCENT_GLASS rgba(122,162,247,.15) focused ws    (0x267aa2f7)
+ *   RED          #f7768e              destructive / critical
  *
- * Note: sketchybar's glass used background.corner_radius=0, so these
- * islands are deliberately square-edged, not rounded.
+ * COLOUR ENCODES STATE, NOT IDENTITY.
+ *
+ * Grey is the resting position for everything. A module only takes on
+ * colour when it has something to say, and the same colour means the same
+ * thing everywhere on the bar:
+ *
+ *   GREY    #b4b4c0   normal / resting — the default for every module
+ *   ACCENT  #7aa2f7   active, focused, connected
+ *   ORANGE  #ff9e64   elevated — a load threshold has been crossed
+ *   RED     #f7768e   critical, or a destructive control under the cursor
+ *   DIM     50% white off, muted, disconnected, unfocused
+ *
+ * The earlier revision gave each module its own hue (cpu green, ram yellow,
+ * gpu magenta …). That was decoration: the colours identified modules you
+ * could already tell apart by their labels, and left nothing to escalate to
+ * when something actually needed attention. ORANGE and RED are the only
+ * colours here that mean "look at me", and nothing wears them at rest.
+ *
+ * Layout is three floating blurred-glass pills — left, centre, right. The
+ * waybar window itself is fully transparent; each group draws its own pill,
+ * and thin dividers mark the clusters inside one. Closer to sketchybar's
+ * per-module islands than a continuous bar, but grouped by side rather
+ * than one island per module.
+ *
+ * The radius is an absurd 999px rather than a measurement. GTK clamps a
+ * radius to half the box, so this stays a true pill whatever height the
+ * bar ends up, with no value to re-derive when the height changes.
  */
 
 * {
     font-family: "JetBrainsMono Nerd Font";
     font-weight: 600;          /* SemiBold, matching FONT_FACE:SemiBold:13.0 */
     font-size: 13px;
-    /* Kill GTK's default min-height so pills honour the 28px below. */
+    /* Kill GTK's default min-height so modules don't force the bar taller. */
     min-height: 0;
 }
 
-/* BAR_COLOR = 0x00000000 — fully transparent, so groups float. */
+/* Fully transparent — the pills are the only visible surface. The
+ * `ignore_alpha = 0.2` half of the layerrule in hyprland.conf is what
+ * stops Hyprland blurring these empty gaps between them; without it the
+ * blur fills the whole bar rectangle and the pills stop reading as
+ * separate objects. */
 window#waybar {
     background: transparent;
+    color: #ffffff;
 }
 
-/* ── the glass islands ───────────────────────────────────────────── */
-#workspaces,
-#window,
-#system,
-#wireplumber,
+/* ── the pills ───────────────────────────────────────────────────── */
+/* The alpha is deliberately low: Hyprland blurs what is behind these
+ * (layerrule blur in hyprland.conf), so it is a tint over a frosted
+ * backdrop rather than a flat wash. Raise it and the blur is wasted,
+ * because nothing shows through to blur. */
+#left,
 #clock,
+#taskbar,
+#stats,
+#status,
 #custom-power {
-    background: rgba(0, 0, 0, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(16, 16, 22, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
     color: #ffffff;
 
-    min-height: 28px;
-    padding: 0 8px;
-    /* sketchybar spacer items were width=12 */
-    margin: 0 6px;
+    /* Generous, because the curved ends eat into the usable width. */
+    padding: 0 6px;
+    margin: 0;
+}
+
+/* Even 6px gaps between every pill. The bar's own 10px inset already holds
+ * the end pills off the screen edge, so no outer margin is needed. */
+#taskbar,
+#stats,
+#status {
+    margin-right: 6px;
+}
+
+#left {
+    margin-right: 6px;
+}
+
+/* ── taskbar ─────────────────────────────────────────────────────── */
+/* Its own pill, sitting left of the stats. Tighter side padding than the
+ * text pills because its contents are icons, which already carry their
+ * own visual margin. */
+#taskbar {
+    padding: 0 4px;
+}
+
+#taskbar button {
+    background: transparent;
+    border: none;
+    border-radius: 999px;
+    padding: 0 6px;
+    margin: 4px 1px;
+    min-width: 0;
+}
+
+/* The focused window. Same accent chip as the active workspace, so the two
+ * "this is current" markers on the bar read identically. */
+#taskbar button.active {
+    background: rgba(122, 162, 247, 0.15);
+}
+
+#taskbar button:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Hide the pill when nothing is open, so an empty output doesn't leave a
+ * stray floating capsule with nothing in it. */
+window#waybar.empty #taskbar {
+    background: transparent;
+    border: none;
+}
+
+/* ── modules inside a pill ───────────────────────────────────────── */
+/* Transparent: the group behind them draws the only background. */
+#workspaces,
+#window,
+#cpu,
+#memory,
+#custom-gpu,
+#network,
+#bluetooth,
+#wireplumber {
+    background: transparent;
+    border: none;
+    padding: 0 10px;
+}
+
+/* ── cluster dividers ────────────────────────────────────────────── */
+/* Only the left pill still needs one — it is the only pill holding two
+ * unrelated things (workspaces and the focused app). On the right the pill
+ * boundaries themselves now do the separating. */
+#window {
+    border-left: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 /* ── workspaces ──────────────────────────────────────────────────── */
 #workspaces {
-    padding: 0 2px;
+    padding: 0 4px;
 }
 
+/* A round accent chip, not the flush bar's underline: a rule along the
+ * bottom edge would sit on the pill's curve. The vertical margin is what
+ * keeps the chip circular — without it the button stretches to the pill's
+ * full height and becomes a tall capsule. */
 #workspaces button {
     color: rgba(255, 255, 255, 0.5);   /* DIM — unfocused */
     background: transparent;
     border: none;
-    border-radius: 0;
-    padding: 0 8px;
-    min-width: 20px;
+    border-radius: 999px;
+    padding: 0 4px;
+    /* Wider than the 22px the digits needed: the CJK numerals are
+     * full-width glyphs and would otherwise touch their chip's edge. */
+    min-width: 26px;
+    margin: 4px 1px;
 }
 
 #workspaces button.active {
     color: #7aa2f7;                     /* ACCENT */
-    background: rgba(122, 162, 247, 0.15);  /* ACCENT_GLASS */
+    background: rgba(122, 162, 247, 0.15);
 }
 
 #workspaces button.urgent {
@@ -68,66 +175,113 @@ window#waybar {
 
 #workspaces button:hover {
     color: #ffffff;
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.06);
 }
 
-/* ── focused app (sketchybar front_app pill) ─────────────────────── */
+/* ── focused app ─────────────────────────────────────────────────── */
 #window {
     color: #ffffff;
-    padding: 0 12px;
 }
 
-/* Hide the pill entirely when no window is focused, so an empty
- * workspace doesn't leave a stray floating rectangle. */
+/* Collapse the app name when nothing is focused, so the left pill shrinks
+ * to just the workspaces rather than trailing an empty divided section. */
 window#waybar.empty #window {
-    background: transparent;
-    border: none;
+    border-left: none;
     padding: 0;
     margin: 0;
 }
 
-/* ── system group: cpu / ram / gpu share one island ──────────────── */
-#system {
-    padding: 0 4px;
-}
-
+/* ── system stats ────────────────────────────────────────────────── */
+/* Tighter than the 10px default so CPU/RAM/GPU group visually without
+ * needing dividers between them. */
+/* All three stats share one ramp, so a loaded machine reads the same way
+ * whichever resource is loaded. At rest they are plain GREY — a number
+ * sitting at 9% has nothing to report. */
 #cpu,
 #memory,
 #custom-gpu {
+    color: #b4b4c0;                     /* GREY — normal */
+    padding: 0 6px;
+}
+
+#cpu.warning,
+#memory.warning,
+#custom-gpu.warning {
+    color: #ff9e64;                     /* ORANGE — elevated */
+}
+
+#cpu.critical,
+#memory.critical,
+#custom-gpu.critical {
+    color: #f7768e;                     /* RED — critical */
+}
+
+#cpu {
+    padding-left: 10px;
+}
+
+#custom-gpu {
+    padding-right: 10px;
+}
+
+/* ── network + bluetooth + volume ────────────────────────────────── */
+/* One pill: two radios and the audio sink, all "state of a device". */
+/* Connected is the state worth signalling, so it gets ACCENT; anything
+ * off or disconnected falls to DIM. Grey is for "on, nothing attached". */
+#network,
+#bluetooth {
     color: #b4b4c0;                     /* GREY */
     padding: 0 8px;
 }
 
-/* ── volume ──────────────────────────────────────────────────────── */
-#wireplumber {
-    color: #b4b4c0;
+#network.wifi,
+#network.ethernet,
+#bluetooth.connected {
+    color: #7aa2f7;                     /* ACCENT — connected */
 }
 
-#wireplumber.muted {
+#status,
+#stats {
+    padding: 0 4px;
+}
+
+/* DIM rather than RED: a radio being off is a state you chose, not a
+ * fault. RED is reserved for things that need acting on. */
+#network.disconnected,
+#bluetooth.disabled,
+#bluetooth.off {
     color: rgba(255, 255, 255, 0.5);
 }
 
+/* ── volume ──────────────────────────────────────────────────────── */
+/* Audible is the resting state, so GREY. Muted is a deviation, so DIM —
+ * the same treatment a disconnected radio gets, because it is the same
+ * kind of fact: this device is not doing anything right now. */
+#wireplumber {
+    color: #b4b4c0;                     /* GREY */
+}
+
+#wireplumber.muted {
+    color: rgba(255, 255, 255, 0.5);    /* DIM */
+}
+
 /* ── clock ───────────────────────────────────────────────────────── */
-/* GREY, not the WHITE sketchybar used. On macOS the clock was a short
- * string and could carry the primary-label tier; here the format is
- * "{:%a %d %b %I:%M %p}", which is the longest run of text on the bar —
- * at full white it read as highlighted next to the grey stats and volume
- * either side of it. Same island, same padding, just demoted to the
- * secondary tier so the right side is uniform. */
+/* GREY, not WHITE. The format is the longest run of text on the bar, and
+ * at full white it read as highlighted next to the grey stats. */
 #clock {
     color: #b4b4c0;                     /* GREY */
-    padding: 0 12px;
+    padding: 0 14px;
 }
 
 /* ── power button ────────────────────────────────────────────────── */
+/* Left GREY on purpose: it is the one destructive control on the bar, and
+ * it should only take on colour (RED) when you are actually pointing at it. */
 #custom-power {
     color: #b4b4c0;
+    /* Symmetric, so the single glyph sits centred in a circular pill. */
     padding: 0 12px;
-    /* No right margin — sit flush with the bar's 10px edge inset. */
-    margin-right: 0;
 }
 
 #custom-power:hover {
     color: #f7768e;                     /* RED — destructive affordance */
-    background: rgba(247, 118, 142, 0.12);
 }

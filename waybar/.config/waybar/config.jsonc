@@ -1,8 +1,9 @@
 // Waybar — Linux counterpart to sketchybar/.config/sketchybar/sketchybarrc
 //
-// Mirrors the sketchybar layout: a transparent bar whose module groups read as
-// floating translucent islands. Left = workspaces + focused app,
-// centre = clock, right = system stats / volume / power.
+// A floating, blurred-glass bar. Closer in spirit to sketchybar than a flush
+// top bar, but one continuous surface rather than sketchybar's separate
+// per-module islands. Left = workspaces + focused app, centre = clock,
+// right = system stats / volume / power.
 //
 // Differences from the macOS bar, forced by the platform:
 //   - no battery pill (this machine is a desktop, no /sys/class/power_supply)
@@ -12,22 +13,73 @@
     "layer": "top",
     "position": "top",
 
-    // sketchybar: height=36 margin=10 y_offset=6
-    "height": 36,
+    // A single floating bar: inset from all three edges so it reads as a
+    // detached surface, but one continuous bar rather than separate islands.
+    // The bar's own background is what you see; the module groups inside it
+    // are transparent.
+    //
+    // The real translucency comes from Hyprland, not from here — see the
+    // `layerrule = blur, waybar` line in hypr/.config/hypr/hyprland.conf.
+    // Without it the alpha below just greys out whatever is behind.
+    "height": 34,
     "margin-top": 6,
     "margin-left": 10,
     "margin-right": 10,
 
+    // Three pills, not one per module: everything on a side shares a single
+    // island, with CSS dividers marking the clusters inside it. Modules are
+    // wrapped in groups purely so there is one widget per side to draw the
+    // pill on — waybar has no way to draw a background behind a bare list.
+    //
     // The clock sits centre, macOS-menu-bar style, rather than in the right
     // cluster where sketchybar had it. Note waybar centres this group against
     // the bar, not against the gap between left and right — so it stays put
     // as the focused-app title changes width.
-    "modules-left": ["hyprland/workspaces", "hyprland/window"],
+    "modules-left": ["group/left"],
     "modules-center": ["clock"],
-    "modules-right": ["group/system", "wireplumber", "custom/power"],
+    "modules-right": ["wlr/taskbar", "group/stats", "group/status", "custom/power"],
+
+    "group/left": {
+        "orientation": "horizontal",
+        "modules": ["hyprland/workspaces", "hyprland/window"]
+    },
+
+    // The right side is three pills plus the taskbar: stats | status | power.
+    // custom/power needs no group — a single module can carry its own pill,
+    // since the background is drawn on the module's own widget.
+    "group/stats": {
+        "orientation": "horizontal",
+        "modules": ["cpu", "memory", "custom/gpu"]
+    },
+
+    // Renamed from group/radios now that volume lives here too — the two
+    // radios and the sink are all "current state of a device".
+    "group/status": {
+        "orientation": "horizontal",
+        "modules": ["network", "bluetooth", "wireplumber"]
+    },
 
     "hyprland/workspaces": {
-        "format": "{name}",
+        // CJK numerals instead of digits. format-icons is keyed by workspace
+        // name, which is the number as a string for these numeric workspaces.
+        //
+        // JetBrainsMono has no CJK coverage, so these resolve through
+        // fontconfig fallback to Noto Sans CJK. They are full-width glyphs
+        // and so render wider than the digits they replace — the button
+        // min-width in style.css is sized for them.
+        "format": "{icon}",
+        "format-icons": {
+            "1": "一",
+            "2": "二",
+            "3": "三",
+            "4": "四",
+            "5": "五",
+            "6": "六",
+            "7": "七",
+            "8": "八",
+            "9": "九",
+            "default": "{name}"
+        },
         // Mirrors the workspace→monitor pinning in hyprland.conf, so each
         // bar only ever lists the workspaces that live on its own output.
         "persistent-workspaces": {
@@ -59,26 +111,78 @@
         }
     },
 
-    // sketchybar grouped cpu+ram+gpu into a single system_pill bracket.
-    "group/system": {
-        "orientation": "horizontal",
-        "modules": ["cpu", "memory", "custom/gpu"]
+    // Open windows as icons, in their own pill. Backed by the
+    // wlr-foreign-toplevel-management protocol, which Hyprland implements —
+    // this is not the same source as hyprland/window, so it lists every
+    // toplevel rather than just the focused one.
+    "wlr/taskbar": {
+        "format": "{icon}",
+        "icon-size": 18,
+        // Per-output, matching the workspace pinning: the Gigabyte's bar
+        // lists its own windows and the Dell's lists its own.
+        "all-outputs": false,
+        "tooltip-format": "{title}",
+        "on-click": "activate",
+        // Middle-click closes. Deliberately not on left-click, which is far
+        // too easy to hit by accident on a row of small icons.
+        "on-click-middle": "close",
+        // Icons are resolved from .desktop entries; anything without one
+        // falls back to a generic icon rather than disappearing.
+        "ignore-list": []
     },
 
+    // states drive the .warning / .critical CSS classes, so the stat turns
+    // amber then red under load instead of being a colour that never moves.
     "cpu": {
         "interval": 5,
-        "format": "CPU {usage}%"
+        "format": "CPU {usage}%",
+        "states": { "warning": 70, "critical": 90 }
     },
 
     "memory": {
         "interval": 5,
-        "format": "RAM {percentage}%"
+        "format": "RAM {percentage}%",
+        "states": { "warning": 75, "critical": 90 }
     },
 
+    // Emits JSON so it can carry a `class`, giving GPU the same
+    // warning/critical thresholds cpu and memory get from `states`.
+    // A plain-text custom module has no way to signal state.
     "custom/gpu": {
         "interval": 5,
-        "exec": "nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits 2>/dev/null || echo 0",
-        "format": "GPU {}%"
+        "return-type": "json",
+        "exec": "u=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits 2>/dev/null || echo 0); if [ \"$u\" -ge 90 ]; then c=critical; elif [ \"$u\" -ge 70 ]; then c=warning; else c=\"\"; fi; printf '{\"text\":\"GPU %s%%\",\"class\":\"%s\"}\\n' \"$u\" \"$c\"",
+        "format": "{}"
+    },
+
+    // This machine is on wifi (wlp0s20f3); the ethernet port enp6s0 is down.
+    // Both formats are defined anyway so the bar is correct if that changes.
+    // Glyphs are \uf1eb U+F1EB (wifi) and 󰈀 U+F0200 (ethernet), both verified
+    // present in JetBrainsMono Nerd Font.
+    "network": {
+        "interval": 5,
+        "format-wifi": "\uf1eb  {signalStrength}%",
+        "format-ethernet": "󰈀  wired",
+        "format-linked": "󰈀  no IP",
+        "format-disconnected": "\uf1eb  off",
+        "tooltip-format-wifi": "{essid}  ({signalStrength}%)\n{ipaddr}/{cidr}",
+        "tooltip-format-ethernet": "{ifname}\n{ipaddr}/{cidr}",
+        "tooltip-format-disconnected": "Disconnected",
+        // nmtui rather than a GUI: no NetworkManager applet is installed,
+        // and nmtui is part of the same package as nmcli.
+        "on-click": "ghostty -e nmtui"
+    },
+
+    // Icon only when nothing is connected, device name when something is.
+    // The bar has no room for "{controller_alias} {status}".
+    "bluetooth": {
+        "format": "\uf293",
+        "format-connected": "\uf293  {device_alias}",
+        "format-disabled": "\uf294",
+        "format-off": "\uf294",
+        "tooltip-format": "{controller_alias}\n{status}",
+        "tooltip-format-connected": "{controller_alias}\n{num_connections} connected\n{device_enumerate}",
+        "on-click": "blueman-manager"
     },
 
     "wireplumber": {
