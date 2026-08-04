@@ -199,10 +199,31 @@
         "tooltip": false
     },
 
-    // sketchybar calendar.sh: date +'%a %d %b %I:%M %p'
+    // Chinese, matching the CJK workspace numerals. zh_CN.utf8 is already
+    // generated on this box, so no locale-gen is needed.
+    //
+    // 24-hour on purpose. glibc's zh_CN renders %p as a literal "PM", not
+    // 上午/下午, so a 12-hour format would leave an English fragment sitting
+    // in an otherwise Chinese string.
+    //
+    // The L flag is load-bearing: waybar formats through libfmt's chrono
+    // support, which only consults `locale` when the spec asks for it. With
+    // the locale set but no L, %A still renders as English.
+    //
+    // Likewise %m/%d rather than %-m/%-d: libfmt has no glibc-style `-`
+    // no-padding flag, and using it makes the whole format throw, leaving
+    // the module blank.
+    //
+    // %A is the full weekday (星期二); %a would give the bare 二.
+    // Month stays before day because Chinese orders date parts
+    // largest-to-smallest — 08月04日, never 04日08月.
+    //
+    // Diverges from sketchybar's calendar.sh (%a %d %b %I:%M %p), which
+    // stays English on the Mac.
     "clock": {
         "interval": 1,
-        "format": "{:%a %d %b %I:%M %p}",
+        "locale": "zh_CN.utf8",
+        "format": "{:L%A %m月%d日 %H:%M}",
         "tooltip-format": "<tt>{calendar}</tt>"
     }
 }
