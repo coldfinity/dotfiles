@@ -215,8 +215,8 @@
     // the module blank.
     //
     // %A is the full weekday (星期二); %a would give the bare 二.
-    // Month stays before day because Chinese orders date parts
-    // largest-to-smallest — 08月04日, never 04日08月.
+    // Month precedes day: Chinese orders date parts largest-to-smallest,
+    // so 08月04日 is the conventional form.
     //
     // Diverges from sketchybar's calendar.sh (%a %d %b %I:%M %p), which
     // stays English on the Mac.
