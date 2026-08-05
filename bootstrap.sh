@@ -92,7 +92,7 @@ COMMON=(bin fastfetch ghostty nvim nvim.bak tmux tmux-sessionizer wezterm zsh)
 # macOS-only tools.
 MAC_ONLY=(aerospace sketchybar)
 # Linux-only tools.
-LINUX_ONLY=(hypr waybar wofi)
+LINUX_ONLY=(hypr mako waybar wofi)
 # NOTE: fcitx5 is stowed separately below — it must not be tree-folded.
 
 PKGS=("${COMMON[@]}")

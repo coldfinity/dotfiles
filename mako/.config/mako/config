@@ -1,0 +1,58 @@
+# mako — notification daemon for the Hyprland session.
+# Started by `exec-once = mako` in hyprland.conf.
+#
+# Before this, nothing on the machine implemented org.freedesktop.Notifications
+# at all: notify-send failed with ServiceUnknown and every desktop notification
+# — Discord, Spotify, herdr's agent-finished alerts — was silently discarded.
+#
+# Themed to match waybar/.config/waybar/style.css, which takes its palette
+# from sketchybar/.config/sketchybar/colors.sh:
+#
+#   WHITE   #ffffff   GREY   #b4b4c0   ACCENT #7aa2f7   RED #f7768e
+#
+# Colour follows the same rule as the bar: it encodes urgency, and the
+# resting state is uncoloured.
+
+font=JetBrainsMono Nerd Font 11
+
+# Same fill and hairline edge as the bar's pills. Slightly more opaque:
+# waybar sits on a blurred layer, and mako has no equivalent, so the alpha
+# has to carry legibility on its own over an arbitrary wallpaper.
+background-color=#12121aee
+text-color=#ffffff
+border-color=#ffffff1f
+progress-color=over #7aa2f733
+
+border-size=1
+border-radius=12
+padding=12
+margin=8
+max-icon-size=48
+
+# Top-right, clearing the bar. waybar occupies y=6..40 (6px margin + 34px
+# height), so 46 leaves a 6px gap below it — the same gap the bar's own
+# pills use between themselves.
+anchor=top-right
+margin=46,16,0,0
+width=380
+height=160
+
+default-timeout=6000
+ignore-timeout=0
+max-visible=5
+layer=overlay
+
+# Urgency. Normal notifications stay uncoloured, matching the bar's rule
+# that nothing wears colour at rest.
+[urgency=low]
+text-color=#b4b4c0
+default-timeout=4000
+
+[urgency=normal]
+text-color=#ffffff
+
+# Critical notifications never auto-dismiss — that is what critical means.
+[urgency=critical]
+border-color=#f7768e
+text-color=#ffffff
+default-timeout=0
