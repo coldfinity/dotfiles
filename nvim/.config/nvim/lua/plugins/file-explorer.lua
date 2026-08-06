@@ -37,11 +37,11 @@ oil.setup({
 		show_hidden = true,
 		natural_order = true,
 	},
-	float = {
-		padding = 2,
-		max_width = 100,
-		max_height = 0,
-	},
+	-- float = {
+	-- 	padding = 2,
+	-- 	max_width = 100,
+	-- 	max_height = 0,
+	-- },
 	use_default_keymaps = true,
 	keymaps = {
 		["q"] = "actions.close",

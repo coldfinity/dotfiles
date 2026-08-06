@@ -21,7 +21,7 @@ config.font = wezterm.font("Iosevka Nerd Font")
 --config.font = wezterm.font("Fira Code")
 
 config.font_size = 16
-config.line_height = 1.2
+config.line_height = 1
 
 config.default_cursor_style = "BlinkingBlock"
 config.cursor_blink_rate = 600
