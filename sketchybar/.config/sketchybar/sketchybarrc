@@ -1,82 +1,157 @@
 #!/bin/bash
+#
+# Sketchybar — macOS counterpart to waybar/.config/waybar/config.jsonc
+#
+# Three floating frames: left = where your work is (workspaces + the windows
+# on them), centre = clock and now playing, right = system state. The bar
+# window itself is transparent; each frame draws its own surface, and thin
+# dividers mark the sections inside one.
+#
+# SQUARE, NOT PILLS.
+#
+# These used to be five separate filled capsules — the default bar shape, and
+# the same shape as every other rice. They are now 2px-radius outlines with
+# almost no fill, which is the geometry the rest of the desktop already uses:
+# wezterm is a square-cornered window and the Linux side's hyprlock input
+# field is rounding = 0. The frame is the border, not the fill.
+#
+# Clusters that used to earn their own capsule are now divided sections
+# inside one frame, so the right-hand side reads as a single object rather
+# than four floating lozenges.
+#
+# Differences from the Linux bar, forced by the platform:
+#   - battery exists here; the Linux box is a desktop with no power supply
+#   - GPU comes from ioreg's IOAccelerator rather than nvidia-smi
+#   - no Wi-Fi signal percentage: airport -I is gone and wdutil needs sudo
+#   - waybar's hover drawers grow the frame in place; sketchybar has no
+#     revealer, so stats and status open popups instead
+#   - the input-source indicator reads HIToolbox rather than fcitx5-remote
 
 source "$CONFIG_DIR/colors.sh"
+source "$CONFIG_DIR/settings.sh"
 
 FONT_FACE="JetBrainsMono Nerd Font"
 
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 ITEM_DIR="$CONFIG_DIR/items"
 
-##### Bar Appearance #####
-# Transparent bar + y_offset/margin -> the pills read as floating glass islands.
-sketchybar --bar position=top height=36 margin=10 y_offset=6 blur_radius=0 sticky=on color=$BAR_COLOR
+##### Bar #####
+# Transparent, inset from all three edges so the frames read as detached
+# surfaces. blur_radius stays 0: the frames rely on their own fill, as
+# waybar's do — its frost comes from a hyprland layerrule, not from the bar.
+sketchybar --bar position=top height=36 margin=10 y_offset=6 \
+  blur_radius=0 sticky=on color=$BAR_COLOR
 
 ##### Defaults #####
+# GREY, not white. Grey is the resting position for everything on the bar; a
+# module only takes colour when it has something to say. See colors.sh.
+#
+# The shadows are what let FRAME_BG stay low enough to read as glass — see
+# colors.sh. distance=0 keeps them as a halo tight around each glyph rather
+# than an offset drop shadow; at 13px an offset one just looks blurry.
 default=(
-  padding_left=6
-  padding_right=6
+  padding_left=0
+  padding_right=0
   icon.font="$FONT_FACE:SemiBold:13.0"
   label.font="$FONT_FACE:SemiBold:13.0"
   icon.color=$GREY
-  label.color=$WHITE
+  label.color=$GREY
+  icon.shadow.drawing=on
+  icon.shadow.color=$TEXT_SHADOW
+  icon.shadow.distance=0
+  label.shadow.drawing=on
+  label.shadow.color=$TEXT_SHADOW
+  label.shadow.distance=0
   background.drawing=off
-  background.corner_radius=0
-  background.height=28
-  icon.padding_left=8
-  icon.padding_right=4
-  label.padding_left=4
-  label.padding_right=8
+  background.corner_radius=2
+  background.height=22
 )
 sketchybar --default "${default[@]}"
 
-##### Frosted glass island style (reused by every bracket) #####
-glass=(
-  background.color=$GLASS_BG
-  background.corner_radius=0
+##### Frame style, reused by all three brackets #####
+# 2px, not 0. A true right angle at this size aliases into a ragged corner
+# pixel; 2px draws clean and is not readable as "rounded" at a glance.
+frame=(
+  background.drawing=on
+  background.color=$FRAME_BG
+  background.border_color=$FRAME_BORDER
+  background.border_width=1
+  background.corner_radius=2
   background.height=28
+  padding_left=4
+  padding_right=4
 )
 
-##### Left Side #####
-source $ITEM_DIR/aerospace.sh
+##### Popup style, shared by the stats, status and power groups #####
+# Matched to the frames, minus the transparency: a popup sits over arbitrary
+# window content rather than over the wallpaper, so alpha here would just
+# make it hard to read. Same reasoning as the tooltip rule in waybar's
+# style.css.
+popup=(
+  popup.background.color=0xf2191724
+  popup.background.border_color=$FRAME_BORDER
+  popup.background.border_width=1
+  popup.background.corner_radius=2
+  popup.background.shadow.drawing=on
+  popup.align=right
+  popup.y_offset=2
+  popup.height=26
+)
 
-sketchybar --add bracket workspace_pill space.1 space.2 space.3 space.4 space.5 \
-  --set workspace_pill "${glass[@]}"
+source "$ITEM_DIR/divider.sh"
 
-sketchybar --add item spacer_app left --set spacer_app width=12
+##### Left frame — workspaces │ taskbar #####
+source "$ITEM_DIR/workspaces.sh"
+add_divider taskbar left
+source "$ITEM_DIR/taskbar.sh"
 
-source $ITEM_DIR/front_app.sh
+# Built from the same lists the items were, rather than written out by hand.
+# A bracket silently ignores a name that doesn't exist, so a hardcoded list
+# that drifts out of step doesn't error — it just leaves the missing item
+# drawing outside the frame, which is a nuisance to spot.
+ws_items=(); for sid in "${WS_IDS[@]}"; do ws_items+=("space.$sid"); done
+tb_items=(); for i in $(seq 1 "$TASKBAR_SLOTS"); do tb_items+=("taskbar.$i"); done
 
-sketchybar --add bracket front_app_pill front_app \
-  --set front_app_pill "${glass[@]}" padding_left=6 padding_right=6
+sketchybar --add bracket left_frame \
+  "${ws_items[@]}" divider.taskbar "${tb_items[@]}" \
+  --set left_frame "${frame[@]}"
 
-##### Right Side #####
-source $ITEM_DIR/cpu.sh
-source $ITEM_DIR/ram.sh
-source $ITEM_DIR/gpu.sh
+##### Centre frame — clock │ now playing #####
+# Clock first, now playing after it. The clock is the fixed-width half of
+# this frame and the track title is the part that changes length, so putting
+# the variable element last keeps the growth on one edge. It also means the
+# divider belongs to media, and disappears with it when nothing is playing
+# rather than leaving the clock with a stray rule.
+source "$ITEM_DIR/clock.sh"
+add_divider media center
+source "$ITEM_DIR/media.sh"
 
-sketchybar --add bracket system_pill cpu ram gpu \
-  --set system_pill "${glass[@]}" padding_left=6 padding_right=6
+sketchybar --add bracket center_frame clock divider.media media \
+  --set center_frame "${frame[@]}"
 
-sketchybar --add item spacer_sys right --set spacer_sys width=12
+##### Right frame — stats │ status │ input │ battery │ power #####
+# Items placed `right` are laid out right-to-left in the order they are
+# added, so this list is the reverse of how it reads on screen: power ends up
+# at the right edge and stats at the left, matching waybar's
+# stats / status / fcitx5 / power order.
+source "$ITEM_DIR/power.sh"
+add_divider power right
 
-source $ITEM_DIR/volume.sh
+source "$ITEM_DIR/battery.sh"
+add_divider battery right
 
-sketchybar --add bracket volume_pill volume \
-  --set volume_pill "${glass[@]}" padding_left=6 padding_right=6
+source "$ITEM_DIR/input_source.sh"
+add_divider input right
 
-sketchybar --add item spacer_vol right --set spacer_vol width=12
+source "$ITEM_DIR/status.sh"
+add_divider status right
 
-source $ITEM_DIR/battery.sh
+source "$ITEM_DIR/stats.sh"
 
-sketchybar --add bracket battery_pill battery \
-  --set battery_pill "${glass[@]}" padding_left=6 padding_right=6
+sketchybar --add bracket right_frame \
+  stats divider.status status divider.input input_source \
+  divider.battery battery divider.power power \
+  --set right_frame "${frame[@]}"
 
-sketchybar --add item spacer_bat right --set spacer_bat width=12
-
-source $ITEM_DIR/calendar.sh
-
-sketchybar --add bracket clock_pill calendar \
-  --set clock_pill "${glass[@]}" padding_left=6 padding_right=6
-
-##### Force all scripts to run the first time #####
+##### Force every script to run once #####
 sketchybar --update
