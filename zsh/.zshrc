@@ -1,17 +1,17 @@
-printf '\n  \033[1m  Commands\033[0m\n'
-printf '  %-12s %s\n' \
-  'v'         'nvim' \
-  'lg'        'lazygit' \
-  'claude'    'claude code' \
-  'opencode'  'opencode' \
-  'z'         'jump dir (zoxide)' \
-  'mole'      'ssh tunnel' \
-  'btop'      'system monitor' \
-  'C-f'       'tmux sessionizer' \
-  'll'        'ls -la with icons' \
-  'zshconfig' 'edit this file' \
-  'gclone'    'git clone script'
-echo
+# printf '\n  \033[1m  Commands\033[0m\n'
+# printf '  %-12s %s\n' \
+#   'v'         'nvim' \
+#   'lg'        'lazygit' \
+#   'claude'    'claude code' \
+#   'opencode'  'opencode' \
+#   'z'         'jump dir (zoxide)' \
+#   'mole'      'ssh tunnel' \
+#   'btop'      'system monitor' \
+#   'C-f'       'tmux sessionizer' \
+#   'll'        'ls -la with icons' \
+#   'zshconfig' 'edit this file' \
+#   'gclone'    'git clone script'
+# echo
 
 #fastfetch
 
@@ -64,6 +64,15 @@ esac
 export PATH="/opt/nvim/bin:$PATH"
 # also covers pipx-installed tools and stowed scripts (gclone, how)
 export PATH="$HOME/.local/bin:$PATH"
+
+# Both of these were appended by their own installers, with /home/yudi-wu
+# hardcoded. This file is stowed on macOS too, where neither directory
+# exists, so they are rewritten to use $HOME and guarded — an absent
+# directory would otherwise sit on PATH doing nothing.
+[ -d "$HOME/.opencode/bin" ] && export PATH="$HOME/.opencode/bin:$PATH"
+# spicetify: needed to re-run `spicetify backup apply`, since a Spotify
+# update through apt replaces the patched files with stock ones.
+[ -d "$HOME/.spicetify" ] && export PATH="$PATH:$HOME/.spicetify"
 
 # Zoxide (keep last — it wraps `cd`)
 eval "$(zoxide init zsh --cmd cd)"
