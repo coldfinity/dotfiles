@@ -1,0 +1,114 @@
+/* rofi launcher theme — Launchpad-style icon grid.
+ *
+ * Palette from sketchybar/.config/sketchybar/colors.sh, the same source
+ * waybar and mako use:
+ *
+ *   WHITE  #ffffff   GREY #b4b4c0   ACCENT #7aa2f7   RED #f7768e
+ *
+ * This is the layout wofi could not produce: `orientation: vertical` on
+ * the element puts the icon above the label. GTK3 CSS has no equivalent,
+ * which is why the wofi version was icon-beside-name.
+ */
+
+* {
+    bg:        #12121af7;
+    bg-soft:   #ffffff10;
+    bg-accent: #7aa2f726;
+    fg:        #ffffff;
+    fg-dim:    #b4b4c0;
+    accent:    #7aa2f7;
+    edge:      #ffffff1f;
+
+    background-color: transparent;
+    text-color:       @fg;
+    font:             "JetBrainsMono Nerd Font 12";
+}
+
+window {
+    /* Square-ish rather than a pill: a grid needs corners. Matches mako's
+     * 12px rather than the bar's full capsule. */
+    border-radius: 14px;
+    border:        1px solid;
+    border-color:  @edge;
+    background-color: @bg;
+
+    width:    1000px;
+    location: center;
+    anchor:   center;
+    padding:  0px;
+}
+
+mainbox {
+    padding:  16px;
+    spacing:  14px;
+    children: [ inputbar, listview ];
+}
+
+/* ── search ──────────────────────────────────────────────────────── */
+inputbar {
+    background-color: @bg-soft;
+    border:           1px solid;
+    border-color:     @edge;
+    border-radius:    10px;
+    padding:          10px 14px;
+    spacing:          10px;
+    children:         [ prompt, entry ];
+}
+
+prompt {
+    text-color: @accent;
+}
+
+entry {
+    placeholder:       "Search";
+    placeholder-color: @fg-dim;
+    cursor:            text;
+}
+
+/* ── the grid ────────────────────────────────────────────────────── */
+listview {
+    columns:      4;
+    lines:        4;
+    fixed-height: true;
+    /* The grid should hold its shape while you type rather than reflowing
+     * on every keystroke. */
+    flow:         horizontal;
+    cycle:        true;
+    scrollbar:    false;
+    spacing:      8px;
+}
+
+/* Vertical: icon on top, label underneath. This is the whole reason for
+ * the move off wofi. */
+element {
+    orientation:   vertical;
+    padding:       14px 8px;
+    spacing:       8px;
+    border-radius: 12px;
+    cursor:        pointer;
+}
+
+element normal.normal,
+element alternate.normal {
+    text-color: @fg-dim;
+}
+
+element selected.normal {
+    background-color: @bg-accent;
+    text-color:       @fg;
+}
+
+element-icon {
+    size:             48px;
+    horizontal-align: 0.5;
+    cursor:           inherit;
+}
+
+element-text {
+    horizontal-align: 0.5;
+    vertical-align:   0.5;
+    /* Long names get an ellipsis rather than widening their cell and
+     * making the grid ragged. */
+    text-color:       inherit;
+    cursor:           inherit;
+}

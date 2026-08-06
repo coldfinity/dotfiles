@@ -1,24 +1,19 @@
 #!/usr/bin/env bash
 #
 # Power menu for the waybar ⏻ button (modules-right → custom/power).
-# Presents a short wofi list and acts on the choice.
+# Presents a short rofi list and acts on the choice.
 #
-# --conf /dev/null is deliberate: the main wofi config sets show=drun and
-# columns=4, both of which would fight --dmenu.
-#
-# The stylesheet is dmenu.css, not the launcher's style.css. style.css is
-# shaped for the 4-column icon grid — 64px min-height cells — which made
-# these five rows far too tall to fit the window. Same palette either way.
+# dmenu.rasi, not the launcher theme: launcher.rasi is a 4-column grid of
+# 48px icons, which made these five text rows far taller than the window.
+# Same palette either way.
 
 set -euo pipefail
 
-choice=$(printf 'Lock\nSleep\nLog out\nRestart\nShut down\n' | wofi \
-    --dmenu \
-    --prompt "Power" \
-    --width 260 \
-    --height 260 \
-    --conf /dev/null \
-    --style "$HOME/.config/wofi/dmenu.css")
+choice=$(printf 'Lock\nSleep\nLog out\nRestart\nShut down\n' | rofi \
+    -dmenu \
+    -l 5 \
+    -p "Power" \
+    -theme "$HOME/.config/rofi/dmenu.rasi")
 
 case "$choice" in
     "Lock")      hyprlock ;;

@@ -1,0 +1,92 @@
+/* rofi dmenu theme — the small prompts: power menu, confirm.sh, clipboard.
+ *
+ * Separate from launcher.rasi on purpose, exactly as wofi needed a separate
+ * dmenu.css: the launcher is a 4-column grid of 48px icons, and reusing it
+ * for a five-line text menu produced enormous rows that overflowed the
+ * window. Same palette, list geometry.
+ */
+
+* {
+    bg:        #12121af7;
+    bg-soft:   #ffffff10;
+    bg-accent: #7aa2f726;
+    fg:        #ffffff;
+    fg-dim:    #b4b4c0;
+    accent:    #7aa2f7;
+    edge:      #ffffff1f;
+
+    background-color: transparent;
+    text-color:       @fg;
+    font:             "JetBrainsMono Nerd Font 12";
+}
+
+window {
+    border-radius:    14px;
+    border:           1px solid;
+    border-color:     @edge;
+    background-color: @bg;
+
+    width:    420px;
+    location: center;
+    anchor:   center;
+}
+
+mainbox {
+    padding:  12px;
+    spacing:  10px;
+    children: [ inputbar, listview ];
+}
+
+inputbar {
+    background-color: @bg-soft;
+    border:           1px solid;
+    border-color:     @edge;
+    border-radius:    10px;
+    padding:          8px 12px;
+    spacing:          8px;
+    children:         [ prompt, entry ];
+}
+
+prompt {
+    text-color: @accent;
+}
+
+entry {
+    placeholder:       "";
+    placeholder-color: @fg-dim;
+}
+
+listview {
+    columns:   1;
+    dynamic:   true;
+    scrollbar: false;
+    spacing:   2px;
+    /* No `lines` here on purpose. It reserves that many rows whatever the
+     * caller passes in, so a two-item prompt kept a six-row trough of dead
+     * space. Each caller passes -l with its own item count instead. */
+}
+
+/* Horizontal here, unlike the launcher's vertical grid cells. */
+element {
+    orientation:   horizontal;
+    padding:       8px 12px;
+    spacing:       10px;
+    border-radius: 8px;
+    cursor:        pointer;
+}
+
+element normal.normal,
+element alternate.normal {
+    text-color: @fg-dim;
+}
+
+element selected.normal {
+    background-color: @bg-accent;
+    text-color:       @fg;
+}
+
+element-text {
+    vertical-align: 0.5;
+    text-color:     inherit;
+    cursor:         inherit;
+}

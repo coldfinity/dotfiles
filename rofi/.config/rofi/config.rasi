@@ -1,0 +1,46 @@
+// rofi — application launcher, bound to ALT+Space in hyprland.conf.
+//
+// Replaces wofi. The deciding factor was layout: wofi builds each entry as
+// a horizontal GTK box and GTK3 CSS cannot flip a box's orientation, so an
+// icon-above-name grid was impossible there. rofi's .rasi engine sets
+// orientation per element, which is what launcher.rasi relies on.
+//
+// rofi 2.0 speaks Wayland natively — it links libwayland-client directly,
+// which is why there is no separate rofi-wayland package to install.
+//
+// Behaviour only; appearance lives in launcher.rasi and dmenu.rasi.
+
+configuration {
+    modes: "drun,run,window";
+
+    // Icons come from the .desktop entry via the icon theme.
+    show-icons: true;
+    // Just the app name — the generic name and comment turn a grid cell
+    // into a paragraph.
+    drun-display-format: "{name}";
+
+    // Terminal apps (Terminal=true in their .desktop) open in wezterm,
+    // matching $term in hyprland.conf.
+    terminal: "wezterm";
+
+    // Fuzzy would be the wofi equivalent, but rofi's normal matching treats
+    // space-separated words as independent substrings, which is far more
+    // predictable on short queries.
+    matching: "normal";
+    case-sensitive: false;
+
+    // Sort by how often you launch things, so the common apps surface first.
+    sorting-method: "fzf";
+    sort: true;
+
+    // Mode names shown when cycling with SHIFT+arrow.
+    display-drun: "Apps";
+    display-run:  "Run";
+    display-window: "Windows";
+
+    // Nothing to gain from a scrollbar in a grid; arrow keys still scroll.
+    kb-row-tab: "";
+    kb-accept-entry: "Return";
+}
+
+@theme "launcher"
