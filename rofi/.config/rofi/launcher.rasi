@@ -1,9 +1,10 @@
 /* rofi launcher theme — Launchpad-style icon grid.
  *
- * Palette from sketchybar/.config/sketchybar/colors.sh, the same source
- * waybar and mako use:
+ * Rosé Pine, matching wezterm's color_scheme and waybar's style.css:
  *
- *   WHITE  #ffffff   GREY #b4b4c0   ACCENT #7aa2f7   RED #f7768e
+ *   TEXT #e0def4   SUBTLE #908caa   IRIS #c4a7e7   LOVE #eb6f92
+ *   BASE #191724 — the window fill, at f2 so the Hyprland blur behind it
+ *   still shows through.
  *
  * This is the layout wofi could not produce: `orientation: vertical` on
  * the element puts the icon above the label. GTK3 CSS has no equivalent,
@@ -11,13 +12,13 @@
  */
 
 * {
-    bg:        #12121af7;
-    bg-soft:   #ffffff10;
-    bg-accent: #7aa2f726;
-    fg:        #ffffff;
-    fg-dim:    #b4b4c0;
-    accent:    #7aa2f7;
-    edge:      #ffffff1f;
+    bg:        #191724f2;
+    bg-soft:   #e0def412;
+    bg-accent: #c4a7e733;
+    fg:        #e0def4;
+    fg-dim:    #908caa;
+    accent:    #c4a7e7;
+    edge:      #e0def421;
 
     background-color: transparent;
     text-color:       @fg;

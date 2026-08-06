@@ -5,10 +5,10 @@
 # at all: notify-send failed with ServiceUnknown and every desktop notification
 # — Discord, Spotify, herdr's agent-finished alerts — was silently discarded.
 #
-# Themed to match waybar/.config/waybar/style.css, which takes its palette
-# from sketchybar/.config/sketchybar/colors.sh:
+# Rosé Pine, matching waybar/.config/waybar/style.css and wezterm:
 #
-#   WHITE   #ffffff   GREY   #b4b4c0   ACCENT #7aa2f7   RED #f7768e
+#   TEXT #e0def4   SUBTLE #908caa   IRIS #c4a7e7   LOVE #eb6f92
+#   BASE #191724 — the fill
 #
 # Colour follows the same rule as the bar: it encodes urgency, and the
 # resting state is uncoloured.
@@ -18,10 +18,10 @@ font=JetBrainsMono Nerd Font 11
 # Same fill and hairline edge as the bar's pills. Slightly more opaque:
 # waybar sits on a blurred layer, and mako has no equivalent, so the alpha
 # has to carry legibility on its own over an arbitrary wallpaper.
-background-color=#12121aee
-text-color=#ffffff
-border-color=#ffffff1f
-progress-color=over #7aa2f733
+background-color=#191724f0
+text-color=#e0def4
+border-color=#e0def421
+progress-color=over #c4a7e73d
 
 border-size=1
 border-radius=12
@@ -45,14 +45,14 @@ layer=overlay
 # Urgency. Normal notifications stay uncoloured, matching the bar's rule
 # that nothing wears colour at rest.
 [urgency=low]
-text-color=#b4b4c0
+text-color=#908caa
 default-timeout=4000
 
 [urgency=normal]
-text-color=#ffffff
+text-color=#e0def4
 
 # Critical notifications never auto-dismiss — that is what critical means.
 [urgency=critical]
-border-color=#f7768e
-text-color=#ffffff
+border-color=#eb6f92
+text-color=#e0def4
 default-timeout=0

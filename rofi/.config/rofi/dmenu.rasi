@@ -7,13 +7,13 @@
  */
 
 * {
-    bg:        #12121af7;
-    bg-soft:   #ffffff10;
-    bg-accent: #7aa2f726;
-    fg:        #ffffff;
-    fg-dim:    #b4b4c0;
-    accent:    #7aa2f7;
-    edge:      #ffffff1f;
+    bg:        #191724f2;
+    bg-soft:   #e0def412;
+    bg-accent: #c4a7e733;
+    fg:        #e0def4;
+    fg-dim:    #908caa;
+    accent:    #c4a7e7;
+    edge:      #e0def421;
 
     background-color: transparent;
     text-color:       @fg;

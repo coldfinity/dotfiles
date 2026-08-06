@@ -1,10 +1,14 @@
-/* Waybar — palette from sketchybar/.config/sketchybar/colors.sh
+/* Waybar — Rosé Pine, the same scheme wezterm runs (.wezterm.lua sets
+ * color_scheme = "rose-pine"). The bar sits directly above terminal
+ * windows all day, so its greys are Rosé Pine's warm purple-greys rather
+ * than the cool blue-greys this used to carry.
  *
- *   WHITE        #ffffff              primary labels
- *   GREY         #b4b4c0              icons / secondary text
- *   DIM          rgba(255,255,255,.5) unfocused
- *   ACCENT       #7aa2f7              icy blue
- *   RED          #f7768e              destructive / critical
+ *   TEXT         #e0def4              primary labels
+ *   SUBTLE       #908caa              icons / secondary text
+ *   MUTED        rgba(224, 222, 244, .45) unfocused
+ *   IRIS         #c4a7e7              accent — the scheme's purple
+ *   LOVE         #eb6f92              destructive / critical
+ *   BASE         #191724              pill fill, at low alpha
  *
  * COLOUR ENCODES STATE, NOT IDENTITY.
  *
@@ -12,11 +16,11 @@
  * colour when it has something to say, and the same colour means the same
  * thing everywhere on the bar:
  *
- *   GREY    #b4b4c0   normal / resting — the default for every module
- *   ACCENT  #7aa2f7   active, focused, connected
- *   ORANGE  #ff9e64   elevated — a load threshold has been crossed
- *   RED     #f7768e   critical, or a destructive control under the cursor
- *   DIM     50% white off, muted, disconnected, unfocused
+ *   GREY    #908caa   normal / resting — the default for every module
+ *   ACCENT  #c4a7e7   active, focused, connected
+ *   ORANGE  #f6c177   elevated — a load threshold has been crossed
+ *   RED     #eb6f92   critical, or a destructive control under the cursor
+ *   DIM     45% text  off, muted, disconnected, unfocused
  *
  * The earlier revision gave each module its own hue (cpu green, ram yellow,
  * gpu magenta …). That was decoration: the colours identified modules you
@@ -50,7 +54,7 @@
  * separate objects. */
 window#waybar {
     background: transparent;
-    color: #ffffff;
+    color: #e0def4;
 }
 
 /* ── the pills ───────────────────────────────────────────────────── */
@@ -64,10 +68,10 @@ window#waybar {
 #stats,
 #status,
 #custom-power {
-    background: rgba(16, 16, 22, 0.55);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(25, 23, 36, 0.60);
+    border: 1px solid rgba(224, 222, 244, 0.12);
     border-radius: 999px;
-    color: #ffffff;
+    color: #e0def4;
 
     /* Generous, because the curved ends eat into the usable width. */
     padding: 0 6px;
@@ -106,11 +110,11 @@ window#waybar {
 /* The focused window. Same accent chip as the active workspace, so the two
  * "this is current" markers on the bar read identically. */
 #taskbar button.active {
-    background: rgba(122, 162, 247, 0.15);
+    background: rgba(196, 167, 231, 0.18);
 }
 
 #taskbar button:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(224, 222, 244, 0.08);
 }
 
 /* Hide the pill when nothing is open, so an empty output doesn't leave a
@@ -140,7 +144,7 @@ window#waybar.empty #taskbar {
  * unrelated things (workspaces and the focused app). On the right the pill
  * boundaries themselves now do the separating. */
 #window {
-    border-left: 1px solid rgba(255, 255, 255, 0.12);
+    border-left: 1px solid rgba(224, 222, 244, 0.12);
 }
 
 /* ── workspaces ──────────────────────────────────────────────────── */
@@ -153,7 +157,7 @@ window#waybar.empty #taskbar {
  * keeps the chip circular — without it the button stretches to the pill's
  * full height and becomes a tall capsule. */
 #workspaces button {
-    color: rgba(255, 255, 255, 0.5);   /* DIM — unfocused */
+    color: rgba(224, 222, 244, 0.45);   /* DIM — unfocused */
     background: transparent;
     border: none;
     border-radius: 999px;
@@ -165,22 +169,22 @@ window#waybar.empty #taskbar {
 }
 
 #workspaces button.active {
-    color: #7aa2f7;                     /* ACCENT */
-    background: rgba(122, 162, 247, 0.15);
+    color: #c4a7e7;                     /* ACCENT */
+    background: rgba(196, 167, 231, 0.18);
 }
 
 #workspaces button.urgent {
-    color: #f7768e;                     /* RED */
+    color: #eb6f92;                     /* RED */
 }
 
 #workspaces button:hover {
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.06);
+    color: #e0def4;
+    background: rgba(224, 222, 244, 0.06);
 }
 
 /* ── focused app ─────────────────────────────────────────────────── */
 #window {
-    color: #ffffff;
+    color: #e0def4;
 }
 
 /* Collapse the app name when nothing is focused, so the left pill shrinks
@@ -200,20 +204,20 @@ window#waybar.empty #window {
 #cpu,
 #memory,
 #custom-gpu {
-    color: #b4b4c0;                     /* GREY — normal */
+    color: #908caa;                     /* GREY — normal */
     padding: 0 6px;
 }
 
 #cpu.warning,
 #memory.warning,
 #custom-gpu.warning {
-    color: #ff9e64;                     /* ORANGE — elevated */
+    color: #f6c177;                     /* ORANGE — elevated */
 }
 
 #cpu.critical,
 #memory.critical,
 #custom-gpu.critical {
-    color: #f7768e;                     /* RED — critical */
+    color: #eb6f92;                     /* RED — critical */
 }
 
 #cpu {
@@ -230,14 +234,14 @@ window#waybar.empty #window {
  * off or disconnected falls to DIM. Grey is for "on, nothing attached". */
 #network,
 #bluetooth {
-    color: #b4b4c0;                     /* GREY */
+    color: #908caa;                     /* GREY */
     padding: 0 8px;
 }
 
 #network.wifi,
 #network.ethernet,
 #bluetooth.connected {
-    color: #7aa2f7;                     /* ACCENT — connected */
+    color: #c4a7e7;                     /* ACCENT — connected */
 }
 
 #status,
@@ -250,7 +254,7 @@ window#waybar.empty #window {
 #network.disconnected,
 #bluetooth.disabled,
 #bluetooth.off {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(224, 222, 244, 0.45);
 }
 
 /* ── volume ──────────────────────────────────────────────────────── */
@@ -258,18 +262,18 @@ window#waybar.empty #window {
  * the same treatment a disconnected radio gets, because it is the same
  * kind of fact: this device is not doing anything right now. */
 #wireplumber {
-    color: #b4b4c0;                     /* GREY */
+    color: #908caa;                     /* GREY */
 }
 
 #wireplumber.muted {
-    color: rgba(255, 255, 255, 0.5);    /* DIM */
+    color: rgba(224, 222, 244, 0.45);    /* DIM */
 }
 
 /* ── clock ───────────────────────────────────────────────────────── */
 /* GREY, not WHITE. The format is the longest run of text on the bar, and
  * at full white it read as highlighted next to the grey stats. */
 #clock {
-    color: #b4b4c0;                     /* GREY */
+    color: #908caa;                     /* GREY */
     padding: 0 14px;
 }
 
@@ -277,11 +281,11 @@ window#waybar.empty #window {
 /* Left GREY on purpose: it is the one destructive control on the bar, and
  * it should only take on colour (RED) when you are actually pointing at it. */
 #custom-power {
-    color: #b4b4c0;
+    color: #908caa;
     /* Symmetric, so the single glyph sits centred in a circular pill. */
     padding: 0 12px;
 }
 
 #custom-power:hover {
-    color: #f7768e;                     /* RED — destructive affordance */
+    color: #eb6f92;                     /* RED — destructive affordance */
 }
