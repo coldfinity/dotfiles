@@ -102,6 +102,7 @@
         // Keys are regexes matched against the whole formatted string.
         "rewrite": {
             "com.mitchellh.ghostty": "Ghostty",
+            "org.wezfurlong.wezterm": "WezTerm",
             "zen": "Zen",
             "discord": "Discord",
             "Spotify": "Spotify",
@@ -170,7 +171,7 @@
         "tooltip-format-disconnected": "Disconnected",
         // nmtui rather than a GUI: no NetworkManager applet is installed,
         // and nmtui is part of the same package as nmcli.
-        "on-click": "ghostty -e nmtui"
+        "on-click": "wezterm start -- nmtui"
     },
 
     // Icon only when nothing is connected, device name when something is.

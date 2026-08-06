@@ -20,7 +20,7 @@ config.color_scheme = "rose-pine"
 config.font = wezterm.font("Iosevka Nerd Font")
 --config.font = wezterm.font("Fira Code")
 
-config.font_size = 20
+config.font_size = 16
 config.line_height = 1.2
 
 config.default_cursor_style = "BlinkingBlock"
@@ -38,8 +38,12 @@ config.macos_window_background_blur = 60
 
 config.scrollback_lines = 10000
 
-config.initial_rows = 150
-config.initial_cols = 50
+-- cols = width, rows = height. These were the other way round, which asked
+-- for a 50-column, 150-row window: roughly 400x2400px, taller than either
+-- monitor. Tiling hid it, but floating the window showed a sliver running
+-- off the bottom of the screen.
+config.initial_cols = 120
+config.initial_rows = 34
 
 config.window_padding = {
 	left = 10,
