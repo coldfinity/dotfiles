@@ -35,27 +35,83 @@
     // cluster where sketchybar had it. Note waybar centres this group against
     // the bar, not against the gap between left and right — so it stays put
     // as the focused-app title changes width.
+    // Left frame is "where your work is" — the workspaces and the windows
+    // on them. Those two were split across opposite ends of the bar until
+    // now, with the taskbar filed on the right purely because that is where
+    // there was room.
     "modules-left": ["group/left"],
-    "modules-center": ["clock"],
-    "modules-right": ["wlr/taskbar", "group/stats", "group/status", "custom/power"],
+    "modules-center": ["group/center"],
+    "modules-right": ["group/right"],
 
     "group/left": {
         "orientation": "horizontal",
-        "modules": ["hyprland/workspaces", "hyprland/window"]
+        "modules": ["hyprland/workspaces", "wlr/taskbar"]
+    },
+
+    // hyprland/window used to sit here, printing the focused app's name.
+    // It was deleted rather than moved: wlr/taskbar already marks the
+    // focused window with the same iris block the active workspace uses,
+    // so the label was the same fact written twice at opposite ends of the
+    // bar. Its `rewrite` map (com.mitchellh.ghostty → Ghostty, and so on)
+    // went with it — the taskbar identifies windows by icon and puts the
+    // real title in the tooltip, so there is nothing left to rewrite.
+    // Clock first, now playing after it. The clock is the fixed-width half
+    // of this frame and the track title is the part that changes length, so
+    // putting the variable element last keeps the growth on one edge. It
+    // also means the divider belongs to mpris, and disappears with it when
+    // nothing is playing rather than leaving the clock with a stray rule.
+    "group/center": {
+        "orientation": "horizontal",
+        "modules": ["clock", "mpris"]
+    },
+
+    // One frame for the whole right-hand side, rather than the four
+    // separate capsules this used to be. group/stats and group/status are
+    // nested inside it — waybar allows a group as a member of another
+    // group, and the drawer behaviour survives the nesting. The sections
+    // are told apart by CSS dividers now, the same way the left frame
+    // separates workspaces from the focused app.
+    "group/right": {
+        "orientation": "horizontal",
+        "modules": ["group/stats", "group/status", "custom/fcitx5", "custom/power"]
     },
 
     // The right side is three pills plus the taskbar: stats | status | power.
     // custom/power needs no group — a single module can carry its own pill,
     // since the background is drawn on the module's own widget.
+    //
+    // Both right-hand groups are drawers: the first module in `modules` is
+    // the anchor and stays visible, the rest slide out on hover. This is
+    // what keeps the resting bar short — six modules' worth of numbers
+    // collapse to two glyphs until you point at them.
+    //
+    // transition-left-to-right is false so the reveal animates from the
+    // right, growing back towards the centre of the screen. With it true
+    // the children appear to sweep out from under the anchor in the wrong
+    // direction on a right-aligned cluster.
     "group/stats": {
         "orientation": "horizontal",
-        "modules": ["cpu", "memory", "custom/gpu"]
+        "drawer": {
+            "transition-duration": 350,
+            "children-class": "stat",
+            "transition-left-to-right": false
+        },
+        "modules": ["custom/load", "cpu", "memory", "custom/gpu"]
     },
 
     // Renamed from group/radios now that volume lives here too — the two
     // radios and the sink are all "current state of a device".
+    //
+    // network is the anchor rather than a synthetic glyph like the stats
+    // drawer uses: it already renders as a single icon, and connectivity
+    // is the one thing here worth being able to see without hovering.
     "group/status": {
         "orientation": "horizontal",
+        "drawer": {
+            "transition-duration": 350,
+            "children-class": "device",
+            "transition-left-to-right": false
+        },
         "modules": ["network", "bluetooth", "wireplumber"]
     },
 
@@ -88,31 +144,7 @@
         }
     },
 
-    // sketchybar's front_app pill.
-    "hyprland/window": {
-        "format": "{class}",
-        "max-length": 40,
-        "separate-outputs": true,
-        // sketchybar's front_app drew an app icon; waybar can too, resolved
-        // from the .desktop entry via the GTK icon theme.
-        "icon": true,
-        "icon-size": 18,
-        // Wayland app-ids are reverse-DNS, so the raw class reads
-        // "com.mitchellh.ghostty". Map the ones you use to display names.
-        // Keys are regexes matched against the whole formatted string.
-        "rewrite": {
-            "com.mitchellh.ghostty": "Ghostty",
-            "org.wezfurlong.wezterm": "WezTerm",
-            "zen": "Zen",
-            "discord": "Discord",
-            "Spotify": "Spotify",
-            "org.mozilla.firefox": "Firefox",
-            "code": "VS Code",
-            "org.gnome.Nautilus": "Files"
-        }
-    },
-
-    // Open windows as icons, in their own pill. Backed by the
+    // Open windows as icons, beside the workspaces. Backed by the
     // wlr-foreign-toplevel-management protocol, which Hyprland implements —
     // this is not the same source as hyprland/window, so it lists every
     // toplevel rather than just the focused one.
@@ -132,17 +164,32 @@
         "ignore-list": []
     },
 
+    // The collapsed stats drawer's anchor. See stats.sh — it samples all
+    // three resources and reports the worst, so the resting bar can still
+    // go amber or red without the numbers being on screen.
+    "custom/load": {
+        "interval": 5,
+        "return-type": "json",
+        "exec": "~/.config/waybar/stats.sh",
+        "format": "{}"
+    },
+
     // states drive the .warning / .critical CSS classes, so the stat turns
     // amber then red under load instead of being a colour that never moves.
+    //
+    // Glyphs rather than the old "CPU 45%": 󰘙 U+F0619 (chip), 󰍛 U+F035B
+    // (memory) and 󰢮 U+F08AE (expansion card) for the GPU. All three are
+    // Material Design icons from the Nerd Font patch — verified present in
+    // JetBrainsMono Nerd Font, like the wifi and bluetooth glyphs below.
     "cpu": {
         "interval": 5,
-        "format": "CPU {usage}%",
+        "format": "󰘙 {usage}%",
         "states": { "warning": 70, "critical": 90 }
     },
 
     "memory": {
         "interval": 5,
-        "format": "RAM {percentage}%",
+        "format": "󰍛 {percentage}%",
         "states": { "warning": 75, "critical": 90 }
     },
 
@@ -152,7 +199,7 @@
     "custom/gpu": {
         "interval": 5,
         "return-type": "json",
-        "exec": "u=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits 2>/dev/null || echo 0); if [ \"$u\" -ge 90 ]; then c=critical; elif [ \"$u\" -ge 70 ]; then c=warning; else c=\"\"; fi; printf '{\"text\":\"GPU %s%%\",\"class\":\"%s\"}\\n' \"$u\" \"$c\"",
+        "exec": "u=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits 2>/dev/null || echo 0); if [ \"$u\" -ge 90 ]; then c=critical; elif [ \"$u\" -ge 70 ]; then c=warning; else c=\"\"; fi; printf '{\"text\":\"󰢮 %s%%\",\"class\":\"%s\"}\\n' \"$u\" \"$c\"",
         "format": "{}"
     },
 
@@ -186,10 +233,61 @@
         "on-click": "blueman-manager"
     },
 
+    // 󰕾 U+F057E audible, 󰖁 U+F0581 muted. Muted drops the number as well
+    // as changing the glyph — the level a muted sink would return to is
+    // not information you need while it is silent.
     "wireplumber": {
-        "format": "VOL {volume}%",
-        "format-muted": "VOL --",
+        "format": "󰕾 {volume}%",
+        "format-muted": "󰖁",
         "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+    },
+
+    // fcitx5 input method. Nothing on the bar reported this before, so the
+    // only way to find out which mode you were in was to type something and
+    // see what came out.
+    //
+    // fcitx5-remote exits printing the state as a number: 1 is inactive
+    // (plain latin), 2 is an active input engine (pinyin). It is polled
+    // rather than event-driven because fcitx5-remote is a query tool with
+    // no watch mode; 1s is fast enough that the bar has caught up before
+    // you have finished the first character.
+    "custom/fcitx5": {
+        "interval": 1,
+        "return-type": "json",
+        "exec": "s=$(fcitx5-remote 2>/dev/null || echo 1); if [ \"$s\" = 2 ]; then printf '{\"text\":\"中\",\"tooltip\":\"Pinyin\",\"class\":\"active\"}\\n'; else printf '{\"text\":\"EN\",\"tooltip\":\"Latin\",\"class\":\"\"}\\n'; fi",
+        "format": "{}",
+        "on-click": "fcitx5-remote -t"
+    },
+
+    // Now playing, in the centre frame beside the clock. Waybar is built
+    // with mpris support (verified against the binary), so this talks to
+    // Spotify over D-Bus directly — no playerctl needed, which is just as
+    // well, since it is not installed.
+    //
+    // max-length caps the shift: the centre group is centred against the
+    // bar, so a title that grows moves the clock with it. 38 keeps the
+    // worst case to a few characters' worth of drift.
+    "mpris": {
+        // No `player` here on purpose: the module's default is playerctld,
+        // which proxies whichever player was last active. So this follows
+        // Spotify and Zen both, switching to whichever you touched most
+        // recently, rather than being pinned to one bus name.
+        //
+        // playerctld is D-Bus activatable (the service file ships in
+        // /usr/share/dbus-1/services), so nothing needs to start it — the
+        // first connection brings it up. It is not in hyprland.conf's
+        // exec-once list for that reason.
+        "format": "{player_icon} {dynamic}",
+        "format-paused": "{status_icon} {dynamic}",
+        "dynamic-order": ["title", "artist"],
+        "max-length": 38,
+        "player-icons": { "default": "󰎈", "spotify": "󰓇" },
+        "status-icons": { "paused": "󰏤" },
+        "tooltip-format": "{title}\n{artist}\n{album}",
+        // Left-click toggles playback; the scroll wheel would skip tracks,
+        // which is far too easy to trigger by accident on a bar you scroll
+        // past. Deliberately not bound.
+        "on-click": "play-pause"
     },
 
     // Power button — opens power-menu.sh (lock / sleep / log out / restart /

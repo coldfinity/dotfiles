@@ -28,15 +28,21 @@
  * when something actually needed attention. ORANGE and RED are the only
  * colours here that mean "look at me", and nothing wears them at rest.
  *
- * Layout is three floating blurred-glass pills — left, centre, right. The
- * waybar window itself is fully transparent; each group draws its own pill,
- * and thin dividers mark the clusters inside one. Closer to sketchybar's
- * per-module islands than a continuous bar, but grouped by side rather
- * than one island per module.
+ * Layout is three floating frames — left, centre, right. The waybar window
+ * itself is fully transparent; each group draws its own frame, and thin
+ * dividers mark the clusters inside one.
  *
- * The radius is an absurd 999px rather than a measurement. GTK clamps a
- * radius to half the box, so this stays a true pill whatever height the
- * bar ends up, with no value to re-derive when the height changes.
+ * SQUARE, NOT PILLS.
+ *
+ * These used to be 999px capsules with a tinted fill: the default Wayland
+ * bar, and the same shape as every other rice. They are now 2px-radius
+ * outlines with almost no fill, which is the geometry the rest of the
+ * desktop already uses — hyprlock's input field is rounding = 0 and wezterm
+ * is a square-cornered window. The bar was the odd one out.
+ *
+ * The frame is the border, not the fill. Clusters that used to earn their
+ * own capsule are now divided sections inside one frame, so the right-hand
+ * side reads as a single object rather than four floating lozenges.
  */
 
 * {
@@ -57,57 +63,79 @@ window#waybar {
     color: #e0def4;
 }
 
-/* ── the pills ───────────────────────────────────────────────────── */
-/* The alpha is deliberately low: Hyprland blurs what is behind these
- * (layerrule blur in hyprland.conf), so it is a tint over a frosted
- * backdrop rather than a flat wash. Raise it and the blur is wasted,
- * because nothing shows through to blur. */
+/* ── the frames ──────────────────────────────────────────────────── */
+/* The border carries the shape; the fill is almost nothing.
+ *
+ * 0.30 rather than 0, which is what "no fill" would want. The layerrule in
+ * hyprland.conf is `blur, waybar` with `ignore_alpha = 0.2`, and that
+ * threshold is what keeps Hyprland from blurring the empty gaps between
+ * the frames. Drop the fill below 0.2 and these stop being blurred too —
+ * the frost vanishes and the text ends up sitting on raw wallpaper, which
+ * is unreadable over anything bright. So this is the lowest fill that
+ * still reads as empty while staying on the blurred side of that cutoff.
+ *
+ * 2px, not 0. A true right angle at this size aliases into a slightly
+ * ragged corner pixel; 2px is enough for GTK to draw a clean one and is
+ * not readable as "rounded" at a glance. */
 #left,
-#clock,
-#taskbar,
-#stats,
-#status,
-#custom-power {
-    background: rgba(25, 23, 36, 0.60);
-    border: 1px solid rgba(224, 222, 244, 0.12);
-    border-radius: 999px;
+#center,
+#right {
+    background: rgba(25, 23, 36, 0.30);
+    border: 1px solid rgba(224, 222, 244, 0.18);
+    border-radius: 2px;
     color: #e0def4;
 
-    /* Generous, because the curved ends eat into the usable width. */
-    padding: 0 6px;
+    /* Tighter than the capsules needed — square corners waste no width at
+     * the ends, so the old 6px of clearance was pure padding. */
+    padding: 0 2px;
     margin: 0;
 }
 
-/* Even 6px gaps between every pill. The bar's own 10px inset already holds
- * the end pills off the screen edge, so no outer margin is needed. */
+/* ── sections inside a frame ─────────────────────────────────────── */
+/* These used to draw their own capsules. They are now plain sections of
+ * their frame, separated by a rule on the leading edge rather than by a
+ * gap and a border of their own.
+ *
+ * Every section that is not first in its frame carries the rule. The
+ * first one must not: its border would sit a pixel inside the frame's own
+ * left edge and read as a doubled line. */
 #taskbar,
-#stats,
-#status {
-    margin-right: 6px;
+#mpris,
+#status,
+#custom-fcitx5,
+#custom-power {
+    background: transparent;
+    border: none;
+    border-left: 1px solid rgba(224, 222, 244, 0.12);
+    border-radius: 0;
+    margin: 0;
 }
 
-#left {
-    margin-right: 6px;
+/* First in their frames — left, centre and right respectively. */
+#workspaces,
+#clock,
+#stats {
+    border-left: none;
 }
 
-/* ── taskbar ─────────────────────────────────────────────────────── */
-/* Its own pill, sitting left of the stats. Tighter side padding than the
- * text pills because its contents are icons, which already carry their
- * own visual margin. */
 #taskbar {
+    /* Tighter than the text sections: its contents are icons, which carry
+     * their own visual margin. */
     padding: 0 4px;
 }
 
 #taskbar button {
     background: transparent;
     border: none;
-    border-radius: 999px;
+    /* Square, matching the frames. The 999px circles read as a dock. */
+    border-radius: 2px;
     padding: 0 6px;
     margin: 4px 1px;
     min-width: 0;
+    transition: background 200ms ease;
 }
 
-/* The focused window. Same accent chip as the active workspace, so the two
+/* The focused window. Same accent block as the active workspace, so the two
  * "this is current" markers on the bar read identically. */
 #taskbar button.active {
     background: rgba(196, 167, 231, 0.18);
@@ -117,17 +145,18 @@ window#waybar {
     background: rgba(224, 222, 244, 0.08);
 }
 
-/* Hide the pill when nothing is open, so an empty output doesn't leave a
- * stray floating capsule with nothing in it. */
+/* Collapse the section when nothing is open, so an empty output doesn't
+ * leave a stray divider with nothing after it. */
 window#waybar.empty #taskbar {
-    background: transparent;
-    border: none;
+    border-left: none;
+    padding: 0;
 }
 
-/* ── modules inside a pill ───────────────────────────────────────── */
-/* Transparent: the group behind them draws the only background. */
+/* ── modules inside a frame ──────────────────────────────────────── */
+/* Transparent: the frame behind them draws the only background. */
 #workspaces,
-#window,
+#mpris,
+#custom-load,
 #cpu,
 #memory,
 #custom-gpu,
@@ -137,14 +166,42 @@ window#waybar.empty #taskbar {
     background: transparent;
     border: none;
     padding: 0 10px;
+    /* Every colour change on the bar is a state change, and none of them
+     * are urgent enough to be instant. GTK3 animates colour and background
+     * fine; it will not animate a border, which is why the dividers below
+     * are static. */
+    transition: color 200ms ease, background 200ms ease;
 }
 
-/* ── cluster dividers ────────────────────────────────────────────── */
-/* Only the left pill still needs one — it is the only pill holding two
- * unrelated things (workspaces and the focused app). On the right the pill
- * boundaries themselves now do the separating. */
-#window {
-    border-left: 1px solid rgba(224, 222, 244, 0.12);
+/* ── now playing ─────────────────────────────────────────────────── */
+/* GREY like the clock beside it: this is ambient, not something you need
+ * to be told about. Nothing here escalates. */
+#mpris {
+    color: #908caa;
+    padding: 0 10px;
+}
+
+/* Paused is a deviation from the resting state, so it dims — the same
+ * treatment a muted sink or a disabled radio gets. */
+#mpris.paused {
+    color: rgba(224, 222, 244, 0.45);
+}
+
+/* Waybar hides mpris when no player is running, which collapses the centre
+ * frame to just the clock rather than leaving an empty divided section. */
+
+/* ── input method ────────────────────────────────────────────────── */
+/* EN at rest, 中 in accent when a pinyin engine is engaged. This follows
+ * the bar's rule exactly: latin input is the resting state and wears no
+ * colour, and the mode that changes what your keystrokes do is the one
+ * worth signalling. */
+#custom-fcitx5 {
+    color: #908caa;
+    padding: 0 10px;
+}
+
+#custom-fcitx5.active {
+    color: #c4a7e7;                     /* ACCENT */
 }
 
 /* ── workspaces ──────────────────────────────────────────────────── */
@@ -152,25 +209,56 @@ window#waybar.empty #taskbar {
     padding: 0 4px;
 }
 
-/* A round accent chip, not the flush bar's underline: a rule along the
- * bottom edge would sit on the pill's curve. The vertical margin is what
- * keeps the chip circular — without it the button stretches to the pill's
- * full height and becomes a tall capsule. */
+/* An accent block, not the flush bar's underline: a rule along the bottom
+ * edge would sit on the frame's own border. The vertical margin is what
+ * keeps the block clear of the frame — without it the button stretches to
+ * the full height and swallows the border.
+ *
+ * The block morphs rather than just recolouring: inactive workspaces are
+ * 26px squares and the focused one stretches to 46px wide, animated.
+ * min-width is the only width property GTK3 will interpolate — transition
+ * `width` and nothing moves, because the button's width comes from the
+ * box layout rather than from CSS. */
 #workspaces button {
     color: rgba(224, 222, 244, 0.45);   /* DIM — unfocused */
     background: transparent;
     border: none;
-    border-radius: 999px;
+    border-radius: 2px;
     padding: 0 4px;
     /* Wider than the 22px the digits needed: the CJK numerals are
      * full-width glyphs and would otherwise touch their chip's edge. */
     min-width: 26px;
     margin: 4px 1px;
+    transition: color 200ms ease,
+                background 200ms ease,
+                min-width 250ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* Persistent workspaces that hold no windows. They are listed so the row
+ * keeps a stable width, but they are the least important thing on the bar
+ * and shouldn't compete with the ones you are actually using. */
+#workspaces button.empty {
+    color: rgba(224, 222, 244, 0.25);
+}
+
+/* Showing on this monitor, but not the workspace holding keyboard focus.
+ * With two outputs one of the bars is always in this state, and until now
+ * that bar highlighted nothing at all — .active is given only to the
+ * globally focused workspace, so the Dell's bar went blank the moment you
+ * clicked something on the Gigabyte. Same widened block as .active, but
+ * outlined rather than filled: this is where you are, not what you are
+ * typing into. */
+#workspaces button.visible {
+    color: #908caa;
+    box-shadow: inset 0 0 0 1px rgba(224, 222, 244, 0.18);
+    min-width: 46px;
 }
 
 #workspaces button.active {
     color: #c4a7e7;                     /* ACCENT */
     background: rgba(196, 167, 231, 0.18);
+    box-shadow: inset 0 0 0 1px rgba(196, 167, 231, 0.45);
+    min-width: 46px;
 }
 
 #workspaces button.urgent {
@@ -182,25 +270,13 @@ window#waybar.empty #taskbar {
     background: rgba(224, 222, 244, 0.06);
 }
 
-/* ── focused app ─────────────────────────────────────────────────── */
-#window {
-    color: #e0def4;
-}
-
-/* Collapse the app name when nothing is focused, so the left pill shrinks
- * to just the workspaces rather than trailing an empty divided section. */
-window#waybar.empty #window {
-    border-left: none;
-    padding: 0;
-    margin: 0;
-}
-
 /* ── system stats ────────────────────────────────────────────────── */
 /* Tighter than the 10px default so CPU/RAM/GPU group visually without
  * needing dividers between them. */
 /* All three stats share one ramp, so a loaded machine reads the same way
  * whichever resource is loaded. At rest they are plain GREY — a number
  * sitting at 9% has nothing to report. */
+#custom-load,
 #cpu,
 #memory,
 #custom-gpu {
@@ -208,16 +284,36 @@ window#waybar.empty #window {
     padding: 0 6px;
 }
 
+#custom-load.warning,
 #cpu.warning,
 #memory.warning,
 #custom-gpu.warning {
     color: #f6c177;                     /* ORANGE — elevated */
 }
 
+#custom-load.critical,
 #cpu.critical,
 #memory.critical,
 #custom-gpu.critical {
     color: #eb6f92;                     /* RED — critical */
+}
+
+/* ── drawers ─────────────────────────────────────────────────────── */
+/* group/stats and group/status collapse to their first module and reveal
+ * the rest on hover (see config.jsonc). The anchor gets a little more room
+ * than a drawer child so the collapsed pill reads as a deliberate icon
+ * button rather than a clipped row. */
+#custom-load {
+    padding: 0 8px;
+}
+
+/* children-class from the drawer config. The reveal is a GTK revealer, so
+ * the slide itself is animated by transition-duration in config.jsonc —
+ * this only fades the contents in, which stops the text appearing at full
+ * strength before the pill has finished growing under it. */
+#stats .stat,
+#status .device {
+    transition: opacity 250ms ease;
 }
 
 #cpu {
@@ -282,10 +378,31 @@ window#waybar.empty #window {
  * it should only take on colour (RED) when you are actually pointing at it. */
 #custom-power {
     color: #908caa;
-    /* Symmetric, so the single glyph sits centred in a circular pill. */
-    padding: 0 12px;
+    padding: 0 10px;
 }
 
 #custom-power:hover {
     color: #eb6f92;                     /* RED — destructive affordance */
+}
+
+/* ── tooltips ────────────────────────────────────────────────────── */
+/* Left at the GTK default until now, which meant a square, near-opaque
+ * grey box appearing under a set of rounded rose-pine pills. Restyled to
+ * match the pills, minus the transparency: a tooltip sits over arbitrary
+ * window content rather than over the wallpaper, and Hyprland's layerrule
+ * blur does not apply to it, so alpha here would just make it hard to
+ * read.
+ *
+ * The `tooltip` selector is the window; `tooltip label` is the text inside
+ * it. Setting colour only on the former leaves the label at GTK's own
+ * foreground, so both are needed. */
+tooltip {
+    background: #191724;
+    border: 1px solid rgba(224, 222, 244, 0.12);
+    border-radius: 12px;
+}
+
+tooltip label {
+    color: #e0def4;
+    padding: 4px 2px;
 }
