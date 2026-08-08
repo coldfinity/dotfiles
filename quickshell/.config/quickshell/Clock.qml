@@ -21,7 +21,7 @@ Item {
     required property string screenName
 
     Layout.fillHeight: true
-    implicitWidth: label.implicitWidth + 28
+    implicitWidth: label.implicitWidth + 22
 
     // Ticks once a second. `precision` is what decides how often the
     // binding re-evaluates — asking for Seconds on a display that only
@@ -37,7 +37,8 @@ Item {
 
         font.family: Theme.fontFamily
         font.pixelSize: Theme.fontSize
-        font.weight: Font.DemiBold
+        font.weight: Theme.weight
+        font.letterSpacing: Theme.tracking
 
         text: Qt.locale("zh_CN").toString(clock.date, "dddd MM月dd日 HH:mm")
 
@@ -46,7 +47,7 @@ Item {
         // to the grey stats. Brightens while the dashboard is open, so the
         // clock reads as the thing that opened it rather than as unrelated
         // text sitting above a panel.
-        color: dashboard.visible ? Theme.text : Theme.subtle
+        color: (dashboard.open || clockHover.hovered) ? Theme.text : Theme.subtle
 
         Behavior on color {
             ColorAnimation {
@@ -58,27 +59,21 @@ Item {
     // Click, not hover. The dashboard is something you interact with —
     // paging months, dragging the volume — so it must not vanish the
     // moment the cursor strays off the way a hover popup would.
+    HoverHandler {
+        id: clockHover
+    }
+
     MouseArea {
         anchors.fill: parent
         cursorShape: Qt.PointingHandCursor
-        onClicked: dashboard.visible = !dashboard.visible
+        onClicked: dashboard.toggle()
     }
 
     Dashboard {
         id: dashboard
         anchorItem: root
         screenName: root.screenName
-        visible: false
-
-        // No grabFocus. A grabbing popup has to be parented to a surface
-        // that has received input, and the bar is a layer-shell surface
-        // with no keyboard focus — asking for the grab produced "Failed to
-        // create grabbing popup. Ensure popup has a transientParent set"
-        // and the panel never appeared.
-        //
-        // The cost is that clicking elsewhere does not dismiss it; clicking
-        // the clock again does. Making the bar keyboardFocus: OnDemand
-        // would restore click-away, at the price of the bar taking focus
-        // from the window you were typing in every time you touch it.
+        // Click the clock again to close it. Click-away dismissal was
+        // tried and reverted — see the note in ShellPopup.qml.
     }
 }

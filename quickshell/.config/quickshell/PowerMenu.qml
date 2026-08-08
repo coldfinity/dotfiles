@@ -14,21 +14,11 @@ import QtQuick
 // Destructive items sit at the bottom and take love on hover; lock and
 // sleep are recoverable and stay grey. Same rule as the bar: colour marks
 // the thing that deserves a second's thought.
-PopupWindow {
+ShellPopup {
     id: menu
-
-    required property Item anchorItem
-
-    anchor.item: anchorItem
-    anchor.rect.y: anchorItem.height + 6
-    anchor.rect.x: anchorItem.width / 2
-    anchor.gravity: Edges.Bottom
-    anchor.edges: Edges.Bottom
 
     implicitWidth: 190
     implicitHeight: 214
-
-    color: "transparent"
 
     readonly property var actions: [
         {
@@ -63,46 +53,59 @@ PopupWindow {
         }
     ]
 
-    PopupSurface {
+    Column {
         anchors.fill: parent
-        shown: menu.visible
+        anchors.margins: 8
+        spacing: 2
 
-        Column {
-            anchors.fill: parent
-            anchors.margins: 8
-            spacing: 2
+        Repeater {
+            model: menu.actions
 
-            Repeater {
-                model: menu.actions
+            delegate: Rectangle {
+                id: row
 
-                delegate: Rectangle {
-                    id: row
+                required property var modelData
+                required property int index
 
-                    required property var modelData
-                    required property int index
+                width: parent.width
+                height: 38
+                radius: Theme.radius
+                color: hover.hovered ? (modelData.danger ? Qt.rgba(0.922, 0.435, 0.573, 0.14) : Theme.hover) : "transparent"
 
-                    width: parent.width
-                    height: 38
-                    radius: Theme.radius
-                    color: hover.hovered ? (modelData.danger ? Qt.rgba(0.922, 0.435, 0.573, 0.14) : Theme.hover) : "transparent"
+                Behavior on color {
+                    ColorAnimation {
+                        duration: Theme.animMs
+                    }
+                }
 
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: Theme.animMs
-                        }
+                // Each row slides in a beat after the one above it, so the
+                // menu unfolds rather than appearing all at once.
+                //
+                // Driven off `menu.open`, not Component.onCompleted. The
+                // delegates are built once when the shell starts and then
+                // persist — so onCompleted played this exactly once, into a
+                // window that was not on screen, and every real opening of
+                // the menu after that had no animation at all.
+                opacity: 0
+
+                Connections {
+                    target: menu
+                    function onOpenChanged() {
+                        if (menu.open)
+                            entry.restart();
+                    }
+                }
+
+                SequentialAnimation {
+                    id: entry
+
+                    // The stagger the comment above promised. It was never
+                    // implemented — every row animated at once.
+                    PauseAnimation {
+                        duration: row.index * 30
                     }
 
-                    // Each row slides in a beat after the one above it, so
-                    // the menu unfolds rather than appearing all at once.
-                    // 30ms is small enough to read as one gesture.
-                    opacity: 0
-                    x: 0
-
-                    Component.onCompleted: entry.start()
-
                     ParallelAnimation {
-                        id: entry
-
                         NumberAnimation {
                             target: row
                             property: "opacity"
@@ -121,54 +124,55 @@ PopupWindow {
                             easing.type: Easing.OutCubic
                         }
                     }
+                }
 
-                    Text {
-                        id: glyph
-                        anchors.left: parent.left
-                        anchors.leftMargin: 12
-                        anchors.verticalCenter: parent.verticalCenter
-                        text: row.modelData.glyph
-                        font.family: Theme.fontFamily
-                        font.pixelSize: Theme.fontSize + 1
-                        color: hover.hovered ? (row.modelData.danger ? Theme.love : Theme.text) : Theme.subtle
+                Text {
+                    id: glyph
+                    anchors.left: parent.left
+                    anchors.leftMargin: 12
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: row.modelData.glyph
+                    font.family: Theme.fontFamily
+                    font.pixelSize: Theme.fontSize + 1
+                    color: hover.hovered ? (row.modelData.danger ? Theme.love : Theme.text) : Theme.subtle
 
-                        Behavior on color {
-                            ColorAnimation {
-                                duration: Theme.animMs
-                            }
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: Theme.animMs
                         }
                     }
+                }
 
-                    Text {
-                        anchors.left: glyph.right
-                        anchors.leftMargin: 12
-                        anchors.verticalCenter: parent.verticalCenter
-                        text: row.modelData.label
-                        font.family: Theme.fontFamily
-                        font.pixelSize: Theme.fontSize
-                        font.weight: Font.DemiBold
-                        color: hover.hovered ? (row.modelData.danger ? Theme.love : Theme.text) : Theme.subtle
+                Text {
+                    anchors.left: glyph.right
+                    anchors.leftMargin: 12
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: row.modelData.label
+                    font.family: Theme.fontFamily
+                    font.pixelSize: Theme.fontSize
+                    font.weight: Theme.weight
+                    font.letterSpacing: Theme.tracking
+                    color: hover.hovered ? (row.modelData.danger ? Theme.love : Theme.text) : Theme.subtle
 
-                        Behavior on color {
-                            ColorAnimation {
-                                duration: Theme.animMs
-                            }
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: Theme.animMs
                         }
                     }
+                }
 
-                    HoverHandler {
-                        id: hover
-                        cursorShape: Qt.PointingHandCursor
-                    }
+                HoverHandler {
+                    id: hover
+                    cursorShape: Qt.PointingHandCursor
+                }
 
-                    TapHandler {
-                        onTapped: {
-                            menu.visible = false;
-                            // execDetached, not Process: these outlive the
-                            // shell that launched them, and half of them
-                            // end the session that owns it.
-                            Quickshell.execDetached(row.modelData.command);
-                        }
+                TapHandler {
+                    onTapped: {
+                        menu.open = false;
+                        // execDetached, not Process: these outlive the shell
+                        // that launched them, and half of them end the
+                        // session that owns it.
+                        Quickshell.execDetached(row.modelData.command);
                     }
                 }
             }

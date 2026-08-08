@@ -25,10 +25,35 @@ value=$3
 # Bus numbers are assigned by probe order and move when hardware changes;
 # the connector name (DP-1, DP-3) is the stable identifier and is what
 # hyprland.conf already uses to name the outputs.
-bus=$(ddcutil detect --brief 2>/dev/null | awk -v want="card1-$connector" '
-    /I2C bus:/ { b = $3 }
-    /DRM connector:/ { if ($3 == want) { sub("/dev/i2c-", "", b); print b; exit } }
-')
+#
+# Cached, because `ddcutil detect` probes every I2C bus on the system and
+# costs ~0.57s of the ~0.87s this script used to take. That ran on every
+# single opening of the dashboard, which is exactly the wrong moment to
+# spend half a second — it is the hitch you feel when the panel appears.
+#
+# The cache lives in the runtime dir, so it is cleared on every reboot and
+# a monitor swap cannot leave a stale bus number behind for long. If the
+# cached bus has gone away, the read below fails and we re-probe.
+cache="${XDG_RUNTIME_DIR:-/tmp}/quickshell-ddc-bus-$connector"
+
+resolve_bus() {
+    ddcutil detect --brief 2>/dev/null | awk -v want="card1-$connector" '
+        /I2C bus:/ { b = $3 }
+        /DRM connector:/ { if ($3 == want) { sub("/dev/i2c-", "", b); print b; exit } }
+    '
+}
+
+bus=""
+if [ -r "$cache" ]; then
+    cached=$(cat "$cache")
+    # Trust it only if that bus still exists.
+    [ -e "/dev/i2c-$cached" ] && bus=$cached
+fi
+
+if [ -z "$bus" ]; then
+    bus=$(resolve_bus)
+    [ -n "$bus" ] && printf '%s\n' "$bus" > "$cache"
+fi
 
 [ -n "$bus" ] || exit 1
 
@@ -40,7 +65,12 @@ get)
         awk '/^VCP/ { if ($5 > 0) printf "%d\n", ($4 * 100) / $5; else print $4 }'
     ;;
 set)
-    ddcutil --bus "$bus" setvcp 10 "$value" 2>/dev/null
+    # Both streams, not just stderr. setvcp emits ddc_write_only_with_retry
+    # trace lines on STDOUT, so `2>/dev/null` alone leaves them to be read
+    # as if they were output. Nothing parses this command's output today,
+    # but a stray "Starting" on stdout is exactly the kind of thing that
+    # silently poisons a SplitParser the moment someone wires one up.
+    ddcutil --bus "$bus" setvcp 10 "$value" >/dev/null 2>&1
     ;;
 *)
     echo "usage: brightness.sh get|set <connector> [value]" >&2

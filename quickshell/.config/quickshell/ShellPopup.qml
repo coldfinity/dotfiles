@@ -4,15 +4,35 @@ import QtQuick
 // The base every popup in this shell is built on: dashboard, power menu,
 // tooltips, workspace dropdowns.
 //
-// It exists to fix a specific bug. PopupSurface animates on `shown`, but
-// the popups used to drive PopupWindow.visible directly — and a Wayland
-// popup unmaps the moment visible goes false, so the fade-out had no frames
-// to render into. Opening looked smooth and closing was an instant blink.
-//
-// The fix is to separate the two. `open` is what callers bind to; `visible`
-// is held true until the close animation has actually finished, then
-// dropped. Reopening mid-close cancels the pending unmap, so a fast
+// It separates `open` from `visible`. A Wayland popup unmaps the moment
+// visible goes false, so a popup that drove `visible` directly had no
+// frames left to render its fade-out into — opening looked smooth and
+// closing was an instant blink. `open` is what callers bind to; `visible`
+// is held true until the close animation has finished, then dropped.
+// Reopening mid-close cancels the pending unmap, so a fast
 // hover-out-hover-in does not blink either.
+//
+// NO FOCUS GRAB. This was tried and removed.
+//
+// Setting grabFocus on the click-opened popups gave click-anywhere-to-
+// dismiss, and required Bar.qml to set keyboardFocus: OnDemand, since a
+// grabbing popup must be parented to a surface that has received input.
+// It never worked reliably here. In order, it produced:
+//
+//   1. A reopen race — clicking the anchor while open delivered both a
+//      compositor dismissal and a click to the button underneath, so the
+//      popup closed and immediately reopened.
+//   2. A guard against that which was long enough to swallow a deliberate
+//      second click, so the button appeared to ignore you.
+//   3. A recreation loop — the compositor destroyed the surface while
+//      `visible` was still true for the close animation, so quickshell
+//      rebuilt the window, which was dismissed again, repeatedly. That is
+//      the flashing.
+//
+// Each fix was reasoned rather than observed, because synthetic clicks do
+// not reproduce any of it. Clicking the anchor again to close is what
+// worked, so that is what this does. If click-away is worth another
+// attempt, it needs to start from a way to actually test it.
 PopupWindow {
     id: root
 
@@ -24,9 +44,8 @@ PopupWindow {
     // Content goes inside the animated surface, not the bare window.
     default property alias content: surface.content
 
-    // How far below the anchor the popup hangs. The bar's frames have a
-    // border of their own, and a popup flush against it reads as growing
-    // out of the bar rather than as a separate surface.
+    // How far below the anchor the popup hangs. A popup flush against the
+    // bar reads as growing out of it rather than as a separate surface.
     property int gap: 6
 
     anchor.item: anchorItem
@@ -48,13 +67,18 @@ PopupWindow {
         }
     }
 
-    // Slightly longer than PopupSurface's longest exit animation (200ms),
-    // so the window is never pulled out from under a frame still being
-    // drawn.
+    // Slightly longer than PopupSurface's longest exit animation, so the
+    // window is never pulled out from under a frame still being drawn.
     Timer {
         id: unmap
-        interval: 240
+        interval: 170
         onTriggered: root.visible = false
+    }
+
+    // Kept as the callers' entry point rather than having them assign
+    // `open` directly, so open/close policy stays in one place.
+    function toggle() {
+        open = !open;
     }
 
     PopupSurface {

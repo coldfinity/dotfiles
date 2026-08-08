@@ -33,28 +33,37 @@ Item {
         radius: Theme.radius
 
         opacity: root.shown ? 1 : 0
-        scale: root.shown ? 1 : 0.97
-        y: root.shown ? 0 : -6
+        scale: root.shown ? 1 : 0.99
+        y: root.shown ? 0 : -4
 
-        // Opacity leads slightly and the movement trails, which reads as
-        // the surface settling rather than sliding.
+        // Deliberately quick.
+        //
+        // The window itself maps in under 2ms — measured — so any lag you
+        // feel opening one of these is entirely this animation. The
+        // original 130/200ms with a scale from 0.97 read as sluggish on a
+        // panel you click: you had already looked at where the content
+        // would be before it finished arriving.
+        //
+        // The scale starts at 0.99 rather than 0.97 for the same reason. At
+        // 0.97 you watch it grow; at 0.99 it just resolves. The motion is
+        // there to soften the appearance, not to be seen.
         Behavior on opacity {
             NumberAnimation {
-                duration: 130
+                duration: 90
                 easing.type: Easing.OutQuad
             }
         }
 
         Behavior on scale {
             NumberAnimation {
-                duration: 200
+                duration: 130
                 easing.type: Easing.OutCubic
             }
         }
 
         Behavior on y {
             NumberAnimation {
-                duration: 200
+                duration: 130
                 easing.type: Easing.OutCubic
             }
         }

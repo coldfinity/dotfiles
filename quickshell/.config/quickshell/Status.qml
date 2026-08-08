@@ -60,8 +60,15 @@ RowLayout {
     // ── network ──────────────────────────────────────────────────────
     Item {
         id: net
+
+        // Every module acknowledges the cursor now. Brightening to full
+        // text colour is enough — the bar has no backgrounds left to
+        // highlight, so the text itself has to be the affordance.
+        HoverHandler {
+            id: netModuleHover
+        }
         Layout.fillHeight: true
-        implicitWidth: netLabel.implicitWidth + 22
+        implicitWidth: netLabel.implicitWidth + 18
 
         property string ip: ""
 
@@ -99,12 +106,33 @@ RowLayout {
             anchors.centerIn: parent
             font.family: Theme.fontFamily
             font.pixelSize: Theme.fontSize
-            font.weight: Font.DemiBold
+            font.weight: Theme.weight
+            font.letterSpacing: Theme.tracking
 
-            // Connected is the state worth signalling; disconnected falls
-            // to dim rather than red — a radio being off is a state you
-            // chose, not a fault.
-            color: root.wifi ? Theme.iris : Theme.dim
+            // Connected is NOT accent-worthy. It is true essentially all
+            // the time, so colouring it spent the one accent colour on a
+            // non-event and left the bar permanently lit. Connected is now
+            // the resting grey; the accent is reserved for things that
+            // actually changed.
+            //
+            // A weak link does escalate, because that IS news — it is the
+            // reason your connection feels bad, and nothing else on the bar
+            // would tell you.
+            color: {
+                if (netModuleHover.hovered)
+                    return Theme.text;
+                if (!root.wifi)
+                    return Theme.dim;
+                if (root.wifi.signalStrength < 0.35)
+                    return Theme.gold;
+                return Theme.subtle;
+            }
+
+            Behavior on color {
+                ColorAnimation {
+                    duration: Theme.animMs
+                }
+            }
 
             // signalStrength is a qreal in 0..1, not a percentage — reading
             // it raw showed "1%" on an 84% link. waybar's {signalStrength}
@@ -114,7 +142,7 @@ RowLayout {
             // the BMP (U+F1EB, U+F293). The volume and stats glyphs are
             // Material Design icons above U+FFFF, which a 4-digit \u
             // escape cannot reach, so those stay literal.
-            text: root.wifi ? "\uf1eb " + Math.round(root.wifi.signalStrength * 100) + "%" : "\uf1eb off"
+            text: root.wifi ? "\uf1eb " + Math.round(root.wifi.signalStrength * 100) : "\uf1eb off"
         }
 
         HoverHandler {
@@ -153,7 +181,7 @@ RowLayout {
     Item {
         id: bt
         Layout.fillHeight: true
-        implicitWidth: btLabel.implicitWidth + 20
+        implicitWidth: btLabel.implicitWidth + 16
 
         readonly property var adapter: Bluetooth.defaultAdapter
 
@@ -173,9 +201,16 @@ RowLayout {
             anchors.centerIn: parent
             font.family: Theme.fontFamily
             font.pixelSize: Theme.fontSize
-            font.weight: Font.DemiBold
+            font.weight: Theme.weight
+            font.letterSpacing: Theme.tracking
 
-            color: bt.connectedDevice ? Theme.iris : (bt.adapter && bt.adapter.enabled ? Theme.subtle : Theme.dim)
+            color: btHover.hovered ? Theme.text : (bt.connectedDevice ? Theme.subtle : (bt.adapter && bt.adapter.enabled ? Theme.dim : Theme.faint))
+
+            Behavior on color {
+                ColorAnimation {
+                    duration: Theme.animMs
+                }
+            }
 
             text: bt.connectedDevice ? "\uf293 " + bt.connectedDevice.name : "\uf293"
         }
@@ -222,7 +257,7 @@ RowLayout {
     Item {
         id: vol
         Layout.fillHeight: true
-        implicitWidth: volLabel.implicitWidth + 20
+        implicitWidth: volLabel.implicitWidth + 16
 
         readonly property bool muted: root.sink && root.sink.audio ? root.sink.audio.muted : false
         readonly property int volume: root.sink && root.sink.audio ? Math.round(root.sink.audio.volume * 100) : 0
@@ -232,13 +267,24 @@ RowLayout {
             anchors.centerIn: parent
             font.family: Theme.fontFamily
             font.pixelSize: Theme.fontSize
-            font.weight: Font.DemiBold
+            font.weight: Theme.weight
+            font.letterSpacing: Theme.tracking
 
             // Audible is the resting state, so grey. Muted dims, and drops
             // the number: the level a muted sink would return to is not
             // information you need while it is silent.
-            color: vol.muted ? Theme.dim : Theme.subtle
-            text: vol.muted ? "󰖁" : "󰕾 " + vol.volume + "%"
+            color: volHover.hovered ? Theme.text : (vol.muted ? Theme.dim : Theme.subtle)
+
+            Behavior on color {
+                ColorAnimation {
+                    duration: Theme.animMs
+                }
+            }
+            text: vol.muted ? "󰖁" : "󰕾 " + vol.volume
+        }
+
+        HoverHandler {
+            id: volHover
         }
 
         MouseArea {

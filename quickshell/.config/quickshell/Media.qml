@@ -10,8 +10,6 @@ import QtQuick.Layouts
 // package was installed — quickshell talks to MPRIS on the session bus
 // directly and sees every player without a proxy in between.
 //
-// Carries its own leading divider so that both disappear together when
-// nothing is playing, rather than leaving the clock with a stray rule.
 RowLayout {
     id: root
 
@@ -44,8 +42,6 @@ RowLayout {
 
     visible: player !== null
 
-    Divider {}
-
     Item {
         Layout.fillHeight: true
         // Capped so a long title cannot shove the clock off centre. The
@@ -62,7 +58,8 @@ RowLayout {
 
             font.family: Theme.fontFamily
             font.pixelSize: Theme.fontSize
-            font.weight: Font.DemiBold
+            font.weight: Theme.weight
+            font.letterSpacing: Theme.tracking
 
             // Ambient information, so grey like the clock beside it.
             // Paused dims further — the same treatment a muted sink gets,

@@ -1,7 +1,6 @@
 import Quickshell
 import Quickshell.Wayland
 import QtQuick
-import QtQuick.Layouts
 
 // One bar, on one monitor. Instantiated per screen by shell.qml.
 PanelWindow {
@@ -43,6 +42,13 @@ PanelWindow {
     // rule matches the namespace "waybar"; this one needs its own.
     WlrLayershell.namespace: "quickshell-bar"
 
+    // Keyboard focus is left at the default (None) deliberately.
+    //
+    // It was briefly OnDemand, which a grabbing popup requires — see the
+    // note in ShellPopup.qml about why the grab was removed. With no grab
+    // to support, OnDemand is pure cost: clicking the bar would take
+    // keyboard focus off whatever you were typing in, for nothing.
+
     // ── left: where your work is ─────────────────────────────────────
     Frame {
         anchors.left: parent.left
@@ -65,8 +71,6 @@ PanelWindow {
         Clock {
             screenName: bar.modelData.name
         }
-        // Media carries its own leading divider, so both vanish together
-        // when nothing is playing.
         Media {}
     }
 
@@ -76,11 +80,8 @@ PanelWindow {
         anchors.verticalCenter: parent.verticalCenter
 
         Stats {}
-        Divider {}
         Status {}
-        Divider {}
         InputMode {}
-        Divider {}
         PowerButton {}
     }
 }

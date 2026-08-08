@@ -15,8 +15,22 @@ Item {
     id: root
 
     required property string glyph
+
+    // Owned by the caller, as a binding to the real thing (Pipewire's
+    // volume, the queried brightness). This component must never assign to
+    // it.
     property real value: 0
     property bool live: true
+
+    // Where the handle is while you are dragging. Writing to `value`
+    // instead — which is what this did — destroys the caller's binding the
+    // first time you touch the slider. After that the volume bar stopped
+    // following volume changed from anywhere else, and the brightness bar
+    // stopped picking up the value re-queried when the panel reopens. The
+    // slider silently became a display of its own last drag.
+    property real dragValue: 0
+
+    readonly property real display: mouse.pressed ? dragValue : value
 
     signal moved(real value)
     signal released(real value)
@@ -45,7 +59,7 @@ Item {
         color: Theme.hover
 
         Rectangle {
-            width: parent.width * Math.max(0, Math.min(1, root.value))
+            width: parent.width * Math.max(0, Math.min(1, root.display))
             height: parent.height
             radius: parent.radius
             color: Theme.iris
@@ -55,7 +69,7 @@ Item {
         // not a control — which keeps the panel calm until you reach for it.
         Rectangle {
             visible: mouse.containsMouse || mouse.pressed
-            x: parent.width * Math.max(0, Math.min(1, root.value)) - width / 2
+            x: parent.width * Math.max(0, Math.min(1, root.display)) - width / 2
             anchors.verticalCenter: parent.verticalCenter
             width: 10
             height: 10
@@ -77,20 +91,20 @@ Item {
             }
 
             onPressed: mouseEvent => {
-                root.value = fraction(mouseEvent.x);
+                root.dragValue = fraction(mouseEvent.x);
                 if (root.live)
-                    root.moved(root.value);
+                    root.moved(root.dragValue);
             }
 
             onPositionChanged: mouseEvent => {
                 if (!pressed)
                     return;
-                root.value = fraction(mouseEvent.x);
+                root.dragValue = fraction(mouseEvent.x);
                 if (root.live)
-                    root.moved(root.value);
+                    root.moved(root.dragValue);
             }
 
-            onReleased: root.released(root.value)
+            onReleased: root.released(root.dragValue)
         }
     }
 
@@ -100,7 +114,7 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         width: 36
         horizontalAlignment: Text.AlignRight
-        text: Math.round(root.value * 100) + "%"
+        text: Math.round(root.display * 100) + "%"
         font.family: Theme.fontFamily
         font.pixelSize: Theme.fontSize - 2
         color: Theme.subtle

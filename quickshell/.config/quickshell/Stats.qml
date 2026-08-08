@@ -17,16 +17,19 @@ RowLayout {
     Stat {
         glyph: "󰘙"
         value: SysInfo.cpu
+        history: SysInfo.cpuHistory
         Layout.fillHeight: true
     }
     Stat {
         glyph: "󰍛"
         value: SysInfo.mem
+        history: SysInfo.memHistory
         Layout.fillHeight: true
     }
     Stat {
         glyph: "󰢮"
         value: SysInfo.gpu
+        history: SysInfo.gpuHistory
         Layout.fillHeight: true
     }
 }

@@ -13,7 +13,7 @@ Item {
     id: root
 
     Layout.fillHeight: true
-    implicitWidth: 40
+    implicitWidth: 34
 
     Text {
         id: glyph
@@ -21,7 +21,7 @@ Item {
         text: "⏻"
         font.family: Theme.fontFamily
         font.pixelSize: Theme.fontSize
-        color: (mouse.containsMouse || menu.visible) ? Theme.love : Theme.subtle
+        color: (mouse.containsMouse || menu.open) ? Theme.love : Theme.subtle
 
         // A slight lift under the cursor. Small enough not to shift the
         // bar's layout — scale is a paint-time transform, so it does not
@@ -47,12 +47,12 @@ Item {
         anchors.fill: parent
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
-        onClicked: menu.visible = !menu.visible
+        onClicked: menu.toggle()
     }
 
     PowerMenu {
         id: menu
         anchorItem: root
-        visible: false
+        open: false
     }
 }

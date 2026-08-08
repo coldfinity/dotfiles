@@ -36,7 +36,7 @@ Item {
             "9": "九"
         })
 
-    readonly property int chipWidth: 32
+    readonly property int chipWidth: 28
     readonly property int chipSpacing: 2
     readonly property int pitch: chipWidth + chipSpacing
 
@@ -73,7 +73,7 @@ Item {
         id: row
         anchors.centerIn: parent
         implicitWidth: root.ids.length * root.pitch - root.chipSpacing
-        implicitHeight: 26
+        implicitHeight: 22
 
         // ── the sliding block ────────────────────────────────────────
         // Drawn under the numerals. OutBack overshoots a few pixels and
@@ -146,14 +146,18 @@ Item {
                 }
 
                 readonly property bool focused: index === root.focusedIndex
-                readonly property bool empty: ws === null || ws.toplevels.values.length === 0
+                readonly property int windowCount: ws === null ? 0 : ws.toplevels.values.length
+                readonly property bool empty: windowCount === 0
 
                 Text {
-                    anchors.centerIn: parent
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.verticalCenterOffset: -2
                     text: root.numerals[String(chip.modelData)] ?? chip.modelData
                     font.family: Theme.fontFamily
                     font.pixelSize: Theme.fontSize
-                    font.weight: Font.DemiBold
+                    font.weight: Theme.weight
+                    font.letterSpacing: Theme.tracking
 
                     color: {
                         if (chip.ws !== null && chip.ws.urgent)
@@ -191,6 +195,46 @@ Item {
                             duration: 600
                             easing.type: Easing.InOutQuad
                         }
+                    }
+                }
+
+                // Occupancy. One dot per window, up to three, then a wider
+                // bar for "more than that" — a row of six dots stops being
+                // countable at a glance and becomes texture.
+                //
+                // Sits under the numeral rather than beside it so the row
+                // keeps its fixed pitch; the sliding indicator's position
+                // is index × pitch and depends on that staying uniform.
+                Row {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: 1
+                    spacing: 2
+                    visible: chip.windowCount > 0
+
+                    Repeater {
+                        model: Math.min(chip.windowCount, 3)
+
+                        delegate: Rectangle {
+                            width: chip.windowCount > 3 ? 3 : 3
+                            height: 3
+                            radius: 1.5
+                            color: chip.focused ? Theme.iris : Theme.dim
+
+                            Behavior on color {
+                                ColorAnimation {
+                                    duration: Theme.animMs
+                                }
+                            }
+                        }
+                    }
+
+                    Rectangle {
+                        visible: chip.windowCount > 3
+                        width: 6
+                        height: 3
+                        radius: 1.5
+                        color: chip.focused ? Theme.iris : Theme.dim
                     }
                 }
 

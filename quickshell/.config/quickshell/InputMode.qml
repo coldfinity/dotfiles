@@ -15,7 +15,7 @@ Item {
     id: root
 
     Layout.fillHeight: true
-    implicitWidth: label.implicitWidth + 20
+    implicitWidth: label.implicitWidth + 16
 
     Text {
         id: label
@@ -23,14 +23,19 @@ Item {
         text: InputState.mode
         font.family: Theme.fontFamily
         font.pixelSize: Theme.fontSize
-        font.weight: Font.DemiBold
-        color: InputState.active ? Theme.iris : Theme.subtle
+        font.weight: Theme.weight
+        font.letterSpacing: Theme.tracking
+        color: imHover.hovered ? Theme.text : (InputState.active ? Theme.iris : Theme.subtle)
 
         Behavior on color {
             ColorAnimation {
                 duration: Theme.animMs
             }
         }
+    }
+
+    HoverHandler {
+        id: imHover
     }
 
     MouseArea {
