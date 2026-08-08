@@ -19,6 +19,26 @@ conform.setup({
 		typescriptreact = { "prettier" },
 	},
 	formatters = {
+		styler = {
+			-- styler defaults to tidyverse_style() (2 spaces); use the buffer's
+			-- own indent settings instead
+			args = function(_, ctx)
+				local sw = vim.bo[ctx.buf].shiftwidth
+				if sw == 0 then
+					sw = vim.bo[ctx.buf].tabstop
+				end
+				return {
+					"-s",
+					"-e",
+					string.format(
+						"styler::style_file(commandArgs(TRUE), transformers = styler::tidyverse_style(indent_by = %d))",
+						sw
+					),
+					"--args",
+					"$FILENAME",
+				}
+			end,
+		},
 		clang_format = {
 			-- clang-format defaults to LLVM style (2 spaces); use the buffer's
 			-- own indent settings instead
