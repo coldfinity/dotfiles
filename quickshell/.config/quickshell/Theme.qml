@@ -64,16 +64,29 @@ Singleton {
     // 2px, not 0. A true right angle aliases into a ragged corner pixel at
     // this size; 2px draws clean and does not read as "rounded".
     readonly property int radius: 2
-    // 32. Was 30 at 12px type; the extra point of text needs the room back,
-    // and with no frame drawn there is no box for the glyphs to crowd —
-    // only the strip's own edges.
-    readonly property int barHeight: 32
+    // Tracks the type size. 15px Iosevka needs more vertical room than the
+    // 13px it replaced, and with no frame drawn the only thing the glyphs
+    // can crowd is the strip's own edges.
+    readonly property int barHeight: 36
     readonly property int gap: 6
     readonly property int inset: 10
 
     // ── type ─────────────────────────────────────────────────────────
-    readonly property string fontFamily: "JetBrainsMono Nerd Font"
-    readonly property int fontSize: 13
+    // Maple Mono NF CN. Installed to ~/.local/share/fonts/MapleMono from
+    // the upstream release (subframe7536/maple-font v7.9) — it is not in
+    // any Ubuntu repo, and the apt font packages are all unpatched builds
+    // with no Nerd Font glyphs.
+    //
+    // The CN build is the reason for the choice. Every other candidate
+    // covers latin and the Nerd Font icons but not Chinese, so the
+    // workspace numerals 一二三四五 fell through fontconfig to Noto Sans
+    // CJK — a different typeface, different weight, sitting right next to
+    // the rest of the bar. This carries all three, so the bar is finally
+    // one family throughout. Verified before switching: CJK, the stat and
+    // volume icons, wifi, bluetooth and the power-menu glyphs are all
+    // present in this face.
+    readonly property string fontFamily: "Maple Mono NF CN"
+    readonly property int fontSize: 15
 
     // Medium, not DemiBold.
     //
@@ -89,7 +102,31 @@ Singleton {
     // spending pixels on padding.
     readonly property real tracking: 0.4
 
+    // ── motion ───────────────────────────────────────────────────────
+    // One vocabulary instead of thirteen one-off durations.
+    //
+    // The bar had a different number at nearly every call site — 60, 90,
+    // 110, 120, 130, 150, 160, 220, 260, 300, 320, 340 — each reasonable
+    // on its own and none related to the others. Motion reads as a system
+    // when things that take the same kind of action take the same time.
+    //
+    //   quick   feedback you caused and are already looking at: hover
+    //   normal  a state change you did not: colour, connection, mode
+    //   slow    layout — something resizing or moving other things
+    //   pulse   the urgent workspace's breathing, deliberately its own
+    readonly property int animQuick: 120
     readonly property int animMs: 200
+    readonly property int animSlow: 320
+    readonly property int animPulse: 600
+
+    // The shared curve. OutCubic everywhere: fast to start, settling at
+    // the end. Stored as a token so changing the shell's character is one
+    // edit rather than a search across every file.
+    readonly property int ease: Easing.OutCubic
+
+    // Popups are deliberately NOT on these tokens — see PopupSurface.qml.
+    // Their timings were set by measurement after the panel felt laggy,
+    // and folding them into the general scale would undo that.
 
     // The shared load ramp. All three stats use it, so a loaded machine
     // reads the same way whichever resource is the one under load.

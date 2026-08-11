@@ -80,7 +80,7 @@ Item {
                 property: "opacity"
                 from: 0
                 to: 1
-                duration: 260
+                duration: Theme.animSlow
                 easing.type: Easing.OutQuad
             }
 
@@ -89,8 +89,8 @@ Item {
                 property: "y"
                 from: -10
                 to: 0
-                duration: 340
-                easing.type: Easing.OutCubic
+                duration: Theme.animSlow
+                easing.type: Theme.ease
             }
         }
     }

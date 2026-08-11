@@ -26,4 +26,31 @@ ShellRoot {
 
         Bar {}
     }
+
+    // Volume and brightness overlay. One instance for the whole shell; its
+    // per-screen windows live inside it.
+    Osd {}
+
+    // Clock, machine and now-playing on the wallpaper layer. Covered by any
+    // window, so they need no visibility logic of their own.
+    DesktopWidgets {}
+
+    // Application launcher, on SUPER+Space. Replaces rofi.
+    Launcher {}
+
+    // The control centre. A shell-level overlay rather than a popup hanging
+    // off the clock, so a keybind can open it too.
+    Dashboard {}
+
+    // Notification toasts. The daemon itself is the Notifications
+    // singleton — this only draws what it is tracking.
+    Toasts {}
+
+    // Polkit authentication. Replaces hyprpolkitagent.
+    PolkitDialog {}
+
+    // A native lock screen, opened only on request — hyprlock is still what
+    // locks this machine at boot and on idle. See Lock.qml.
+    Lock {}
+
 }

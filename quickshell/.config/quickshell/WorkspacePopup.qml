@@ -11,9 +11,17 @@ import QtQuick
 // surface, styled like the rest of the shell, appearing next to the thing
 // they describe.
 //
-// Titles rather than icons: an icon tells you Zen is open somewhere, a
-// title tells you which page. That is the information you actually want
-// when deciding whether to switch.
+// The application name first, the window title under it.
+//
+// This showed only the title to begin with, on the argument that an icon
+// tells you Zen is open somewhere while a title tells you which page. True
+// as far as it went, but it threw away the more important half: "herdr"
+// does not tell you that is a terminal, and a list of window titles with no
+// applications attached is a list of things you have to decode.
+//
+// The name comes from the desktop entry via AppIndex, so it is the name the
+// application's author chose rather than a Wayland app-id like
+// "org.wezfurlong.wezterm".
 ShellPopup {
     id: popup
 
@@ -42,7 +50,7 @@ ShellPopup {
                 required property var modelData
 
                 width: column.width
-                height: 24
+                height: 38
                 radius: Theme.radius
                 color: hover.hovered ? Theme.hover : "transparent"
 
@@ -52,22 +60,40 @@ ShellPopup {
                     }
                 }
 
-                Text {
+                Column {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
-                    anchors.leftMargin: 8
-                    anchors.rightMargin: 8
+                    anchors.leftMargin: 10
+                    anchors.rightMargin: 10
+                    spacing: 0
 
-                    // Hyprland's own IPC carries the title; the wlr toplevel
-                    // behind it carries the app id, which is the better
-                    // label when a window has no title yet.
-                    text: entry.modelData.title || (entry.modelData.wayland ? entry.modelData.wayland.appId : "—")
-                    elide: Text.ElideRight
+                    Text {
+                        width: parent.width
+                        elide: Text.ElideRight
+                        text: AppIndex.nameFor(entry.modelData.wayland ? entry.modelData.wayland.appId : "")
+                        font.family: Theme.fontFamily
+                        font.pixelSize: Theme.fontSize - 2
+                        font.weight: Font.DemiBold
+                        color: entry.modelData.activated ? Theme.iris : Theme.text
+                    }
 
-                    font.family: Theme.fontFamily
-                    font.pixelSize: Theme.fontSize - 1
-                    color: entry.modelData.activated ? Theme.iris : Theme.subtle
+                    // The title, secondary. Hidden when it merely repeats
+                    // the application name, which browsers and terminals do
+                    // on a fresh window.
+                    Text {
+                        width: parent.width
+                        elide: Text.ElideRight
+                        visible: text !== ""
+                        text: {
+                            const t = entry.modelData.title || "";
+                            const app = AppIndex.nameFor(entry.modelData.wayland ? entry.modelData.wayland.appId : "");
+                            return t === app ? "" : t;
+                        }
+                        font.family: Theme.fontFamily
+                        font.pixelSize: Theme.fontSize - 4
+                        color: Theme.faint
+                    }
                 }
 
                 HoverHandler {

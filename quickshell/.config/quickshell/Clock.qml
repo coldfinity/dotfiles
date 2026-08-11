@@ -16,10 +16,6 @@ import QtQuick.Layouts
 Item {
     id: root
 
-    // Passed down to the dashboard, which needs the connector name to
-    // address this monitor over DDC/CI.
-    required property string screenName
-
     Layout.fillHeight: true
     implicitWidth: label.implicitWidth + 22
 
@@ -47,7 +43,7 @@ Item {
         // to the grey stats. Brightens while the dashboard is open, so the
         // clock reads as the thing that opened it rather than as unrelated
         // text sitting above a panel.
-        color: (dashboard.open || clockHover.hovered) ? Theme.text : Theme.subtle
+        color: (DashboardState.open || clockHover.hovered) ? Theme.text : Theme.subtle
 
         Behavior on color {
             ColorAnimation {
@@ -66,14 +62,7 @@ Item {
     MouseArea {
         anchors.fill: parent
         cursorShape: Qt.PointingHandCursor
-        onClicked: dashboard.toggle()
+        onClicked: DashboardState.toggle()
     }
 
-    Dashboard {
-        id: dashboard
-        anchorItem: root
-        screenName: root.screenName
-        // Click the clock again to close it. Click-away dismissal was
-        // tried and reverted — see the note in ShellPopup.qml.
-    }
 }

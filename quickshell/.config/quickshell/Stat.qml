@@ -25,19 +25,39 @@ Item {
 
     Behavior on shown {
         NumberAnimation {
-            duration: 320
-            easing.type: Easing.OutCubic
+            duration: Theme.animSlow
+            easing.type: Theme.ease
         }
     }
 
     implicitWidth: label.implicitWidth + 16
 
+    // Width changes are animated, not jumped.
+    //
+    // This is the difference a polished bar has and an unpolished one does
+    // not. Every number here changes width as it crosses a digit boundary —
+    // CPU going 9 to 10, volume 100 to 99 — and every module to its left
+    // shifts to absorb it. Unanimated, the whole right-hand side twitches
+    // sideways several times a minute for no reason you can perceive.
+    Behavior on implicitWidth {
+        NumberAnimation {
+            duration: Theme.animSlow
+            easing.type: Theme.ease
+        }
+    }
+
     Text {
         id: label
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
-        // Nudged up to make room for the trace without growing the bar.
-        anchors.verticalCenterOffset: -3
+
+        // No vertical offset.
+        //
+        // This used to sit 3px high to make room for the trace, which put
+        // the stats out of line with every other module on the bar —
+        // measured centres of 20.5 against 23.5 for network, volume, the
+        // input mode and power. The sparkline hangs below the label
+        // instead, in the room the taller bar already provides.
         text: root.glyph + " " + Math.round(root.shown)
         font.family: Theme.fontFamily
         font.pixelSize: Theme.fontSize
@@ -61,8 +81,8 @@ Item {
         anchors.left: label.left
         anchors.right: label.right
         anchors.top: label.bottom
-        anchors.topMargin: 1
-        height: 8
+        anchors.topMargin: 0
+        height: 7
         values: root.history
         stroke: Theme.loadColour(root.value)
     }

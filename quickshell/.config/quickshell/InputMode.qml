@@ -17,6 +17,20 @@ Item {
     Layout.fillHeight: true
     implicitWidth: label.implicitWidth + 16
 
+    // Width changes are animated, not jumped.
+    //
+    // This is the difference a polished bar has and an unpolished one does
+    // not. Every number here changes width as it crosses a digit boundary —
+    // CPU going 9 to 10, volume 100 to 99 — and every module to its left
+    // shifts to absorb it. Unanimated, the whole right-hand side twitches
+    // sideways several times a minute for no reason you can perceive.
+    Behavior on implicitWidth {
+        NumberAnimation {
+            duration: Theme.animSlow
+            easing.type: Theme.ease
+        }
+    }
+
     Text {
         id: label
         anchors.centerIn: parent

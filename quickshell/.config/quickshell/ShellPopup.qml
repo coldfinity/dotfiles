@@ -48,10 +48,19 @@ PopupWindow {
     // bar reads as growing out of it rather than as a separate surface.
     property int gap: 6
 
+    // Which way the popup grows from its anchor.
+    //
+    // Centred is right for anything near the middle of the bar, but a wide
+    // popup hung off a module near the right edge runs off the screen —
+    // the notification centre is 400px wide anchored a couple of hundred
+    // pixels from the edge, and half of it was simply not on the display.
+    // Left gravity keeps its right edge by the anchor and grows inward.
+    property bool growLeft: false
+
     anchor.item: anchorItem
     anchor.rect.y: anchorItem.height + gap
-    anchor.rect.x: anchorItem.width / 2
-    anchor.gravity: Edges.Bottom
+    anchor.rect.x: growLeft ? anchorItem.width : anchorItem.width / 2
+    anchor.gravity: growLeft ? (Edges.Bottom | Edges.Left) : Edges.Bottom
     anchor.edges: Edges.Bottom
 
     color: "transparent"

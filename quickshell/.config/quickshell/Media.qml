@@ -93,7 +93,7 @@ RowLayout {
                 property: "opacity"
                 from: 0
                 to: 1
-                duration: 260
+                duration: Theme.animSlow
                 easing.type: Easing.OutQuad
             }
         }

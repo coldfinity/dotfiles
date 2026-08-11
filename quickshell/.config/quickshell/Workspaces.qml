@@ -36,7 +36,11 @@ Item {
             "9": "九"
         })
 
-    readonly property int chipWidth: 28
+    // Sized for the CJK numerals, which come from Noto Sans CJK by
+    // fontconfig fallback — Iosevka has no CJK coverage. They are
+    // full-width glyphs, so they need noticeably more room than the type
+    // size alone suggests.
+    readonly property int chipWidth: 32
     readonly property int chipSpacing: 2
     readonly property int pitch: chipWidth + chipSpacing
 
@@ -73,7 +77,7 @@ Item {
         id: row
         anchors.centerIn: parent
         implicitWidth: root.ids.length * root.pitch - root.chipSpacing
-        implicitHeight: 22
+        implicitHeight: 26
 
         // ── the sliding block ────────────────────────────────────────
         // Drawn under the numerals. OutBack overshoots a few pixels and
@@ -93,7 +97,7 @@ Item {
 
             Behavior on x {
                 NumberAnimation {
-                    duration: 300
+                    duration: Theme.animSlow
                     easing.type: Easing.OutBack
                     // Default overshoot is far too springy for a bar you
                     // look at all day; this is just enough to register.
@@ -116,8 +120,8 @@ Item {
 
             Behavior on x {
                 NumberAnimation {
-                    duration: 300
-                    easing.type: Easing.OutCubic
+                    duration: Theme.animSlow
+                    easing.type: Theme.ease
                 }
             }
         }
@@ -149,12 +153,34 @@ Item {
                 readonly property bool empty: ws === null || ws.toplevels.values.length === 0
 
                 Text {
-                    anchors.centerIn: parent
+                    // Filled and aligned rather than centred as an item.
+                    //
+                    // anchors.centerIn centres the Text's box, and that box
+                    // is sized from the primary font's latin metrics — the
+                    // CJK glyph draws lower inside it, so the numerals sat
+                    // visibly below the middle of their chip. Letting the
+                    // text fill the chip and align within it makes Qt use
+                    // the line box instead, which the glyph is centred in.
+                    anchors.fill: parent
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+
                     text: root.numerals[String(chip.modelData)] ?? chip.modelData
                     font.family: Theme.fontFamily
-                    font.pixelSize: Theme.fontSize
-                    font.weight: Theme.weight
-                    font.letterSpacing: Theme.tracking
+
+                    // A point larger and a weight heavier than the rest of
+                    // the bar. CJK glyphs carry far more strokes in the same
+                    // em than a latin digit, so at the bar's size and weight
+                    // 二三四五 thinned out into near-illegible hairlines.
+                    font.pixelSize: Theme.fontSize + 1
+                    font.weight: Font.DemiBold
+
+                    // No tracking, unlike everything else. letterSpacing
+                    // adds space AFTER each character, so on a
+                    // single-character string it widens the text box by a
+                    // trailing gap and pushes the glyph off-centre to the
+                    // left. That was the misalignment.
+                    font.letterSpacing: 0
 
                     color: {
                         if (chip.ws !== null && chip.ws.urgent)
@@ -163,9 +189,14 @@ Item {
                             return Theme.iris;
                         if (chip.index === root.visibleIndex)
                             return Theme.subtle;
+                        // One tier brighter than the equivalent latin text
+                        // would get. An empty workspace still has to be
+                        // readable — it is a label, not decoration — and
+                        // these glyphs lose far more to a low alpha than a
+                        // digit does.
                         if (chip.empty)
-                            return Theme.faint;
-                        return Theme.dim;
+                            return Theme.dim;
+                        return Theme.subtle;
                     }
 
                     Behavior on color {
@@ -184,12 +215,12 @@ Item {
 
                         NumberAnimation {
                             to: 0.35
-                            duration: 600
+                            duration: Theme.animPulse
                             easing.type: Easing.InOutQuad
                         }
                         NumberAnimation {
                             to: 1.0
-                            duration: 600
+                            duration: Theme.animPulse
                             easing.type: Easing.InOutQuad
                         }
                     }

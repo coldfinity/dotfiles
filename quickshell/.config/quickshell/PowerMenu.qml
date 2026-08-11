@@ -111,7 +111,7 @@ ShellPopup {
                             property: "opacity"
                             from: 0
                             to: 1
-                            duration: 160
+                            duration: Theme.animQuick
                             easing.type: Easing.OutQuad
                         }
 
@@ -120,8 +120,8 @@ ShellPopup {
                             property: "x"
                             from: -8
                             to: 0
-                            duration: 220
-                            easing.type: Easing.OutCubic
+                            duration: Theme.animSlow
+                            easing.type: Theme.ease
                         }
                     }
                 }

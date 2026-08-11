@@ -70,6 +70,20 @@ RowLayout {
         Layout.fillHeight: true
         implicitWidth: netLabel.implicitWidth + 18
 
+    // Width changes are animated, not jumped.
+    //
+    // This is the difference a polished bar has and an unpolished one does
+    // not. Every number here changes width as it crosses a digit boundary —
+    // CPU going 9 to 10, volume 100 to 99 — and every module to its left
+    // shifts to absorb it. Unanimated, the whole right-hand side twitches
+    // sideways several times a minute for no reason you can perceive.
+    Behavior on implicitWidth {
+        NumberAnimation {
+            duration: Theme.animSlow
+            easing.type: Theme.ease
+        }
+    }
+
         property string ip: ""
 
         // The IP has to come from `ip`, not from quickshell. NetworkDevice
@@ -183,6 +197,20 @@ RowLayout {
         Layout.fillHeight: true
         implicitWidth: btLabel.implicitWidth + 16
 
+    // Width changes are animated, not jumped.
+    //
+    // This is the difference a polished bar has and an unpolished one does
+    // not. Every number here changes width as it crosses a digit boundary —
+    // CPU going 9 to 10, volume 100 to 99 — and every module to its left
+    // shifts to absorb it. Unanimated, the whole right-hand side twitches
+    // sideways several times a minute for no reason you can perceive.
+    Behavior on implicitWidth {
+        NumberAnimation {
+            duration: Theme.animSlow
+            easing.type: Theme.ease
+        }
+    }
+
         readonly property var adapter: Bluetooth.defaultAdapter
 
         readonly property var connectedDevice: {
@@ -258,6 +286,20 @@ RowLayout {
         id: vol
         Layout.fillHeight: true
         implicitWidth: volLabel.implicitWidth + 16
+
+    // Width changes are animated, not jumped.
+    //
+    // This is the difference a polished bar has and an unpolished one does
+    // not. Every number here changes width as it crosses a digit boundary —
+    // CPU going 9 to 10, volume 100 to 99 — and every module to its left
+    // shifts to absorb it. Unanimated, the whole right-hand side twitches
+    // sideways several times a minute for no reason you can perceive.
+    Behavior on implicitWidth {
+        NumberAnimation {
+            duration: Theme.animSlow
+            easing.type: Theme.ease
+        }
+    }
 
         readonly property bool muted: root.sink && root.sink.audio ? root.sink.audio.muted : false
         readonly property int volume: root.sink && root.sink.audio ? Math.round(root.sink.audio.volume * 100) : 0

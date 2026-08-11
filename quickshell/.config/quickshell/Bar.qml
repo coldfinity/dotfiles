@@ -68,9 +68,7 @@ PanelWindow {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
 
-        Clock {
-            screenName: bar.modelData.name
-        }
+        Clock {}
         Media {}
     }
 
@@ -81,6 +79,7 @@ PanelWindow {
 
         Stats {}
         Status {}
+        NotificationBell {}
         InputMode {}
         PowerButton {}
     }

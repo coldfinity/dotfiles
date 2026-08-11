@@ -36,7 +36,7 @@ Item {
 
         Behavior on scale {
             NumberAnimation {
-                duration: 150
+                duration: Theme.animQuick
                 easing.type: Easing.OutBack
             }
         }
