@@ -1,9 +1,13 @@
 # fcitx5 global config.
 #
 # The one deliberate change from stock is TriggerKeys: fcitx5 ships with
-# Ctrl+Space, but GNOME used Super+Space to cycle input sources, so this
-# keeps the muscle memory. Super+Space is otherwise unbound in
-# hypr/.config/hypr/hyprland.conf (the launcher is ALT+Space).
+# Ctrl+Space, and this was Super+Space for a while to match what GNOME used.
+#
+# It is Alt+Space now, because hyprland.conf moved its mod from ALT to SUPER
+# and the launcher took the Super+Space slot. The two swapped rather than one
+# giving way: Alt+Space is unbound in hyprland.conf, and the compositor grabs
+# keys before applications see them — so if it were bound there, this would
+# silently never fire.
 
 [Hotkey]
 # Toggle between the active method and the previous one.
@@ -21,7 +25,7 @@ EnumerateGroupForwardKeys=
 EnumerateGroupBackwardKeys=
 
 [Hotkey/TriggerKeys]
-0=Super+space
+0=Alt+space
 
 [Hotkey/PrevPage]
 0=Up
