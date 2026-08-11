@@ -23,8 +23,8 @@ sketchybar --add item power right \
   --set power \
   icon=󰐥 \
   icon.color=$GREY \
-  icon.padding_left=10 \
-  icon.padding_right=10 \
+  icon.padding_left=14 \
+  icon.padding_right=0 \
   label.drawing=off \
   background.drawing=off \
   script="$PLUGIN_DIR/power.sh" \
@@ -39,7 +39,7 @@ add_power_action() {
     --set power.$1 \
     icon="$2" \
     icon.color=$GREY \
-    icon.padding_left=10 \
+    icon.padding_left=14 \
     icon.padding_right=8 \
     label="$3" \
     label.color=$GREY \

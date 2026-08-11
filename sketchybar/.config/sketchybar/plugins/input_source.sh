@@ -35,5 +35,5 @@ SELECTED="$(defaults read com.apple.HIToolbox AppleSelectedInputSources 2>/dev/n
 if printf '%s' "$SELECTED" | grep -qE 'inputmethod\.(SCIM|TCIM)'; then
   sketchybar --set "$NAME" label="中" label.color=$ACCENT
 else
-  sketchybar --set "$NAME" label="EN" label.color=$GREY
+  sketchybar --set "$NAME" label="EN" label.color=$TEXT
 fi

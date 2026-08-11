@@ -1,56 +1,50 @@
 #!/bin/bash
 #
-# Aerospace workspaces, as CJK numerals — the same treatment waybar gives the
-# Hyprland ones (see the format-icons map in waybar/config.jsonc).
+# Aerospace workspaces, as CJK numerals.
 #
 # Which workspaces get drawn, and what glyph each one wears, comes from
 # settings.sh so this file and plugins/workspaces.sh cannot disagree.
+#
+# THE FOCUSED ONE IS BOXED, THE REST ARE BARE.
+#
+# Nothing else on this bar is boxed, so the outline alone carries focus —
+# there is no fill to recolour and no divider to compete with it. The box is
+# the whole marker; there is no underline bar inside it.
 
 sketchybar --add event aerospace_workspace_change
 
 for i in "${!WS_IDS[@]}"; do
   sid="${WS_IDS[$i]}"
 
-  # Every chip is created at rest: DIM, no block, narrow. The watcher below
-  # paints the real state on the first --update, so nothing here needs to
-  # guess which workspace is focused at startup.
-  #
-  # THE CHIP IS SIZED BY ITS PADDING, NOT BY `width`.
-  #
-  # Setting width=26/46 is the obvious way to do this and it is wrong:
-  # sketchybar left-aligns an item's content inside a forced width, so the
-  # focused chip drew its numeral hard against the left edge of the block
-  # with the rest of the 46px empty beside it. Waybar has no such problem —
-  # GTK centres the label in the button — which is why the two bars needed
-  # different mechanics here.
-  #
-  # Balanced icon padding gives the same widths and keeps the glyph centred
-  # by construction, at any width, with no arithmetic to keep in sync.
+  # Created at rest: bare, dim, no box. The watcher below paints the real
+  # state on the first --update, so nothing here needs to guess which
+  # workspace is focused at startup.
   sketchybar --add item space.$sid left \
     --set space.$sid \
     icon="${WS_ICONS[$i]}" \
-    icon.font="$FONT_FACE:SemiBold:13.0" \
+    icon.font="$FONT_MAIN" \
     icon.color=$EMPTY \
-    icon.padding_left=6 \
-    icon.padding_right=6 \
-    padding_left=1 \
-    padding_right=1 \
+    icon.padding_left=9 \
+    icon.padding_right=9 \
+    icon.y_offset=0 \
     label.drawing=off \
     background.drawing=off \
-    background.corner_radius=2 \
-    background.height=22 \
+    background.corner_radius=4 \
+    background.height=28 \
     background.border_width=1 \
+    background.color=$WS_BOX_FILL \
+    background.border_color=$WS_BOX_BORDER \
     click_script="aerospace workspace $sid"
 done
 
-# One watcher redraws all nine in a single batched sketchybar call, rather
-# than each chip carrying its own script. Nine scripts would mean nine
-# `aerospace list-workspaces` invocations per switch, and aerospace's CLI is
-# slow enough (~30ms a call) that the row visibly repaints in sequence.
+# One watcher repaints every chip in a single batched sketchybar call, rather
+# than each chip carrying its own script. One script per chip would mean one
+# `aerospace list-workspaces` invocation each per switch, and aerospace's CLI
+# is slow enough (~30ms a call) that the row visibly repaints in sequence.
 #
 # front_app_switched is subscribed as well as the workspace event: focusing a
-# window on another workspace changes which chip is focused without
-# aerospace firing exec-on-workspace-change.
+# window on another workspace changes which chip is focused without aerospace
+# firing exec-on-workspace-change.
 sketchybar --add item workspace_watcher left \
   --set workspace_watcher \
   drawing=off \

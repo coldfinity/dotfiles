@@ -1,50 +1,42 @@
 #!/bin/bash
 #
-# System stats — CPU, RAM, GPU — collapsed behind one glyph.
+# CPU, RAM and GPU — inline, each an icon and a reading.
 #
-# Waybar keeps these in a GTK drawer that grows the frame in place on hover.
-# Sketchybar has no revealer, so they live in a popup instead. An in-bar
-# reveal is reproducible with mouse.entered plus drawing=on and --animate,
-# but it flickers whenever the pointer crosses the group quickly; the popup
-# is the sketchybar-native idiom and doesn't.
+# NO SPARKLINES, THOUGH THE REFERENCE HAS THEM.
 #
-# The anchor carries the state, so the resting bar can still go amber or red
-# without the numbers being on screen — see plugins/stats.sh, which colours it
-# from whichever of the three is worst.
+# Sketchybar's native `graph` item lays out as icon │ plot │ label: the plot
+# takes horizontal space *between* the icon and its number, so a 42px graph
+# put 42px of gap between every glyph and the value it belongs to. There is
+# no way to put the plot underneath the text — an item gets one background,
+# items flow horizontally, and the graph occupies its own column.
 #
-# 󰓅 U+F04C5, speedometer. Same glyph waybar's stats.sh prints.
+# The reference draws its line under the text, which quickshell can do
+# because it lays out freely. Reproducing it here would mean overlapping the
+# label back over the graph with negative padding, which fights the layout
+# rather than using it. The tight icon+number pairing matters more than the
+# line, so the graphs are gone.
+#
+# 󰘙 U+F0619 chip, 󰍛 U+F035B memory, 󰢮 U+F08AE expansion card. All Material
+# Design — the U+F000-F8FF Font Awesome block does not survive being written
+# into these files and lands as an empty icon.
 
-sketchybar --add item stats right \
-  --set stats \
-  icon=󰓅 \
-  icon.color=$GREY \
-  icon.padding_left=8 \
-  icon.padding_right=8 \
-  label.drawing=off \
-  background.drawing=off \
-  update_freq=5 \
-  script="$PLUGIN_DIR/stats.sh" \
-  "${popup[@]}" \
-  --subscribe stats mouse.entered mouse.exited mouse.exited.global
-
-# The three readings, stacked in the popup. They have no scripts of their own:
-# the anchor samples all three and writes them in one batched call, because
-# sampling CPU means holding two `ps` snapshots and doing that three times
-# over would triple the cost for no extra information.
-for stat in cpu ram gpu; do
-  sketchybar --add item stats.$stat popup.stats \
-    --set stats.$stat \
+add_stat() {
+  sketchybar --add item $1 right \
+    --set $1 \
+    icon="$2" \
     icon.color=$GREY \
-    icon.padding_left=10 \
-    icon.padding_right=6 \
-    label.color=$GREY \
-    label.padding_right=10 \
-    background.drawing=off \
-    width=130
-done
+    icon.padding_left=14 \
+    icon.padding_right=4 \
+    label.color=$TEXT \
+    label.padding_right=0 \
+    background.drawing=off
+}
 
-# 󰘙 U+F0619 chip, 󰍛 U+F035B memory, 󰢮 U+F08AE expansion card — the same
-# three glyphs waybar labels cpu/memory/custom-gpu with.
-sketchybar --set stats.cpu icon=󰘙 \
-  --set stats.ram icon=󰍛 \
-  --set stats.gpu icon=󰢮
+add_stat gpu 󰢮
+add_stat ram 󰍛
+add_stat cpu 󰘙
+
+# One script samples all three. Sampling CPU means holding two `ps`
+# snapshots, and doing that once per item would triple the cost for no extra
+# information. cpu owns the timer; ram and gpu are written by it.
+sketchybar --set cpu update_freq=5 script="$PLUGIN_DIR/stats.sh"

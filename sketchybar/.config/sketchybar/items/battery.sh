@@ -10,10 +10,10 @@
 sketchybar --add item battery right \
   --set battery \
   icon.color=$GREY \
-  icon.padding_left=10 \
-  icon.padding_right=6 \
-  label.color=$GREY \
-  label.padding_right=10 \
+  icon.padding_left=14 \
+  icon.padding_right=4 \
+  label.color=$TEXT \
+  label.padding_right=0 \
   background.drawing=off \
   update_freq=60 \
   script="$PLUGIN_DIR/battery.sh" \

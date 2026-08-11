@@ -4,13 +4,14 @@
 # calendar glyph. Now Chinese and glyphless, matching waybar's clock — see
 # plugins/clock.sh for the format.
 #
-# GREY, not TEXT. The format is the longest run of text on the bar, and at
-# full strength it reads as highlighted next to the grey stats.
+# TEXT, not GREY. In the framed design this was deliberately dimmed so the
+# longest run of text on the bar didn't read as highlighted; with no frames
+# and a low bar tint it needs the weight back to stay legible.
 
 sketchybar --add item clock center \
   --set clock \
   icon.drawing=off \
-  label.color=$GREY \
+  label.color=$TEXT \
   label.padding_left=8 \
   label.padding_right=8 \
   update_freq=1 \

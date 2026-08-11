@@ -18,7 +18,7 @@
 sketchybar --add item media center \
   --set media \
   drawing=off \
-  icon.font="$FONT_FACE:SemiBold:13.0" \
+  icon.font="$FONT_MAIN" \
   icon.color=$GREY \
   icon.padding_left=8 \
   icon.padding_right=4 \

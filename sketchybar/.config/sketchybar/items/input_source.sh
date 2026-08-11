@@ -12,9 +12,9 @@
 sketchybar --add item input_source right \
   --set input_source \
   icon.drawing=off \
-  label.color=$GREY \
-  label.padding_left=10 \
-  label.padding_right=10 \
+  label.color=$TEXT \
+  label.padding_left=14 \
+  label.padding_right=0 \
   background.drawing=off \
   update_freq=1 \
   script="$PLUGIN_DIR/input_source.sh" \

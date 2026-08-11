@@ -23,7 +23,7 @@ PERCENT="$(printf '%s' "$BATT" | grep -Eo '[0-9]+%' | head -1 | tr -d '%')"
 # A Mac mini or a desktop-mode machine reports no battery at all. Hide rather
 # than draw a zero.
 if [ -z "$PERCENT" ]; then
-  sketchybar --set "$NAME" drawing=off --set divider.battery drawing=off
+  sketchybar --set "$NAME" drawing=off
   exit 0
 fi
 
@@ -40,7 +40,7 @@ else
   elif [ "$PERCENT" -le 20 ]; then
     COLOR=$ORANGE
   else
-    COLOR=$GREY
+    COLOR=$TEXT
   fi
 
   case 1 in
@@ -54,7 +54,10 @@ else
   esac
 fi
 
+# The icon stays GREY unless the level itself is worth acting on, matching
+# the stat icons: the glyph says what this is, which does not change.
+[ "$COLOR" = "$TEXT" ] && ICON_COLOR=$GREY || ICON_COLOR="$COLOR"
+
 sketchybar --set "$NAME" drawing=on \
-  icon="$ICON" icon.color="$COLOR" \
-  label="${PERCENT}%" label.color="$COLOR" \
-  --set divider.battery drawing=on
+  icon="$ICON" icon.color="$ICON_COLOR" \
+  label="$PERCENT" label.color="$COLOR"

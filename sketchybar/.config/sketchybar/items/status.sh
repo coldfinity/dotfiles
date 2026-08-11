@@ -1,53 +1,47 @@
 #!/bin/bash
 #
-# Device state — network, bluetooth, volume. Waybar calls this group/status:
-# "two radios and the audio sink, all current state of a device".
+# Network, bluetooth and volume — three separate inline items.
 #
-# Network is the anchor rather than a synthetic glyph like the stats group
-# uses. It already renders as a single icon, and connectivity is the one
-# thing here worth being able to see without hovering.
+# These were one anchor with a hover popup behind it. The reference layout
+# shows all three at rest, so the popup and its anchor are gone and each is
+# now its own item on the bar.
 #
 # Connected is the state worth signalling, so it gets ACCENT; anything off or
-# disconnected falls to DIM. GREY is for "on, nothing attached".
+# disconnected falls to DIM. TEXT is for "on, nothing attached".
 
-sketchybar --add item status right \
-  --set status \
+# Order matters: items placed `right` are laid out right-to-left in the order
+# they are added, so this reads volume, bluetooth, network on screen.
+sketchybar --add item volume right \
+  --set volume \
   icon.color=$GREY \
-  icon.padding_left=8 \
-  icon.padding_right=8 \
+  icon.padding_left=14 \
+  icon.padding_right=4 \
+  label.color=$TEXT \
+  label.padding_right=0 \
+  background.drawing=off \
+  update_freq=15 \
+  script="$PLUGIN_DIR/volume.sh" \
+  --subscribe volume volume_change
+
+sketchybar --add item bluetooth right \
+  --set bluetooth \
+  icon.color=$GREY \
+  icon.padding_left=14 \
+  icon.padding_right=0 \
   label.drawing=off \
+  background.drawing=off \
+  update_freq=15 \
+  script="$PLUGIN_DIR/bluetooth.sh" \
+  --subscribe bluetooth system_woke
+
+sketchybar --add item network right \
+  --set network \
+  icon.color=$GREY \
+  icon.padding_left=14 \
+  icon.padding_right=4 \
+  label.color=$TEXT \
+  label.padding_right=0 \
   background.drawing=off \
   update_freq=10 \
   script="$PLUGIN_DIR/network.sh" \
-  "${popup[@]}" \
-  --subscribe status mouse.entered mouse.exited mouse.exited.global \
-  wifi_change system_woke
-
-# Unlike the stats group, these two carry their own scripts: bluetooth and
-# volume have nothing to share with each other or with the anchor, and volume
-# is event-driven where the anchor is polled.
-sketchybar --add item status.bluetooth popup.status \
-  --set status.bluetooth \
-  icon.color=$GREY \
-  icon.padding_left=10 \
-  icon.padding_right=6 \
-  label.color=$GREY \
-  label.padding_right=10 \
-  background.drawing=off \
-  width=170 \
-  update_freq=15 \
-  script="$PLUGIN_DIR/bluetooth.sh" \
-  --subscribe status.bluetooth system_woke
-
-sketchybar --add item status.volume popup.status \
-  --set status.volume \
-  icon.color=$GREY \
-  icon.padding_left=10 \
-  icon.padding_right=6 \
-  label.color=$GREY \
-  label.padding_right=10 \
-  background.drawing=off \
-  width=170 \
-  update_freq=15 \
-  script="$PLUGIN_DIR/volume.sh" \
-  --subscribe status.volume volume_change
+  --subscribe network wifi_change system_woke

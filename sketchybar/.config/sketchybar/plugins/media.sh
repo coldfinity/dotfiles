@@ -44,10 +44,3 @@ case "$STATE" in
     ;;
 esac
 
-# The divider before this item goes with it, so a silent bar shows the clock
-# alone rather than the clock and a rule.
-if [ "$STATE" = "playing" ] || [ "$STATE" = "paused" ]; then
-  sketchybar --set divider.media drawing=on
-else
-  sketchybar --set divider.media drawing=off
-fi

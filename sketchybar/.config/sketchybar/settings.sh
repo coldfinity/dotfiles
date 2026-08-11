@@ -11,6 +11,23 @@
 # everything under items/) and by the plugins directly, since plugins run as
 # their own processes and inherit nothing.
 
+##### Typography #####
+# One dial for the whole bar. The size was hardcoded as 13.0 in three
+# separate places — the defaults block, the workspace numerals and the media
+# item — which meant changing it missed one of them every time.
+#
+# FONT_MAIN is what items should use; FONT_FACE is exported too because a few
+# items want a different weight or size off the same family.
+export FONT_FACE="JetBrainsMono Nerd Font"
+export FONT_SIZE=15.0
+export FONT_MAIN="$FONT_FACE:SemiBold:$FONT_SIZE"
+
+export BAR_HEIGHT=40
+
+# Breathing space at the screen edges. The first and last items sit this far
+# in from the left and right edges.
+export BAR_EDGE_PADDING=24
+
 ##### Workspaces #####
 # WS_IDS and WS_ICONS are parallel: index i in one pairs with index i in the
 # other. Not an associative array — macOS ships bash 3.2, which has none.
