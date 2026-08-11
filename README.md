@@ -23,6 +23,52 @@ cd ~/projects/dotfiles
 
 It's idempotent — safe to re-run.
 
+## Dependencies bootstrap does NOT install
+
+`bootstrap.sh` stows configuration; it does not provision applications. Most
+of them (hyprland, wezterm, neovim, rofi, mako…) come from the distro and are
+assumed present. Three exceptions are not, and the desktop fails in confusing
+ways without them.
+
+**quickshell** — the bar, notifications OSD and desktop widgets. Not in the
+Ubuntu repos. `hyprland.conf` runs `exec-once = qs`, so without it you boot to
+a desktop with no bar:
+
+```sh
+sudo add-apt-repository -y ppa:avengemedia/danklinux
+sudo apt update && sudo apt install quickshell
+```
+
+Note quickshell links private Qt APIs and its dependencies pin the Qt version
+exactly (`qt6-base-private-abi (= 6.10.2)` at time of writing). A Qt point
+release will hold it back until the PPA rebuilds. That is inherent to
+quickshell, not to this PPA.
+
+**qml6-module-qtquick-effects** — a *hard* requirement, not an enhancement.
+`MultiEffect` draws the album-art blur and every text shadow on the desktop
+widgets, and QML import failures are fatal: without this the shell does not
+start at all.
+
+```sh
+sudo apt install qml6-module-qtquick-effects
+```
+
+**Maple Mono NF CN** — the shell's typeface, set in
+`quickshell/.config/quickshell/Theme.qml`. Not in any repo; the apt font
+packages are unpatched builds with no Nerd Font glyphs. The CN build matters
+specifically: it carries latin, the Nerd Font icons *and* Chinese in one face,
+so the workspace numerals 一二三四五 do not fall back to a different typeface.
+
+```sh
+curl -LO https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-NF-CN.zip
+mkdir -p ~/.local/share/fonts/MapleMono
+unzip -o MapleMono-NF-CN.zip -d ~/.local/share/fonts/MapleMono
+fc-cache -f
+```
+
+Without it the shell still runs, but every glyph falls back and the bar looks
+nothing like it should.
+
 ## Manual use
 
 ```sh

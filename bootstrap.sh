@@ -88,11 +88,20 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # ── 4. stow packages ────────────────────────────────────────────────
 # Cross-platform packages.
-COMMON=(bin fastfetch ghostty nvim nvim.bak tmux tmux-sessionizer wezterm zsh)
+COMMON=(bin fastfetch ghostty nvim tmux tmux-sessionizer typst wezterm zsh)
 # macOS-only tools.
 MAC_ONLY=(aerospace sketchybar)
 # Linux-only tools.
-LINUX_ONLY=(hypr mako rofi waybar)
+#
+# quickshell is the bar. hyprland.conf runs `exec-once = qs`, which looks
+# for ~/.config/quickshell/shell.qml — so leaving this out means a fresh
+# install boots to a desktop with no bar and no obvious reason why.
+#
+# waybar stays even though nothing starts it. Its exec-once line in
+# hyprland.conf is commented rather than deleted, as the documented way
+# back if quickshell ever breaks, and that fallback only works if the
+# config is actually on disk.
+LINUX_ONLY=(hypr mako quickshell rofi waybar)
 # NOTE: fcitx5 is stowed separately below — it must not be tree-folded.
 
 PKGS=("${COMMON[@]}")
