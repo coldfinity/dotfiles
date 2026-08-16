@@ -5,11 +5,8 @@
 # Which workspaces get drawn, and what glyph each one wears, comes from
 # settings.sh so this file and plugins/workspaces.sh cannot disagree.
 #
-# THE FOCUSED ONE IS BOXED, THE REST ARE BARE.
-#
-# Nothing else on this bar is boxed, so the outline alone carries focus —
-# there is no fill to recolour and no divider to compete with it. The box is
-# the whole marker; there is no underline bar inside it.
+# NO BACKGROUND, EVER — focus is carried by colour alone (icon.color
+# turning ACCENT). A box drawn under that read as redundant.
 
 sketchybar --add event aerospace_workspace_change
 
@@ -22,18 +19,13 @@ for i in "${!WS_IDS[@]}"; do
   sketchybar --add item space.$sid left \
     --set space.$sid \
     icon="${WS_ICONS[$i]}" \
-    icon.font="$FONT_MAIN" \
+    icon.font="$FONT_TEXT" \
     icon.color=$EMPTY \
     icon.padding_left=9 \
     icon.padding_right=9 \
     icon.y_offset=0 \
     label.drawing=off \
     background.drawing=off \
-    background.corner_radius=4 \
-    background.height=28 \
-    background.border_width=1 \
-    background.color=$WS_BOX_FILL \
-    background.border_color=$WS_BOX_BORDER \
     click_script="aerospace workspace $sid"
 done
 

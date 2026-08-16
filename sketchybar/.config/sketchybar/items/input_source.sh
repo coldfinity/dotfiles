@@ -9,12 +9,15 @@
 # input-source change that a shell script can subscribe to, and 1s is fast
 # enough that the bar has caught up before you finish the first character.
 
+# Rightmost of the audio & input cluster (items/audio.sh), so it carries
+# the gap to the battery cluster after it; its left side, facing volume,
+# stays tight.
 sketchybar --add item input_source right \
   --set input_source \
   icon.drawing=off \
   label.color=$TEXT \
-  label.padding_left=14 \
-  label.padding_right=0 \
+  label.padding_left=8 \
+  label.padding_right=$GROUP_GAP \
   background.drawing=off \
   update_freq=1 \
   script="$PLUGIN_DIR/input_source.sh" \

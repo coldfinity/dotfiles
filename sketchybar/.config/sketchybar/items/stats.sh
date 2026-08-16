@@ -25,8 +25,9 @@ add_stat() {
     --set $1 \
     icon="$2" \
     icon.color=$GREY \
-    icon.padding_left=14 \
+    icon.padding_left=10 \
     icon.padding_right=4 \
+    label.font="$FONT_MONO" \
     label.color=$TEXT \
     label.padding_right=0 \
     background.drawing=off
@@ -35,6 +36,12 @@ add_stat() {
 add_stat gpu 󰢮
 add_stat ram 󰍛
 add_stat cpu 󰘙
+
+# Add order is reversed by the bar: cpu (added last) ends up leftmost on
+# screen, gpu (added first) rightmost. Those two carry the wider gap to the
+# neighbouring clusters; ram, in the middle, keeps the tighter default.
+sketchybar --set cpu icon.padding_left=$GROUP_GAP
+sketchybar --set gpu label.padding_right=$GROUP_GAP
 
 # One script samples all three. Sampling CPU means holding two `ps`
 # snapshots, and doing that once per item would triple the cost for no extra

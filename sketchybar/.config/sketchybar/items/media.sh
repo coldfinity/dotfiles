@@ -15,17 +15,17 @@
 # title that grows moves the clock with it; 38 keeps the worst case to a few
 # characters' drift, matching waybar's max-length.
 
-sketchybar --add item media center \
+sketchybar --add item media right \
   --set media \
   drawing=off \
-  icon.font="$FONT_MAIN" \
+  icon.font="$FONT_ICON" \
   icon.color=$GREY \
   icon.padding_left=8 \
   icon.padding_right=4 \
   label.color=$GREY \
   label.padding_left=4 \
   label.padding_right=8 \
-  label.max_chars=38 \
+  label.max_chars=$MEDIA_MAX_CHARS \
   scroll_texts=on \
   background.drawing=off \
   script="$PLUGIN_DIR/media.sh" \

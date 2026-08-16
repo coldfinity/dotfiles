@@ -23,8 +23,8 @@ sketchybar --add item power right \
   --set power \
   icon=󰐥 \
   icon.color=$GREY \
-  icon.padding_left=14 \
-  icon.padding_right=0 \
+  icon.padding_left=10 \
+  icon.padding_right=$GROUP_GAP \
   label.drawing=off \
   background.drawing=off \
   script="$PLUGIN_DIR/power.sh" \

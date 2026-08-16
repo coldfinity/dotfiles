@@ -1,32 +1,63 @@
 #!/bin/bash
 #
 # Values shared between the item definitions and the plugins that repaint
-# them.
-#
-# These lived in both places until now — items/workspaces.sh built the chips
-# from one list and plugins/workspaces.sh looped over another, and the same
-# went for the taskbar's slot count. That duplication is what left the bar
-# drawing five workspace chips while aerospace had nine: one copy was
-# updated and the other wasn't. Sourced by sketchybarrc (which covers
-# everything under items/) and by the plugins directly, since plugins run as
-# their own processes and inherit nothing.
+# them. Sourced by sketchybarrc (which covers everything under items/) and
+# by the plugins directly, since plugins run as their own processes and
+# inherit nothing.
 
 ##### Typography #####
-# One dial for the whole bar. The size was hardcoded as 13.0 in three
-# separate places — the defaults block, the workspace numerals and the media
-# item — which meant changing it missed one of them every time.
+# Icons need a Nerd Font — SF Pro and SF Mono don't carry the Material
+# Design glyphs this bar uses (network, battery, cpu, power, ...), so text
+# and icons are deliberately different font families. Mixing them into one
+# FONT_MAIN, like the previous version did, is what made switching the text
+# font also blank out every icon.
 #
-# FONT_MAIN is what items should use; FONT_FACE is exported too because a few
-# items want a different weight or size off the same family.
-export FONT_FACE="JetBrainsMono Nerd Font"
-export FONT_SIZE=15.0
-export FONT_MAIN="$FONT_FACE:SemiBold:$FONT_SIZE"
+#   FONT_ICON   glyphs only — network/battery/cpu/gpu/power/media icons.
+#               Must stay a Nerd Font or these render as empty boxes.
+#   FONT_TEXT   prose: clock, window title, media title, the EN/中 input
+#               indicator, and the CJK workspace numerals (SF Pro falls back
+#               to PingFang for CJK the same way the old Nerd Font did).
+#   FONT_MONO   numbers that change on every tick — cpu/ram/gpu/battery/
+#               network/volume percentages — so a reading going from 9% to
+#               10% doesn't shift anything beside it.
+export FONT_ICON="JetBrainsMono Nerd Font:Regular:15.0"
+export FONT_TEXT="SF Pro:Semibold:14.0"
+export FONT_MONO="SF Mono:Regular:13.0"
 
-export BAR_HEIGHT=40
+##### Bar geometry #####
+# A floating bar, inset from every edge. This is the fix for the previous
+# layout, which set margin=0 y_offset=0 and ran the bar flush and
+# full-width — visually indistinguishable from "covering the screen".
+#
+# margin insets left and right; y_offset pushes down from the top. Both use
+# BAR_MARGIN so the inset reads as uniform on the three visible sides.
+export BAR_HEIGHT=32
+export BAR_MARGIN=8
+export BAR_RADIUS=12
+export BAR_EDGE_PADDING=12
 
-# Breathing space at the screen edges. The first and last items sit this far
-# in from the left and right edges.
-export BAR_EDGE_PADDING=24
+##### The notch #####
+# No item sits at `center` — the notch is avoided by not placing anything
+# there in the first place, rather than by sketchybar's own
+# notch_width/notch_display_height bar properties. Those properties exist
+# for exactly this, but on this sketchybar build they make every item's
+# window span the full display height instead of just the bar's, which
+# silently blocks clicks to desktop icons and interactive widgets. See the
+# long comment above the `--bar` call in sketchybarrc.
+
+##### Group spacing #####
+# No pill backgrounds — the native menu bar never draws one either; it
+# groups items by spacing alone. GROUP_GAP is the wider gap between
+# unrelated clusters (workspaces / window title / stats / connectivity /
+# battery+power / clock); the tighter, unnamed 8-10px paddings inside each
+# item file are the gap between items that belong to the same cluster.
+export GROUP_GAP=22
+
+##### Window title #####
+export TITLE_MAX_CHARS=32
+
+##### Media #####
+export MEDIA_MAX_CHARS=38
 
 ##### Workspaces #####
 # WS_IDS and WS_ICONS are parallel: index i in one pairs with index i in the
@@ -36,15 +67,7 @@ export BAR_EDGE_PADDING=24
 # keybind; the bar deliberately lists only these. A workspace left off this
 # list simply isn't drawn.
 #
-# CJK numerals rather than digits, matching waybar. JetBrainsMono has no CJK
-# coverage, so these resolve through macOS font fallback to PingFang. They
-# are full-width glyphs and render wider than the digits they replace, which
-# is what NARROW/WIDE in plugins/workspaces.sh are sized for.
+# CJK numerals, matching waybar. They render through font fallback to
+# PingFang and are full-width glyphs, wider than the digits they replace.
 export WS_IDS=(1 2 3 4 5)
 export WS_ICONS=(一 二 三 四 五)
-
-##### Taskbar #####
-# Slots are pre-created and toggled rather than added and removed, because
-# bracket membership is fixed when the bracket is created — an item added
-# later cannot join left_frame. See items/taskbar.sh.
-export TASKBAR_SLOTS=12

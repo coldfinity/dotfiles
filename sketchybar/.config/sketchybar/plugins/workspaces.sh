@@ -2,14 +2,13 @@
 #
 # Repaints every workspace chip in one batched sketchybar call.
 #
-#   focused    numeral in ACCENT inside an outlined rounded box
-#   visible    numeral in TEXT, no box — showing on some monitor, but not the
-#              one holding keyboard focus
+#   focused    numeral in ACCENT — no background, just the colour change
+#   visible    numeral in TEXT — showing on some monitor, but not the one
+#              holding keyboard focus
 #   occupied   DIM  — has windows, not on screen
 #   empty      EMPTY — listed only so the row keeps a stable width
 #
-# Only the focused chip is decorated. Everything else is a bare glyph, which
-# is what makes the box read as focus rather than as one style among several.
+# No chip ever gets a background. Focus is carried by colour alone.
 
 source "$CONFIG_DIR/colors.sh"
 source "$CONFIG_DIR/settings.sh"
@@ -34,7 +33,7 @@ for sid in "${WS_IDS[@]}"; do
   if [ "$sid" = "$FOCUSED" ]; then
     args+=(--set space.$sid display="$display"
       icon.color=$ACCENT
-      background.drawing=on)
+      background.drawing=off)
 
   elif printf '%s\n' "$VISIBLE" | grep -qx "$sid"; then
     # Showing on a monitor that doesn't hold focus. With one display this

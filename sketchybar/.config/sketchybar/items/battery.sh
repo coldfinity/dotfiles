@@ -10,8 +10,9 @@
 sketchybar --add item battery right \
   --set battery \
   icon.color=$GREY \
-  icon.padding_left=14 \
+  icon.padding_left=$GROUP_GAP \
   icon.padding_right=4 \
+  label.font="$FONT_MONO" \
   label.color=$TEXT \
   label.padding_right=0 \
   background.drawing=off \
