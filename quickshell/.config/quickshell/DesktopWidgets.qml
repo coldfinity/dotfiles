@@ -83,9 +83,7 @@ Scope {
             required property var modelData
             screen: modelData
 
-            // Only the wide monitor. The Dell is 1080p and usually full of
-            // windows, so widgets there would be permanently covered.
-            visible: modelData.name === "DP-1"
+            visible: modelData.name === Monitors.main
 
             anchors {
                 top: true

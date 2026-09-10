@@ -47,7 +47,7 @@ Scope {
 
     // The monitor the dashboard is showing on, which is the one whose
     // brightness the slider should read and write.
-    readonly property string screenName: Hyprland.focusedMonitor ? Hyprland.focusedMonitor.name : "DP-1"
+    readonly property string screenName: Hyprland.focusedMonitor ? Hyprland.focusedMonitor.name : Monitors.main
 
     onOpenChanged: {
         if (!open)
