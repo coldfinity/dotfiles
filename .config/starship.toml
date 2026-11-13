@@ -1,0 +1,50 @@
+# One-line starship prompt, in the style of the "pure" preset.
+#
+#   ~/projects/dotfiles main* ❯                                      4s
+#
+# Left: folder, git branch, a * when the repo is dirty, then the prompt
+# character. Right: how long the last command took (only when it was slow).
+# Colours are the terminal's own ANSI colours. No Nerd Font icons needed.
+
+"$schema" = 'https://starship.rs/config-schema.json'
+
+add_newline = false
+
+format = "$directory$git_branch$git_state$git_status$character"
+right_format = "$cmd_duration"
+
+[directory]
+style = "blue"
+truncation_length = 2
+truncate_to_repo = true
+
+[git_branch]
+format = "[$branch]($style) "
+style = "bright-black"
+
+[git_status]
+format = "([(*$conflicted$untracked$modified$staged$renamed$deleted)](218)[$ahead_behind$stashed]($style) )"
+style = "cyan"
+# Zero-width spaces: invisible, but non-empty, so the single * above appears
+# whenever any of these states is true. Don't replace them with "".
+conflicted = "​"
+untracked = "​"
+modified = "​"
+staged = "​"
+renamed = "​"
+deleted = "​"
+stashed = "≡"
+
+[git_state]
+format = '\([$state( $progress_current/$progress_total)]($style)\) '
+style = "bright-black"
+
+[cmd_duration]
+min_time = 2000
+format = "[$duration]($style)"
+style = "yellow"
+
+[character]
+success_symbol = "[❯](purple)"
+error_symbol = "[❯](red)"
+vimcmd_symbol = "[❮](green)"

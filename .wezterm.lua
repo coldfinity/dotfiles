@@ -5,16 +5,8 @@ local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 
 -- Set the color scheme
--- config.color_scheme = "Catppuccin Mocha"
--- config.color_scheme = "Github Dark"
--- config.color_scheme = "GruvboxDark"
--- config.color_scheme = "GruvboxDarkHard"
--- config.color_scheme = "rose-pine"
--- config.color_scheme = "Dracula"
-config.color_scheme = "Vesper"
--- config.color_scheme = "duskfox"
--- config.color_scheme = "Oxocarbon Dark (Gogh)"
--- config.color_scheme = "flexoki-dark"
+-- config.color_scheme = "Vesper"
+config.color_scheme = "Mono Theme (terminal.sexy)"
 
 -- This is where you actually apply your config choices
 
@@ -37,7 +29,7 @@ config.use_fancy_tab_bar = false
 config.tab_bar_at_bottom = false
 
 config.window_decorations = "RESIZE"
-config.window_background_opacity = 0.4
+config.window_background_opacity = 0.8
 config.macos_window_background_blur = 60
 
 config.scrollback_lines = 10000

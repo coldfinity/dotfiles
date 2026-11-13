@@ -11,8 +11,8 @@ and symlinks it into `$HOME`, and `.stow-local-ignore` keeps repo-only files
 (`README.md`, `.git`, `docs`, …) out of it.
 
 ```
-.zshrc  .tmux.conf  .wezterm.lua  .p10k.zsh
-.config/{aerospace,fastfetch,ghostty,herdr,nvim,sketchybar,tmux-sessionizer}
+.zshrc  .tmux.conf  .wezterm.lua
+.config/{aerospace,fastfetch,ghostty,herdr,nvim,sketchybar,starship.toml,tmux-sessionizer}
 .local/bin/{how,gclone}
 ```
 
@@ -63,7 +63,8 @@ links only `config.toml`.
 - **Neovim treesitter** is being redone. Parsers and queries are generated
   per-machine by nvim-treesitter, so `.config/nvim/queries/` is gitignored and
   not tracked.
-- **p10k:** `.p10k.zsh` is the powerlevel10k config. The theme itself is
-  installed separately and isn't part of this repo.
-- Third-party clones in my home folder (`vim`, `iterm`, `spicetify-themes`,
-  `powerlevel10k`) are deliberately not part of this repo.
+- **Prompt:** [starship](https://starship.rs) with a minimal config in
+  `.config/starship.toml` (directory, git, prompt character). Install it with
+  `brew install starship`; `.zshrc` loads it.
+- Third-party clones in my home folder (`vim`, `iterm`, `spicetify-themes`)
+  are deliberately not part of this repo.

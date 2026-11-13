@@ -15,15 +15,9 @@
 
 #fastfetch
 
-# P10k instant prompt
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
 # Oh My Zsh
 export ZSH="$HOME/.oh-my-zsh"
 
-ZSH_THEME="powerlevel10k/powerlevel10k"
 # ZSH_THEME="robbyrussell"
 # ZSH_THEME="apple"
 
@@ -49,9 +43,6 @@ setopt share_history
 setopt hist_expire_dups_first
 setopt hist_ignore_dups
 setopt hist_verify
-
-# P10k config
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # pnpm
 export PNPM_HOME="/Users/yudiwu/Library/pnpm"
@@ -80,3 +71,6 @@ eval "$(zoxide init zsh --cmd cd)"
 
 # Added by cua-driver-rs installer — see https://github.com/trycua/cua
 export PATH="/Users/yudiwu/.local/bin:$PATH"
+
+# starship theme
+eval "$(starship init zsh)"
