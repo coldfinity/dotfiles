@@ -92,7 +92,7 @@ Scope {
     Process {
         id: brightnessRead
         running: true
-        command: [Quickshell.shellPath("scripts/brightness.sh"), "get", Monitors.main]
+        command: [Quickshell.shellPath("scripts/brightness.sh"), "get", "DP-1"]
         stdout: SplitParser {
             onRead: line => {
                 const v = parseInt(line.trim());

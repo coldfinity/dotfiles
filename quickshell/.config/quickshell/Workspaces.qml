@@ -22,8 +22,7 @@ Item {
 
     required property string screenName
 
-    // Single monitor now, so every workspace lives on it.
-    readonly property var ids: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    readonly property var ids: screenName === "DP-1" ? [1, 2, 3, 4, 5] : [6, 7, 8, 9]
 
     readonly property var numerals: ({
             "1": "一",

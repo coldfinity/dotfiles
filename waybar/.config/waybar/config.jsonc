@@ -136,11 +136,11 @@
             "9": "九",
             "default": "{name}"
         },
-        // Single monitor now, so every workspace lives on the one bar.
-        // JSON has no variables, so "DP-3" here must be kept in sync by hand
-        // with hyprland.conf's $mainMonitor and quickshell's Monitors.qml.
+        // Mirrors the workspace→monitor pinning in hyprland.conf, so each
+        // bar only ever lists the workspaces that live on its own output.
         "persistent-workspaces": {
-            "DP-3": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+            "DP-1": [1, 2, 3, 4, 5],
+            "DP-3": [6, 7, 8, 9]
         }
     },
 
@@ -151,7 +151,8 @@
     "wlr/taskbar": {
         "format": "{icon}",
         "icon-size": 18,
-        // Single monitor now, so there is only one bar to list windows on.
+        // Per-output, matching the workspace pinning: the Gigabyte's bar
+        // lists its own windows and the Dell's lists its own.
         "all-outputs": false,
         "tooltip-format": "{title}",
         "on-click": "activate",
