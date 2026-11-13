@@ -61,6 +61,7 @@ require("neo-tree").setup({
 	filesystem = {
 		filtered_items = { hide_dotfiles = false, hide_gitignored = true },
 		follow_current_file = { enabled = true },
+		hijack_netrw_behavior = "open_default",
 	},
 })
 
@@ -69,7 +70,8 @@ map("n", "<leader>E", "<cmd>Neotree reveal<cr>", "Reveal in tree")
 
 -- ── oil (netrw replacement, buffer-style file editing) ───────
 require("oil").setup({
-	default_file_explorer = true,
+	-- leave directory opening (`nvim .`) to neo-tree
+	default_file_explorer = false,
 	-- reflect external filesystem changes live
 	watch_for_changes = true,
 	columns = {

@@ -8,8 +8,6 @@ vim.pack.add({
 
 require("tenebris").setup({
 	transparent = true,
-	-- italic_comments = false,
-	-- bold_keywords   = false,
 })
 
 require("koda").setup({
@@ -38,9 +36,23 @@ require("kanagawa-paper").setup({
 local themery = require("themery")
 themery.setup({
 	themes = {
-		{ name = "Tenebris", colorscheme = "tenebris" },
-		{ name = "Koda", colorscheme = "koda" },
-		{ name = "Rose Pine", colorscheme = "rose-pine" },
+		-- Tenebris Light is the same colorscheme with background = "light".
+		-- Each entry sets the background (and tenebris' transparency) itself, so
+		-- switching away from the light theme never leaves the next one light.
+		-- Light is opaque: its dark text would be unreadable over a dark,
+		-- translucent terminal.
+		{
+			name = "Tenebris",
+			colorscheme = "tenebris",
+			before = [[ vim.opt.background = "dark"; require("tenebris").setup({ transparent = true }) ]],
+		},
+		{
+			name = "Tenebris Light",
+			colorscheme = "tenebris",
+			before = [[ vim.opt.background = "light"; require("tenebris").setup({ transparent = false }) ]],
+		},
+		{ name = "Koda", colorscheme = "koda", before = [[ vim.opt.background = "dark" ]] },
+		{ name = "Rose Pine", colorscheme = "rose-pine", before = [[ vim.opt.background = "dark" ]] },
 		{
 			name = "Kanagawa Paper (Ink)",
 			colorscheme = "kanagawa-paper-ink",

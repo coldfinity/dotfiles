@@ -11,7 +11,7 @@
 add_newline = false
 
 format = "$directory$git_branch$git_state$git_status$character"
-right_format = "$cmd_duration"
+right_format = "$python$nodejs$rust$golang$cmd_duration"
 
 [directory]
 style = "blue"
@@ -20,7 +20,7 @@ truncate_to_repo = true
 
 [git_branch]
 format = "[$branch]($style) "
-style = "bright-black"
+style = "white"
 
 [git_status]
 format = "([(*$conflicted$untracked$modified$staged$renamed$deleted)](218)[$ahead_behind$stashed]($style) )"
@@ -37,12 +37,32 @@ stashed = "≡"
 
 [git_state]
 format = '\([$state( $progress_current/$progress_total)]($style)\) '
-style = "bright-black"
+style = "white"
 
 [cmd_duration]
 min_time = 2000
 format = "[$duration]($style)"
 style = "yellow"
+
+# Tooling on the right: each only appears inside a project that uses it, and
+# python also shows the active venv's name.
+[python]
+format = '[py $version( \($virtualenv\))]($style) '
+style = "white"
+
+[nodejs]
+# Without this, a stray ~/node_modules makes node show up in the home folder.
+detect_folders = []
+format = "[node $version]($style) "
+style = "white"
+
+[rust]
+format = "[rust $version]($style) "
+style = "white"
+
+[golang]
+format = "[go $version]($style) "
+style = "white"
 
 [character]
 success_symbol = "[❯](purple)"

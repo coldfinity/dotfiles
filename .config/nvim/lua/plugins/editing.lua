@@ -67,3 +67,7 @@ require("toggleterm").setup({
 })
 map("n", "<C-\\>", "<cmd>ToggleTerm<cr>", "Toggle terminal")
 map("t", "<C-\\>", "<cmd>ToggleTerm<cr>", "Toggle terminal")
+
+-- split terminals (numbered so each key opens its own)
+map("n", "<leader>th", "<cmd>1ToggleTerm direction=horizontal size=15<cr>", "Terminal (horizontal split)")
+map("n", "<leader>tv", "<cmd>2ToggleTerm direction=vertical size=80<cr>", "Terminal (vertical split)")

@@ -33,8 +33,8 @@ map("t", "<C-j>", "<C-\\><C-n><C-w>j")
 map("t", "<C-k>", "<C-\\><C-n><C-w>k")
 map("t", "<C-l>", "<C-\\><C-n><C-w>l")
 -- split buffers
-map("n", "<leader>sv", "<cmd>vsplit<cr>", "Split vertical")
-map("n", "<leader>sh", "<cmd>split<cr>", "Split horizontal")
+map("n", "<leader>sv", "<cmd>vsplit | terminal<cr>i", "Split vertical (terminal)")
+map("n", "<leader>sh", "<cmd>split | terminal<cr>i", "Split horizontal (terminal)")
 
 -- buffers
 map("n", "<S-l>", "<cmd>bnext<cr>", "Next buffer")
