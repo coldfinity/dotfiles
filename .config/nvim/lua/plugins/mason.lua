@@ -1,12 +1,9 @@
 -- Prepend mason's bin dir to PATH so native vim.lsp.config finds installed servers
 vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
 
-local ok, mason = pcall(require, "mason")
-if not ok then
-	return
-end
+vim.pack.add({ "https://github.com/williamboman/mason.nvim" })
 
-mason.setup({ ui = { border = "rounded" } })
+require("mason").setup({ ui = { border = "rounded" } })
 
 local ensure_installed = {
 	-- LSP servers

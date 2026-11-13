@@ -1,3 +1,10 @@
+vim.pack.add({
+	"https://github.com/nvim-treesitter/nvim-treesitter",
+	"https://github.com/nvim-treesitter/nvim-treesitter-textobjects",
+	"https://github.com/windwp/nvim-ts-autotag",
+	"https://github.com/nvim-treesitter/nvim-treesitter-context",
+})
+
 require("nvim-treesitter").setup({
 	ensure_installed = {
 		"lua",
@@ -19,11 +26,30 @@ require("nvim-treesitter").setup({
 		"markdown",
 		"markdown_inline",
 		"swift",
+		"luadoc",
+		"query",
+		"regex",
+		"diff",
+		"tsx",
+		"toml",
+		"jsonc",
+		"gitcommit",
+		"git_rebase",
+		"gitignore",
+		"git_config",
+		"dockerfile",
+		"make",
+		"cmake",
+		"sql",
 	},
 })
 
 vim.api.nvim_create_autocmd("FileType", {
-	callback = function()
+	callback = function(ev)
+		-- vimtex provides its own syntax/conceal for tex; TS highlighting conflicts
+		if ev.match == "tex" then
+			return
+		end
 		pcall(vim.treesitter.start)
 	end,
 })
@@ -76,3 +102,10 @@ for lhs, spec in pairs(ts_move) do
 		spec[1](spec[2], "textobjects")
 	end, { desc = "Move " .. spec[2] })
 end
+
+-- auto close/rename html & jsx tags
+require("nvim-ts-autotag").setup()
+
+-- sticky header showing the enclosing function/class at the top of the window
+require("treesitter-context").setup({ max_lines = 3 })
+require("core.map")("n", "<leader>ct", "<cmd>TSContext toggle<cr>", "Toggle treesitter context")

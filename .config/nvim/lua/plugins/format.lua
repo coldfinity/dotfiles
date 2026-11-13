@@ -1,9 +1,6 @@
-local ok, conform = pcall(require, "conform")
-if not ok then
-	return
-end
+vim.pack.add({ "https://github.com/stevearc/conform.nvim" })
 
-conform.setup({
+require("conform").setup({
 	formatters_by_ft = {
 		lua = { "stylua" },
 		python = { "isort", "black" },

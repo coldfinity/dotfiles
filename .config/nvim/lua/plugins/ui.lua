@@ -1,142 +1,98 @@
-local wk_ok, wk = pcall(require, "which-key")
-if wk_ok then
-	wk.setup({
-		preset = "helix",
-		delay = 400,
-		spec = {
-			{ "<leader>f", group = "find" },
-			{ "<leader>g", group = "git" },
-			{ "<leader>h", group = "harpoon & hunks" },
-			{ "<leader>c", group = "code" },
-			{ "<leader>s", group = "splits & search" },
-			{ "<leader>b", group = "buffer" },
-			{ "<leader>d", group = "debug" },
-			{ "<leader>x", group = "diagnostics" },
-			{ "<leader>p", group = "plugins & pdf" },
-			{ "<leader>a", group = "claude" },
-			{ "<leader>t", group = "todo" },
-			{ "<leader>n", group = "docstrings" },
-		},
-	})
-end
+vim.pack.add({
+	"https://github.com/folke/which-key.nvim",
+	"https://github.com/lukas-reineke/indent-blankline.nvim",
+	"https://github.com/OXY2DEV/markview.nvim",
+	"https://github.com/nvimdev/dashboard-nvim",
+	"https://github.com/rcarriga/nvim-notify",
+	"https://github.com/MunifTanjim/nui.nvim",
+	"https://github.com/folke/noice.nvim",
+	"https://github.com/sphamba/smear-cursor.nvim",
+})
 
-local ibl_ok, ibl = pcall(require, "ibl")
-if ibl_ok then
-	vim.api.nvim_set_hl(0, "IblIndent", { fg = "#333333" })
-	vim.api.nvim_set_hl(0, "IblScope", { fg = "#555555" })
-	ibl.setup({
-		indent = { char = "│" },
-		scope = { enabled = true },
-		exclude = { filetypes = { "help", "neo-tree", "dashboard" } },
-	})
-end
+-- ── which-key ────────────────────────────────────────────────
+require("which-key").setup({
+	preset = "helix",
+	delay = 400,
+	spec = {
+		{ "<leader>f", group = "find" },
+		{ "<leader>g", group = "git" },
+		{ "<leader>h", group = "harpoon & hunks" },
+		{ "<leader>c", group = "code" },
+		{ "<leader>s", group = "splits & search" },
+		{ "<leader>b", group = "buffer" },
+		{ "<leader>d", group = "debug" },
+		{ "<leader>x", group = "diagnostics" },
+		{ "<leader>p", group = "plugins & pdf" },
+		{ "<leader>a", group = "claude" },
+		{ "<leader>t", group = "todo" },
+		{ "<leader>n", group = "docstrings" },
+	},
+})
 
-local lualine_ok, lualine = pcall(require, "lualine")
-if lualine_ok then
-	lualine.setup({
-		options = {
-			theme = "auto",
-			icons_enabled = true,
-			globalstatus = true,
-			component_separators = { left = "|", right = "|" },
-			section_separators = { left = "|", right = "|" },
-		},
-		sections = {
-			lualine_a = {
-				"mode",
-			},
-			lualine_b = {
-				"branch",
-				"diff",
-				{
-					"diagnostics",
-					sources = { "nvim_diagnostic" },
-				},
-			},
-			lualine_c = {
-				{
-					function()
-						return vim.fn.system({ "tmux", "display-message", "-p", "#S" }):gsub("%s+$", "")
-					end,
-					cond = function()
-						return vim.env.TMUX ~= nil
-					end,
-					icon = "",
-				},
-				{
-					"filename",
-					path = 1,
-				},
-			},
-			lualine_x = {
-				--"fileformat",
-				"filetype",
-				{
-					function()
-						local clients = vim.lsp.get_clients({ bufnr = 0 })
-						if #clients == 0 then
-							return ""
-						end
-						local names = {}
-						for _, c in ipairs(clients) do
-							table.insert(names, c.name)
-						end
-						return " " .. table.concat(names, ", ")
-					end,
-				},
-			},
-			lualine_y = {
-				"progress",
-			},
-			lualine_z = {
-				"location",
-			},
-		},
-		inactive_sections = {
-			lualine_a = { "filename" },
-			lualine_b = {},
-			lualine_c = {},
-			lualine_x = {},
-			lualine_y = {},
-			lualine_z = { "location" },
-		},
-	})
-end
+-- ── indent guides ────────────────────────────────────────────
+vim.api.nvim_set_hl(0, "IblIndent", { fg = "#333333" })
+vim.api.nvim_set_hl(0, "IblScope", { fg = "#555555" })
+require("ibl").setup({
+	indent = { char = "│" },
+	scope = { enabled = true },
+	exclude = { filetypes = { "help", "neo-tree", "dashboard" } },
+})
 
-local bufferline_ok, bufferline = pcall(require, "bufferline")
-if bufferline_ok then
-	bufferline.setup({
-		options = {
-			mode = "buffers",
-			themable = true,
-			numbers = "none",
-			diagnostics = "nvim_lsp",
-			diagnostics_indicator = function(count, level)
-				local icon = level:match("error") and " " or " "
-				return " " .. icon .. count
-			end,
-			offsets = {
-				{
-					filetype = "neo-tree",
-					text = "File Explorer",
-					text_align = "center",
-					separator = true,
-				},
-			},
-			hover = {
-				enabled = true,
-				delay = 200,
-				reveal = { "close" },
-			},
-			separator_style = "thin",
-			always_show_bufferline = true,
-			enforce_regular_tabs = false,
-			show_close_icon = true,
-			show_buffer_close_icons = true,
-			close_command = "bdelete! %d",
-			left_mouse_command = "buffer %d",
-			middle_mouse_command = "bdelete! %d",
-			right_mouse_command = "vertical sbuffer %d",
+-- ── markview ─────────────────────────────────────────────────
+require("markview").setup({
+	preview = {
+		filetypes = { "markdown" },
+	},
+})
+
+-- ── dashboard ────────────────────────────────────────────────
+require("dashboard").setup({
+	theme = "hyper",
+	config = {
+		week_header = { enable = true },
+		shortcut = {
+			{ desc = "Update plugins", group = "@property", action = "lua vim.pack.update()", key = "u" },
+			{ desc = "Find file", group = "Label", action = "Telescope find_files", key = "f" },
+			{ desc = "Live grep", group = "DiagnosticHint", action = "Telescope live_grep", key = "g" },
+			{ desc = "Recent files", group = "Number", action = "Telescope oldfiles", key = "r" },
+			{ desc = "Config", group = "String", action = "Telescope find_files cwd=~/.config/nvim", key = "c" },
 		},
-	})
-end
+		packages = { enable = true },
+		project = {
+			enable = false,
+			limit = 8,
+			icon = " ",
+			label = " Recent projects:",
+			action = "Telescope find_files cwd=",
+		},
+		mru = { enable = true, limit = 15, icon = " ", label = " Recent files:", cwd_only = true },
+		footer = {},
+	},
+})
+
+-- ── notify & noice ───────────────────────────────────────────
+require("notify").setup({
+	background_colour = "#000000",
+})
+
+require("noice").setup({
+	cmdline = { view = "cmdline" },
+	lsp = {
+		override = {
+			["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+			["vim.lsp.util.stylize_markdown"] = true,
+		},
+	},
+	presets = {
+		bottom_search = true,
+		long_message_to_split = true,
+	},
+})
+
+-- ── smear cursor ─────────────────────────────────────────────
+require("smear_cursor").setup({
+	stiffness = 0.8,
+	trailing_stiffness = 0.5,
+	distance_stop_animating = 0.5,
+	hide_target_hack = false,
+})

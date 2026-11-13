@@ -1,9 +1,11 @@
-local ok, blink = pcall(require, "blink.cmp")
-if not ok then
-	return
-end
+vim.pack.add({
+	"https://github.com/saghen/blink.lib",
+	"https://github.com/Saghen/blink.cmp",
+	"https://github.com/L3MON4D3/LuaSnip",
+	"https://github.com/rafamadriz/friendly-snippets",
+})
 
-blink.setup({
+require("blink.cmp").setup({
 	fuzzy = { implementation = "prefer_rust" },
 	keymap = {
 		["<C-space>"] = { "show", "fallback" },
