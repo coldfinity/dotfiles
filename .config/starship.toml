@@ -10,8 +10,24 @@
 
 add_newline = false
 
-format = "$directory$git_branch$git_state$git_status$character"
-right_format = "$python$nodejs$rust$golang$cmd_duration"
+format = "$username$hostname$directory$git_branch$git_status$git_state$character"
+right_format = "$status$python$nodejs$rust$golang$cmd_duration"
+
+# user@host, shown always (not just over SSH). Styled to match the branch.
+[username]
+show_always = true
+format = "[$user]($style)"
+style_user = "white"
+style_root = "red"
+aliases = { "yudiwu" = "yslv" }
+
+[hostname]
+ssh_only = false
+format = "[@$hostname]($style) [|](white) "
+style = "white"
+trim_at = "."
+# Rename the machine in the prompt only (doesn't touch the real hostname).
+aliases = { "Yudis-MacBook-Pro" = "maccas" }
 
 [directory]
 style = "blue"
@@ -19,18 +35,18 @@ truncation_length = 2
 truncate_to_repo = true
 
 [git_branch]
-format = "[$branch]($style) "
+format = "[\\[$branch]($style)"
 style = "white"
 
 [git_status]
-format = "([(*$conflicted$untracked$modified$staged$renamed$deleted)](218)[$ahead_behind$stashed]($style) )"
+format = "[( *$conflicted$untracked$modified$renamed$deleted)](218)[( $staged)](green)[( $ahead_behind)( $stashed)]($style)[\\]](white) "
 style = "cyan"
 # Zero-width spaces: invisible, but non-empty, so the single * above appears
-# whenever any of these states is true. Don't replace them with "".
+# whenever any of these states is true. Staged shows its own green +. Don't replace them with "".
 conflicted = "​"
 untracked = "​"
 modified = "​"
-staged = "​"
+staged = "+"
 renamed = "​"
 deleted = "​"
 stashed = "≡"
@@ -38,6 +54,12 @@ stashed = "≡"
 [git_state]
 format = '\([$state( $progress_current/$progress_total)]($style)\) '
 style = "white"
+
+# Exit code of the last command, only when it failed.
+[status]
+disabled = false
+format = "[✗ $status]($style) "
+style = "red"
 
 [cmd_duration]
 min_time = 2000
