@@ -30,8 +30,6 @@ require("which-key").setup({
 })
 
 -- ── indent guides ────────────────────────────────────────────
-vim.api.nvim_set_hl(0, "IblIndent", { fg = "#333333" })
-vim.api.nvim_set_hl(0, "IblScope", { fg = "#555555" })
 require("ibl").setup({
 	indent = { char = "│" },
 	scope = { enabled = true },
