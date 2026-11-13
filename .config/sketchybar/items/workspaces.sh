@@ -5,8 +5,7 @@
 # Which workspaces get drawn, and what glyph each one wears, comes from
 # settings.sh so this file and plugins/workspaces.sh cannot disagree.
 #
-# NO BACKGROUND, EVER — focus is carried by colour alone (icon.color
-# turning ACCENT). A box drawn under that read as redundant.
+# Focused workspace styling is applied by the watcher.
 
 sketchybar --add event aerospace_workspace_change
 
@@ -41,6 +40,6 @@ sketchybar --add item workspace_watcher left \
   --set workspace_watcher \
   drawing=off \
   updates=on \
-  update_freq=5 \
+  update_freq=30 \
   script="$PLUGIN_DIR/workspaces.sh" \
-  --subscribe workspace_watcher aerospace_workspace_change front_app_switched
+  --subscribe workspace_watcher aerospace_workspace_change front_app_switched system_woke display_change

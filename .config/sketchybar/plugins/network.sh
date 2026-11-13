@@ -39,9 +39,18 @@ DEFAULT_DEV="$(route -n get default 2>/dev/null \
   | awk '/interface:/ { print $2; exit }')"
 
 if [ -n "$DEFAULT_DEV" ] && [ "$DEFAULT_DEV" != "$WIFI_DEV" ]; then
-  sketchybar --set "$NAME" icon=󰈀 icon.color=$ACCENT label.drawing=off
+  case "$DEFAULT_DEV" in
+    utun*|tun*|tap*|ppp*|ipsec*)
+      sketchybar --set "$NAME" icon.drawing=off label="VPN" label.color=$ACCENT label.drawing=on ;;
+    en*)
+      sketchybar --set "$NAME" icon.drawing=on icon=󰈀 icon.color=$ACCENT label.drawing=off ;;
+    *)
+      sketchybar --set "$NAME" icon.drawing=off label="NET" label.color=$TEXT label.drawing=on ;;
+  esac
   exit 0
 fi
+
+sketchybar --set "$NAME" icon.drawing=on
 
 if [ -z "$WIFI_DEV" ]; then
   # DIM rather than RED: a radio being off is a state you chose, not a fault.

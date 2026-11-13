@@ -17,7 +17,7 @@ sketchybar --add item apple left \
   icon=$'' \
   icon.font="SF Pro:Semibold:22.0" \
   icon.color=$GREY \
-  icon.padding_left=$BAR_EDGE_PADDING \
+  icon.padding_left=0 \
   icon.padding_right=$GROUP_GAP \
   label.drawing=off \
   background.drawing=off \

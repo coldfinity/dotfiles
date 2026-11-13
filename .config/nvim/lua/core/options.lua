@@ -47,3 +47,6 @@ o.foldenable = false
 o.foldlevel = 99
 
 o.completeopt = "menu,menuone,noselect"
+
+-- show ~ on lines past the end of the buffer
+vim.opt.fillchars:append({ eob = "~" })

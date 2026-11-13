@@ -80,7 +80,7 @@ vim.lsp.enable("ts_ls")
 
 -- ── HTML ─────────────────────────────────────────────────────
 vim.lsp.config["html"] = {
-	cmd = { "html-lsp", "--stdio" },
+	cmd = { "vscode-html-language-server", "--stdio" },
 	filetypes = { "html" },
 	root_markers = { "package.json", ".git" },
 }
@@ -88,7 +88,7 @@ vim.lsp.enable("html")
 
 -- ── CSS ──────────────────────────────────────────────────────
 vim.lsp.config["cssls"] = {
-	cmd = { "css-lsp", "--stdio" },
+	cmd = { "vscode-css-language-server", "--stdio" },
 	filetypes = { "css", "scss", "less" },
 	root_markers = { "package.json", ".git" },
 }

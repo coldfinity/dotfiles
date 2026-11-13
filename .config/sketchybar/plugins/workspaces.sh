@@ -8,7 +8,7 @@
 #   occupied   DIM  — has windows, not on screen
 #   empty      EMPTY — listed only so the row keeps a stable width
 #
-# No chip ever gets a background. Focus is carried by colour alone.
+# The focused workspace uses a filled gray chip.
 
 source "$CONFIG_DIR/colors.sh"
 source "$CONFIG_DIR/settings.sh"
@@ -32,8 +32,8 @@ for sid in "${WS_IDS[@]}"; do
 
   if [ "$sid" = "$FOCUSED" ]; then
     args+=(--set space.$sid display="$display"
-      icon.color=$ACCENT
-      background.drawing=off)
+      icon.color=$SURFACE
+      background.drawing=on)
 
   elif printf '%s\n' "$VISIBLE" | grep -qx "$sid"; then
     # Showing on a monitor that doesn't hold focus. With one display this

@@ -37,9 +37,21 @@ require("blink.cmp").setup({
 		menu = {
 			auto_show = true,
 			border = "rounded",
+			max_height = 20,
+			draw = {
+				columns = {
+					{ "kind_icon" },
+					{ "label", "label_description", gap = 1 },
+					{ "kind" },
+				},
+			},
 		},
 		ghost_text = { enabled = false },
 		accept = { auto_brackets = { enabled = true } },
+	},
+	signature = {
+		enabled = true,
+		window = { border = "rounded" },
 	},
 	cmdline = {
 		enabled = true,

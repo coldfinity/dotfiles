@@ -32,8 +32,12 @@ SELECTED="$(defaults read com.apple.HIToolbox AppleSelectedInputSources 2>/dev/n
 # any keyboard input method". The generic rule would also catch Japanese and
 # Korean engines, and label them 中 — wrong, and worse than not reporting
 # them. SCIM is simplified pinyin, TCIM traditional.
-if printf '%s' "$SELECTED" | grep -qE 'inputmethod\.(SCIM|TCIM)'; then
-  sketchybar --set "$NAME" label="中" label.color=$ACCENT
-else
-  sketchybar --set "$NAME" label="EN" label.color=$TEXT
-fi
+case "$SELECTED" in
+  *inputmethod.SCIM*|*inputmethod.TCIM*) LABEL="中"; COLOR=$ACCENT ;;
+  *inputmethod.Kotoeri*) LABEL="日"; COLOR=$ACCENT ;;
+  *inputmethod.Korean*) LABEL="한"; COLOR=$ACCENT ;;
+  *'"KeyboardLayout Name" = ABC;'*|*'"KeyboardLayout Name" = U.S.;'*|*'"KeyboardLayout Name" = British;'*)
+    LABEL="EN"; COLOR=$TEXT ;;
+  *) LABEL="⌨"; COLOR=$GREY ;;
+esac
+sketchybar --set "$NAME" label="$LABEL" label.color=$COLOR

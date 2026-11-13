@@ -1,38 +1,6 @@
 #!/bin/bash
-#
-# Sketchybar — styled after the native menu bar it replaces: real vibrancy
-# (blur, not a flat tint), monochrome icons, no pill backgrounds. Related
-# items are grouped by spacing alone (GROUP_GAP in settings.sh), the same
-# way the system menu bar groups its own icons, rather than by drawing a
-# capsule behind each cluster.
-#
-# This replaces the previous flush, full-width, edge-to-edge layout, whose
-# defining trait — margin=0, y_offset=0, transparent background — was also
-# what made it read as covering the whole screen rather than as a bar.
-#
-# Left    apple logo, workspaces, frontmost app's name
-# Right   now playing — cpu/ram/gpu — input/network/bluetooth/volume —
-#         battery/power — clock
-#
-# Nothing sits at true centre, so nothing lands under the notch/camera
-# housing. sketchybar's own notch_width/notch_display_height bar properties
-# (meant to route items around the notch automatically) are deliberately
-# NOT used here: on this sketchybar build they change every item's window
-# to span the full display height instead of just the bar's — invisible
-# past the bar's own height, but sitting above the desktop-icon layer, so
-# it silently blocks clicks to desktop icons and macOS's interactive
-# desktop widgets. Confirmed by bisection: removing just that one bar
-# property call drops every item window back to BAR_HEIGHT tall.
-#
-# Differences from the Linux (waybar) box, forced by the platform:
-#   - battery exists here; the Linux box is a desktop with no power supply
-#   - GPU comes from ioreg's IOAccelerator rather than nvidia-smi
-#   - wifi signal is cached from a 4-second system_profiler call rather than
-#     read live; see plugins/network.sh
-#   - the input-source indicator reads HIToolbox rather than fcitx5-remote
-#   - the power button opens a sketchybar popup rather than a rofi menu
-#   - window_title shows the frontmost app's name, not its window title —
-#     macOS has no cheap public API for the latter
+# Floating module panels. Keep center empty for the camera notch.
+# Avoid notch sizing properties: this build previously produced tall input windows.
 
 source "$CONFIG_DIR/colors.sh"
 source "$CONFIG_DIR/settings.sh"
@@ -40,28 +8,11 @@ source "$CONFIG_DIR/settings.sh"
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 ITEM_DIR="$CONFIG_DIR/items"
 
-##### Bar #####
-# Floating: inset from every edge, rounded, hairline border. margin insets
-# left/right, y_offset pushes down from the top — both BAR_MARGIN, so the
-# gap reads as uniform on all three visible sides.
-#
-# blur_radius=30 is what makes SURFACE's .60 opacity read as frosted glass
-# rather than just a dim rectangle — this is real vibrancy, the same trick
-# the native menu bar and Control Center use, not a flat tint standing in
-# for one.
-#
-# topmost stays off — it would put the bar over fullscreen windows, and does
-# nothing about the violet screen-recording dot (see the note at the bottom
-# of this file).
 sketchybar --bar position=top height=$BAR_HEIGHT margin=$BAR_MARGIN y_offset=$BAR_MARGIN \
-  corner_radius=$BAR_RADIUS border_width=1 border_color=$SURFACE_BORDER \
+  corner_radius=$BAR_RADIUS border_width=0 border_color=$SURFACE_BORDER \
   padding_left=$BAR_EDGE_PADDING padding_right=$BAR_EDGE_PADDING topmost=off \
-  blur_radius=30 sticky=on color=$BAR_COLOR
+  blur_radius=0 sticky=on color=$BAR_COLOR
 
-##### Defaults #####
-# The bar is opaque now, so items sit on their own surface rather than
-# directly on the wallpaper — no text shadow needed, unlike the previous
-# fully-transparent bar.
 default=(
   padding_left=0
   padding_right=0
@@ -75,58 +26,27 @@ default=(
 )
 sketchybar --default "${default[@]}"
 
-##### Popup style — the power menu is the only one left #####
-# Matches the bar's own vibrancy rather than a separate opaque panel — a
-# popup is still the same material, just a second surface of it.
-popup=(
-  popup.background.color=$SURFACE
-  popup.background.border_color=$SURFACE_BORDER
-  popup.background.border_width=1
-  popup.background.corner_radius=10
-  popup.background.shadow.drawing=on
-  popup.blur_radius=30
-  popup.align=right
-  popup.y_offset=4
-  popup.height=26
-)
+# Dedicated spacers stay outside bracket backgrounds.
+add_gap() {
+  sketchybar --add item "gap.$1" "$2" --set "gap.$1" width=8 \
+    icon.drawing=off label.drawing=off background.drawing=off
+}
 
-##### Left #####
 source "$ITEM_DIR/apple.sh"
 source "$ITEM_DIR/workspaces.sh"
+add_gap application left
 source "$ITEM_DIR/window_title.sh"
 
-##### Right #####
-# Items placed `right` are laid out right-to-left in the order they are
-# added, so this list is the reverse of how it reads on screen:
-#
-#   media — cpu/ram/gpu — network/bluetooth — volume/input — battery/power — clock
-#
-# clock (sourced first) ends up at the very right edge; media (sourced
-# last) furthest left, right next to the window title on the left side of
-# the bar.
 source "$ITEM_DIR/clock.sh"
-source "$ITEM_DIR/power.sh"
+add_gap clock right
 source "$ITEM_DIR/battery.sh"
 source "$ITEM_DIR/input_source.sh"
 source "$ITEM_DIR/audio.sh"
 source "$ITEM_DIR/network.sh"
+add_gap controls right
 source "$ITEM_DIR/stats.sh"
 source "$ITEM_DIR/media.sh"
 
-##### Go #####
-sketchybar --update
+source "$ITEM_DIR/theme.sh"
 
-##### The violet dot near the right edge #####
-#
-# NOT DRAWN BY THIS CONFIG, and not removable from here.
-#
-# It is macOS's screen-recording privacy indicator: a solid ~7pt #6664f9
-# circle the WindowServer paints above every application window whenever an
-# app holds an active ScreenCaptureKit stream. topmost=on does not cover it
-# either — the indicator draws above the topmost window level too.
-#
-# To remove it, take Screen Recording away from whatever is capturing:
-#   System Settings -> Privacy & Security -> Screen & System Audio Recording
-# AltTab is the usual culprit on this machine — it captures continuously to
-# render window thumbnails. Turning it off there costs the thumbnails and
-# nothing else.
+sketchybar --update

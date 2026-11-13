@@ -14,5 +14,6 @@ sketchybar --add item clock right \
   label.color=$TEXT \
   label.padding_left=8 \
   label.padding_right=4 \
-  update_freq=1 \
-  script="$PLUGIN_DIR/clock.sh"
+  update_freq=10 \
+  script="$PLUGIN_DIR/clock.sh" \
+  --subscribe clock system_woke

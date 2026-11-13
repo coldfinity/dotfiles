@@ -1,7 +1,6 @@
 #!/bin/bash
 #
-# Samples CPU, RAM and GPU, writes all three readings and pushes all three
-# sparklines in one batched sketchybar call.
+# Samples CPU, RAM and GPU in one batched update.
 #
 # All three share one ramp, so a loaded machine reads the same way whichever
 # resource is loaded:
@@ -44,12 +43,15 @@ RAM=${RAM:-0}
 
 ##### GPU #####
 # Apple Silicon reports this through IOAccelerator. A machine that doesn't
-# expose it reads 0 rather than erroring the item out.
+# expose it displays an unavailable marker.
 GPU=$(ioreg -r -d 1 -w 0 -c IOAccelerator 2>/dev/null \
   | grep -o '"Device Utilization %"=[0-9]*' \
   | awk -F'=' '{ print $2 }' \
   | head -1)
-GPU=${GPU:-0}
+case "$GPU" in
+  ''|*[!0-9]*) GPU_LABEL="—"; GPU_COLOR=$DIM ;;
+  *) GPU_LABEL="$GPU%"; GPU_COLOR="" ;;
+esac
 
 ##### The shared ramp #####
 ramp() {
@@ -63,7 +65,7 @@ ramp() {
 }
 
 sketchybar \
-  --set cpu label="$CPU" label.color="$(ramp "$CPU")" \
-  --set ram label="$RAM" label.color="$(ramp "$RAM")" \
-  --set gpu label="$GPU" label.color="$(ramp "$GPU")"
+  --set cpu label="$CPU%" label.color="$(ramp "$CPU")" \
+  --set ram label="$RAM%" label.color="$(ramp "$RAM")" \
+  --set gpu label="$GPU_LABEL" label.color="${GPU_COLOR:-$(ramp "$GPU")}"
 

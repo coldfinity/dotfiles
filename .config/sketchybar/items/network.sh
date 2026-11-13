@@ -12,12 +12,12 @@
 # Order matters: items placed `right` are laid out right-to-left in the
 # order they are added, so this reads network, bluetooth on screen.
 # network is leftmost of the cluster, so it carries the gap to the stats
-# cluster before it; bluetooth is rightmost, carrying the gap to audio.
+# cluster before it; volume supplies the gap after bluetooth.
 sketchybar --add item bluetooth right \
   --set bluetooth \
   icon.color=$GREY \
   icon.padding_left=10 \
-  icon.padding_right=$GROUP_GAP \
+  icon.padding_right=0 \
   label.drawing=off \
   background.drawing=off \
   update_freq=15 \

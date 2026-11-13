@@ -81,3 +81,13 @@ autocmd("FileType", {
 		vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = ev.buf, silent = true })
 	end,
 })
+
+-- keep the end-of-buffer ~ visible across colorschemes (many themes hide it)
+local function show_eob()
+	vim.api.nvim_set_hl(0, "EndOfBuffer", { link = "NonText" })
+end
+autocmd("ColorScheme", {
+	group = augroup("show_eob", { clear = true }),
+	callback = show_eob,
+})
+show_eob()
