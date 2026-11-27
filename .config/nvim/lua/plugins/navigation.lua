@@ -3,10 +3,8 @@ vim.pack.add({
 	"https://github.com/nvim-telescope/telescope.nvim",
 	"https://github.com/nvim-lua/plenary.nvim",
 	"https://github.com/nvim-telescope/telescope-fzf-native.nvim",
-	-- file tree / explorer
-	"https://github.com/nvim-neo-tree/neo-tree.nvim",
+	-- file explorer
 	"https://github.com/nvim-tree/nvim-web-devicons",
-	"https://github.com/MunifTanjim/nui.nvim",
 	"https://github.com/stevearc/oil.nvim",
 	-- jumping
 	"https://github.com/folke/flash.nvim",
@@ -49,29 +47,10 @@ map("n", "<leader>fg", "<cmd>Telescope live_grep<cr>", "Live grep")
 map("n", "<leader>fb", "<cmd>Telescope buffers<cr>", "Buffers")
 map("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", "Recent files")
 
--- ── neo-tree (sidebar) ───────────────────────────────────────
-require("neo-tree").setup({
-	close_if_last_window = true,
-	enable_git_status = true,
-	enable_diagnostics = true,
-	-- set width = 30
-	--window = { position = "current" },
-	--window = { position = "float" },
-	window = { position = "left", width = 40 },
-	filesystem = {
-		filtered_items = { hide_dotfiles = false, hide_gitignored = true },
-		follow_current_file = { enabled = true },
-		hijack_netrw_behavior = "open_default",
-	},
-})
-
-map("n", "<leader>e", "<cmd>Neotree toggle<cr>", "Toggle file tree")
-map("n", "<leader>E", "<cmd>Neotree reveal<cr>", "Reveal in tree")
-
--- ── oil (netrw replacement, buffer-style file editing) ───────
-require("oil").setup({
-	-- leave directory opening (`nvim .`) to neo-tree
-	default_file_explorer = false,
+-- ── oil ──────────────────────────────────────────────────────
+local oil = require("oil")
+oil.setup({
+	default_file_explorer = true,
 	-- reflect external filesystem changes live
 	watch_for_changes = true,
 	columns = {
@@ -84,11 +63,6 @@ require("oil").setup({
 		show_hidden = true,
 		natural_order = true,
 	},
-	-- float = {
-	-- 	padding = 2,
-	-- 	max_width = 100,
-	-- 	max_height = 0,
-	-- },
 	use_default_keymaps = true,
 	keymaps = {
 		["q"] = "actions.close",
@@ -96,10 +70,20 @@ require("oil").setup({
 	},
 })
 
+local function toggle_oil()
+	if vim.bo.filetype == "oil" then
+		oil.close()
+	else
+		oil.open()
+	end
+end
+
 map("n", "-", "<cmd>Oil<cr>", "Open parent dir (oil)")
-map("n", "<leader>-", function()
-	require("oil").toggle_float()
-end, "Toggle oil float")
+map("n", "<leader>e", toggle_oil, "Toggle Oil")
+map("n", "<leader>-", toggle_oil, "Toggle Oil")
+map("n", "<leader>E", function()
+	oil.open(vim.fn.getcwd())
+end, "Open working directory in Oil")
 
 -- ── flash ────────────────────────────────────────────────────
 require("flash").setup()

@@ -86,8 +86,5 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		end
 		map_lsp("gd", vim.lsp.buf.definition, "Go to definition")
 		map_lsp("gD", vim.lsp.buf.declaration, "Go to declaration")
-		map_lsp("<leader>cf", function()
-			vim.lsp.buf.format({ async = true })
-		end, "Format")
 	end,
 })

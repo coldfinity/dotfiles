@@ -1,6 +1,7 @@
 vim.pack.add({ "https://github.com/stevearc/conform.nvim" })
 
-require("conform").setup({
+local conform = require("conform")
+conform.setup({
 	formatters_by_ft = {
 		lua = { "stylua" },
 		python = { "isort", "black" },
@@ -59,5 +60,10 @@ require("conform").setup({
 			end,
 		},
 	},
-	format_on_save = { timeout_ms = 500, lsp_fallback = true },
+	default_format_opts = { lsp_format = "fallback" },
+	format_on_save = { timeout_ms = 500 },
 })
+
+require("core.map")("n", "<leader>cf", function()
+	conform.format({ async = true })
+end, "Format")

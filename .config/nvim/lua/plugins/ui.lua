@@ -2,7 +2,6 @@ vim.pack.add({
 	"https://github.com/folke/which-key.nvim",
 	"https://github.com/lukas-reineke/indent-blankline.nvim",
 	"https://github.com/OXY2DEV/markview.nvim",
-	"https://github.com/nvimdev/dashboard-nvim",
 	"https://github.com/rcarriga/nvim-notify",
 	"https://github.com/MunifTanjim/nui.nvim",
 	"https://github.com/folke/noice.nvim",
@@ -33,38 +32,13 @@ require("which-key").setup({
 require("ibl").setup({
 	indent = { char = "│" },
 	scope = { enabled = true },
-	exclude = { filetypes = { "help", "neo-tree", "dashboard" } },
+	exclude = { filetypes = { "help", "oil" } },
 })
 
 -- ── markview ─────────────────────────────────────────────────
 require("markview").setup({
 	preview = {
 		filetypes = { "markdown" },
-	},
-})
-
--- ── dashboard ────────────────────────────────────────────────
-require("dashboard").setup({
-	theme = "hyper",
-	config = {
-		week_header = { enable = true },
-		shortcut = {
-			{ desc = "Update plugins", group = "@property", action = "lua vim.pack.update()", key = "u" },
-			{ desc = "Find file", group = "Label", action = "Telescope find_files", key = "f" },
-			{ desc = "Live grep", group = "DiagnosticHint", action = "Telescope live_grep", key = "g" },
-			{ desc = "Recent files", group = "Number", action = "Telescope oldfiles", key = "r" },
-			{ desc = "Config", group = "String", action = "Telescope find_files cwd=~/.config/nvim", key = "c" },
-		},
-		packages = { enable = true },
-		project = {
-			enable = false,
-			limit = 8,
-			icon = " ",
-			label = " Recent projects:",
-			action = "Telescope find_files cwd=",
-		},
-		mru = { enable = true, limit = 15, icon = " ", label = " Recent files:", cwd_only = true },
-		footer = {},
 	},
 })
 
